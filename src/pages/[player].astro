@@ -1,0 +1,30 @@
+---
+// src/pages/[player].astro
+import { fetchPlayers } from '../scripts/database';
+
+export async function getStaticPaths() {
+  const players = await fetchPlayers();
+  return players.map((player) => ({
+    params: { player: player.username }, // Use the username or another unique field
+  }));
+}
+
+export async function get({ params }) {
+  const players = await fetchPlayers();
+  const player = players.find((p) => p.username === params.player);
+
+  if (!player) {
+    return { notFound: true };
+  }
+
+  return {
+    props: { player },
+  };
+}
+
+const { username, score, rank } = Astro.props.player;
+---
+
+<h1>Player: {username}</h1>
+<p>Score: {score}</p>
+<p>Rank: {rank}</p>

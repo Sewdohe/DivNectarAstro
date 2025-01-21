@@ -1,0 +1,45 @@
+---
+import { fetchPlayers } from '../../scripts/database';
+
+
+export async function getStaticPaths() {
+  const players = await fetchPlayers();
+  return players.map(player => ({
+    params: { uuid: player.uuid }
+  }));
+}
+
+export async function get({ params }) {
+  const players = await fetchPlayers();
+  const player = players.find(p => p.uuid === params.uuid);
+  return {
+    props: { player }
+  };
+}
+---
+
+<html>
+  <head>
+    <title>{player.username}'s Profile</title>
+  </head>
+  <body>
+    <h1>{player.username}'s Profile</h1>
+    <p>Level: {player.level}</p>
+    <p>Experience: {player.experience}</p>
+    <p>Class: {player.class}</p>
+    <p>Guild: {player.guild}</p>
+    <p>Last Login: {new Date(player.last_login).toLocaleString()}</p>
+    <p>Money: {player.money}</p>
+    <p>Interest: {player.interest}</p>
+    <p>Debt: {player.debt}</p>
+    <p>Primary Group: {player.primary_group}</p>
+    <p>Bluemap Coordinates: {player.bluemap_x}, {player.bluemap_y}, {player.bluemap_z}</p>
+    <p>Vault Balance: {player.vault_balance}</p>
+    <h2>Skills</h2>
+    <ul>
+      {Object.entries(player.skills).map(([skill, data]) => (
+        <li>{skill}: {data.level}</li>
+      ))}
+    </ul>
+  </body>
+</html>

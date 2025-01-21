@@ -1,0 +1,51 @@
+---
+import Hamburger from "./Hamburger.astro";
+const links = [
+    {
+        name: "Home",
+        url: "/",
+    },
+    {
+        name: "Blog",
+        url: "/blog",
+    },
+    {
+        name: "Discord",
+        url: "/discord",
+    },
+    {
+        name: "SkyNectar",
+        url: "/skynectar",
+    },
+    {
+        name: "About",
+        url: "/about",
+    },
+];
+---
+<div class="fixed top-0 p4 w-screen h-16 bg-ctp-crust flex items-center">
+    <div class="mocha nav-links flex invisible lg:visible w-full justify-center items-center text-ctp-text">
+        {
+            links.map((link) => (
+                <a
+                    class="text-ctp-text no-underline px-2 lg:prose-lg hover:text-ctp-teal duration-150s cursor-default transition-all"
+                    href={link.url}
+                >
+                    {link.name}
+                </a>
+            ))
+        }
+    <Hamburger />
+    </div>
+</div>
+<!-- this div just matches the height of the navbar
+ to keep the content from going below it on page load. -->
+<div class="h-16"></div>
+
+</div>
+
+<script>
+    document.querySelector(".hamburger")?.addEventListener("click", () => {
+        document.querySelector(".nav-links")?.classList.toggle("expanded");
+    });
+</script>

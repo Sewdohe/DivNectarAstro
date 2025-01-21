@@ -1,3 +1,8 @@
+---
+import Navigation from '../components/Navigation.astro'
+const { pageInfo } = Astro.props;
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
@@ -5,15 +10,19 @@
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>DivNectar</title>
 	</head>
-	<body>
-		<slot />
+	<body class="bg-ctp-base container m-0 p-0 text-ctp-text prose lg:prose-xl">
+		<Navigation />
+		<div class="px-8 lg:px-10">
+			<slot />
+		</div>
 	</body>
 </html>
 
 <style>
 	html,
+	head,
 	body {
 		margin: 0;
 		width: 100%;

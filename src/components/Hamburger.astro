@@ -1,7 +1,56 @@
 ---
 import { Icon } from 'astro-icon/components'
+let isOpen = false
+
+function toggleMenu() {
+  isOpen = !isOpen
+  const modal = document.querySelector('#modal')
+  if (isOpen) {
+    modal.classList.remove('hidden')
+  } else {
+    modal.classList.add('hidden')
+  }
+}
+
+const { navLinks } = Astro.props
 ---
 
-<div class="p-4 text-4xl justify-end visible lg:invisible">
-    <Icon name="line-md:menu" />
+<div class="p-4 text-4xl justify-end lg:invisible">
+    <button id="nav-open">
+        <Icon name="line-md:menu" />
+    </button>
 </div>
+
+<div id="modal" class="fixed prose-2xl inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+    <div class="bg-ctp-crust p-8 rounded-lg shadow-lg w-full max-w-md relative">
+        <button id="nav-close" class="absolute text-ctp-red top-4 right-4 prose-2xl">
+            &times;
+        </button>
+        <nav class="flex flex-col space-y-4">
+            {
+                navLinks.map((link) => (
+                    <a
+                        class="text-ctp-text no-underline px-2 lg:prose-lg hover:text-ctp-teal duration-150s cursor-default transition-all"
+                        href={link.url}
+                    >
+                        {link.name}
+                    </a>
+                ))
+            }
+        </nav>
+    </div>
+</div>
+
+<script>
+    const modal = document.querySelector('#modal');
+    const navOpen = document.querySelector('#nav-open');
+    const navClose = document.querySelector('#nav-close');
+
+    navOpen.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+    });
+
+    navClose.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+</script>

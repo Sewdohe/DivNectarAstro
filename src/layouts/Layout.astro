@@ -3,6 +3,9 @@ import Navigation from "../components/Navigation.astro";
 import { SEO } from "astro-seo";
 const { title, description, image } = Astro.props;
 
+// use our global styles
+import '../styles/global.css';
+
 //
 import { ClientRouter } from 'astro:transitions';
 ---
@@ -53,11 +56,11 @@ import { ClientRouter } from 'astro:transitions';
 		/>
 	</head>
 	<body
-		class="bg-ctp-base container m-0 p-0 text-ctp-text prose-invert lg:prose-xl"
+		class="bg-ctp-base container m-0 p-0 text-ctp-text prose prose-catpuccin lg:prose-xl"
 		transition:animate="slide" 
 	>
 		<Navigation transition:persist transition:animation="none" />
-		<div class="px-8 lg:px-10">
+		<div id="content" class="px-8 lg:px-10">
 			<slot />
 		</div>
 	</body>

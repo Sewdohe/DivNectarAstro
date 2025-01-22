@@ -19,7 +19,7 @@ const players = await getPlayerData();
       players.map((player) => (
         <a
           href={`/players/${player.uuid}`}
-          class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+          class="flex flex-col items-center rounded-lg shadow md:flex-row md:max-w-xl dark:border-gray-700 dark:bg-ctp-crust dark:hover:bg-ctp-mantle"
         >
           <img
             class="object-contain aspect-auto w-full rounded-t-lg h-48 md:w-48 md:rounded-none md:rounded-s-lg"
@@ -27,10 +27,10 @@ const players = await getPlayerData();
             alt=""
           />
           <div class="flex flex-col justify-between p-4 leading-normal">
-            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            <h5 class="mb-2 prose-xl font-bold tracking-tight text-white">
               {player.username}
             </h5>
-            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+            <p class="mb-3 prose-sm text-gray-400">
               {player.username}'s stats:
             </p>
           </div>

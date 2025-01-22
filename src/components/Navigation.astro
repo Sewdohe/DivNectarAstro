@@ -58,7 +58,14 @@ const pathname = new URL(Astro.request.url).pathname;
 
 <style>
     .active {
-        color: orange !important;
-        text-decoration: underline;
+        color: #74c7ec !important;
+    }
+    .active::before {
+        color: #cba6f7;
+        content: '[';
+    }
+    .active::after {
+        color: #cba6f7;
+        content: ']';
     }
 </style>

@@ -50,30 +50,44 @@ const pathname = new URL(Astro.request.url).pathname;
 </div>
 
 <script>
-    const modal = document.querySelector('#modal');
-    const navOpen = document.querySelector('#nav-open');
-    const navClose = document.querySelector('#nav-close');
 
-    if (navOpen) {
-        navOpen.addEventListener('click', () => {
-            if (modal) {
-                modal.classList.remove('hidden');
-            }
-        });
+    function createHamburgerListeners() {
+        const modal = document.querySelector('#modal');
+        const navOpen = document.querySelector('#nav-open');
+        const navClose = document.querySelector('#nav-close');
+        
+        if (navOpen) {
+            navOpen.addEventListener('click', () => {
+                if (modal) {
+                    modal.classList.remove('hidden');
+                }
+            });
+        }
+
+        if (navClose) {
+            navClose.addEventListener('click', () => {
+                if (modal) {
+                    modal.classList.add('hidden');
+                }
+            });
+        }
     }
 
-    if (navClose) {
-        navClose.addEventListener('click', () => {
-            if (modal) {
-                modal.classList.add('hidden');
-            }
-        });
-    }
+    createHamburgerListeners();
+    document.addEventListener('astro:beforeload', createHamburgerListeners);
+    document.addEventListener('astro:page-load', createHamburgerListeners);
 </script>
 
 <style>
     .active {
-        color: orange !important;
-        text-decoration: underline;
+        color: #74c7ec !important;
+    }
+    .active::before {
+        color: #cba6f7;
+        content: '[';
+    }
+    .active::after {
+        color: #cba6f7;
+        content: ']';
     }
 </style>

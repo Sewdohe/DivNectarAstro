@@ -3,12 +3,12 @@ import Navigation from "../components/Navigation.astro";
 import { SEO } from "astro-seo";
 const { title, description, image } = Astro.props;
 
-// enable site-wide transitions using Astro's built-in client router
+//
 import { ClientRouter } from 'astro:transitions';
 ---
 
 <!doctype html>
-<html lang="en" transition:name="root" transition:animate="none">
+<html lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -54,9 +54,10 @@ import { ClientRouter } from 'astro:transitions';
 	</head>
 	<body
 		class="bg-ctp-base container m-0 p-0 text-ctp-text prose-orange lg:prose-xl"
+		transition:animate="slide" 
 	>
-		<Navigation transition:persist />
-		<div class="px-8 lg:px-10" 		transition:animate="slide">
+		<Navigation client:load transition:persist transition:animation="none" />
+		<div class="px-8 lg:px-10">
 			<slot />
 		</div>
 	</body>

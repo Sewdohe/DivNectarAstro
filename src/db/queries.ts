@@ -69,7 +69,6 @@ export async function getPlayerData() {
     }
   }));
 
-  console.log(placeHolderRes);
   return placeHolderRes;
 }
 

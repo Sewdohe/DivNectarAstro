@@ -1,10 +1,11 @@
 ---
 // src/pages/players/[playerId].astro
-import { getPlayerData } from '../../db/queries';
+import { getPlayerData } from "../../db/queries";
+import Layout from "../../layouts/Layout.astro";
 
 export async function getStaticPaths() {
     const players = await getPlayerData();
-    return players.map(player => ({
+    return players.map((player) => ({
         params: { playerId: player.uuid },
     }));
 }
@@ -12,8 +13,26 @@ export async function getStaticPaths() {
 export async function get({ params }: { params: { playerId: string } }) {
     const playerId = params.playerId;
     const players = await getPlayerData();
-    const player = players.find(p => p.uuid.toString() === playerId);
+    const player = players.find((p) => p.uuid === playerId);
+    console.log('got player from param')
+    console.log(player);
     return { props: { player } };
+}
+
+export async function getServerSideProps({ params }) {
+    const { playerId } = params;
+    const players = await getPlayerData();
+    const player = players.find((p) => p.uuid === playerId);
+
+    if (!player) {
+        return {
+            notFound: true,
+        };
+    }
+
+    return {
+        props: { player },
+    };
 }
 
 interface Player {
@@ -21,7 +40,32 @@ interface Player {
     username: string;
 }
 
-const { player } = Astro.props as { player: Player };
+const player = Astro.props;
 ---
 
-<h1>{player.username}</h1>
+<Layout
+    title={`${player.username}'s Skyblock Profile'`}
+    description={`view ${player.username}'s skyblock stats.`}
+    image={{
+        url: `https://mc-heads.net/body/${player.uuid}`,
+        alt: `${player.username}'s avatar`,
+    }}
+>
+    <div class="flex flex-col items-center">
+        <img
+            class="object-contain aspect-auto w-full rounded-lg h-48 md:w-48 md:rounded-none md:rounded-s-lg"
+            src={`https://mc-heads.net/body/${player.uuid}`}
+            alt=""
+        />
+        <div class="flex flex-col justify-between p-4 leading-normal">
+            <h5
+                class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+            >
+                {player.username}
+            </h5>
+            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                {player.username}'s stats:
+            </p>
+        </div>
+    </div>
+</Layout>

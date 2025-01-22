@@ -1,7 +1,8 @@
 import mysql from 'mysql2/promise';
-import dotenv from 'dotenv';
 
-dotenv.config(); // Load environment variables from .env file
+
+console.log("DB_HOST:", import.meta.env.DB_HOST);
+console.log("DB_USER:", import.meta.env.DB_USER);
 
 const connection = await mysql.createPool({
   host: import.meta.env.DB_HOST,

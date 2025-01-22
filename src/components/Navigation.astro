@@ -24,12 +24,12 @@ const links = [
 ];
 ---
 
-<div class="fixed top-0 p4 w-screen max-w-screen h-16 bg-ctp-crust flex items-center">
-    <div class="mocha px-4 flex-1 text-ctp-text text-2xl font-bold">
+<div class="fixed top-0 p4 w-screen max-w-screen h-16 bg-ctp-crust flex flex-row align-middle justify-center">
+    <div class="mocha px-4 h-16 items-start flex-1 text-ctp-text text-2xl font-bold">
         <a href="/">DivNectar</a>
     </div>
     <div
-        class="mocha nav-links flex hidden lg:visible w-full justify-center items-center text-ctp-text"
+        class="hidden md:flex lg:flexs w-full justify-self-center items-center text-ctp-text"
     >
         {
             links.map((link) => (
@@ -42,7 +42,7 @@ const links = [
             ))
         }
     </div>
-    <Hamburger navLinks={links} />
+    <Hamburger class="flex-1 items-end" navLinks={links} />
 </div>
 <!-- this div just matches the height of the navbar
  to keep the content from going below it on page load. -->

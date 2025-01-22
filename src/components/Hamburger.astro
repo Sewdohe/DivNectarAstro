@@ -5,17 +5,24 @@ let isOpen = false
 function toggleMenu() {
   isOpen = !isOpen
   const modal = document.querySelector('#modal')
-  if (isOpen) {
-    modal.classList.remove('hidden')
-  } else {
-    modal.classList.add('hidden')
+  if (modal) {
+    if (isOpen) {
+      modal.classList.remove('hidden')
+    } else {
+      modal.classList.add('hidden')
+    }
   }
 }
 
-const { navLinks } = Astro.props
+interface NavLink {
+    url: string;
+    name: string;
+}
+
+const { navLinks }: { navLinks: NavLink[] } = Astro.props as { navLinks: NavLink[] }
 ---
 
-<div class="p-4 text-4xl justify-end lg:hidden">
+<div class="p-4 text-4xl md:hidden">
     <button id="nav-open">
         <Icon name="line-md:menu" />
     </button>
@@ -46,11 +53,19 @@ const { navLinks } = Astro.props
     const navOpen = document.querySelector('#nav-open');
     const navClose = document.querySelector('#nav-close');
 
-    navOpen.addEventListener('click', () => {
-        modal.classList.remove('hidden');
-    });
+    if (navOpen) {
+        navOpen.addEventListener('click', () => {
+            if (modal) {
+                modal.classList.remove('hidden');
+            }
+        });
+    }
 
-    navClose.addEventListener('click', () => {
-        modal.classList.add('hidden');
-    });
+    if (navClose) {
+        navClose.addEventListener('click', () => {
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        });
+    }
 </script>

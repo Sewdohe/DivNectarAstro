@@ -14,7 +14,7 @@ const players = await getPlayerData();
 ---
 
 <Layout title={title} description={description} image={image}>
-  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" transition:animate="slide">
     {
       players.map((player) => (
         <a
@@ -23,8 +23,6 @@ const players = await getPlayerData();
         >
           <img
             transition:name={`playerImage-${player.uuid}`}
-            transition:name={`playerImage-${player.uuid}`}
-            transition:persist
             class="object-contain aspect-auto w-full rounded-t-lg h-48 md:w-48 md:rounded-none md:rounded-s-lg"
             src={`https://mc-heads.net/body/${player.uuid}`}
             alt=""

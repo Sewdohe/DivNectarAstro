@@ -2,33 +2,42 @@
 import Layout from "../layouts/Layout.astro";
 
 const title = "DivNectar - About";
-const description = 'Learn more about DivNectar and Sewdohe'
+const description = "Learn more about DivNectar and Sewdohe";
 const image = {
-	url: "https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png",
-	alt: "DivNectar Logo",
-}
-
-
-const identity = {
-  firstName: "Sarah",
-  country: "Canada",
-  occupation: "Technical Writer",
-  hobbies: ["photography", "birdwatching", "baseball"],
+  url: "https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png",
+  alt: "DivNectar Logo",
 };
 
-const skills = ["HTML", "CSS", "JavaScript", "React", "Astro", "Writing Docs"];
+const identity = {
+  firstName: "Josh",
+  country: "United States :(",
+  occupation: "Mechanic",
+  hobbies: [
+    "breaking code",
+    "fixing code",
+    "having people use the things I make",
+    "playing minecraft",
+    "raising my family",
+  ],
+};
+
+const skills = ["HTML", "CSS", "JavaScript", "React", "Astro", "Angular", "Server Management", "Linux (all of it)"];
 ---
 
 <Layout title={title} description={description} image={image}>
-  <p>Here are a few facts about me:</p>
+  <p><b>Here are a few facts about me:</b></p>
   <ul>
     <li>My name is {identity.firstName}.</li>
     <li>I live in {identity.country} and I work as a {identity.occupation}.</li>
-    {identity.hobbies.length >= 2 &&
-      <li>Two of my hobbies are: {identity.hobbies[0]} and {identity.hobbies[1]}</li>
+    {
+      identity.hobbies.length >= 2 && (
+        <li>
+          Two of my hobbies are: {identity.hobbies[0]} and {identity.hobbies[1]}
+        </li>
+      )
     }
   </ul>
-  <p>My skills are:</p>
+  <p><b>Skills:</b></p>
   <ul>
     {skills.map((skill) => <li>{skill}</li>)}
   </ul>

@@ -10,7 +10,7 @@ image:
 
 SkyNectar aims to bring you a top-notch and polished Minecraft vanilla+ experience. Ripe with things to do and daily content, SkyNectar is prepared to be your new home and provide you with countless hours of experiences and fun!
 
-View the [player glossary](https://divnectar.com/players)
+View the [player glossary](/players)
 
 Every stop has been pulled out for this server, in an attempt to provide you with the fullest Minecraft experience possible. Here is a non-exaustive list of features on the server:
 - Full discord integration

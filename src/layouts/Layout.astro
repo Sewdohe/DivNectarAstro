@@ -57,10 +57,9 @@ import { ClientRouter } from 'astro:transitions';
 	</head>
 	<body
 		class="bg-ctp-base container m-0 p-0 text-ctp-text prose prose-catpuccin lg:prose-xl"
-		transition:animate="slide" 
 	>
 		<Navigation transition:persist transition:animation="none" />
-		<div id="content" class="px-8 lg:px-10">
+		<div id="content" class="px-8 lg:px-10" transition:animate="slide">
 			<slot />
 		</div>
 	</body>

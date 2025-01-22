@@ -24,14 +24,14 @@ export const prerender = false;
         alt: `${player.username}'s avatar`,
     }}
 >
-    <div class="flex flex-col items-center">
+    <div class="flex flex-col  items-center">
         <img
             transition:name={player.uuid}
-            class="object-contain aspect-auto w-full rounded-lg h-48 md:w-48 md:rounded-none md:rounded-s-lg"
+            class="object-contain rounded-lg h-48 md:w-48 md:rounded-none md:rounded-s-lg"
             src={`https://mc-heads.net/body/${player.uuid}`}
             alt=""
         />
-        <div class="flex flex-col justify-between p-4 leading-normal">
+        <div class="flex flex-col w-full md:w-fit justify-between p-4 leading-normal">
             <h5
                 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
             >
@@ -39,6 +39,56 @@ export const prerender = false;
             </h5>
             <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
                 {player.username}'s stats:
+                <table>
+                    <tr>
+                        <td>Coins:</td>
+                        <td>${player.money}</td>
+                    </tr>
+                    <tr>
+                        <td>Level:</td>
+                        <td>{player.level}</td>
+                    </tr>
+                    <tr>
+                        <td>Rank:</td>
+                        <td>{player.primary_group}</td>
+                    </tr>
+                    <tr>
+                        <td>Experience:</td>
+                        <td>{player.experience}</td>
+                    </tr>
+                    <tr>
+                        <td>Alchemy:</td>
+                        <td>{player.p_alchemy_lvl}</td>
+                    </tr>
+                    <tr>
+                        <td>Enchanting:</td>
+                        <td>{player.p_enchanting_lvl}</td>
+                    </tr>
+                    <tr>
+                        <td>Farming:</td>
+                        <td>{player.p_farming_lvl}</td>
+                    </tr>
+                    <tr>
+                        <td>Fishing:</td>
+                        <td>{player.p_fishing_lvl}</td>
+                    </tr>
+                    <tr>
+                        <td>Mining:</td>
+                        <td>{player.p_mining_lvl}</td>
+                    </tr>
+                    <tr>
+                        <td>Smelting:</td>
+                        <td>{player.p_smelting_lvl}</td>
+                    </tr>
+                    <tr>
+                        <td>Smithing:</td>
+                        <td>{player.p_smithing_lvl}</td>
+                    </tr>
+                    <tr>
+                        <td>Woodcutting:</td>
+                        <td>{player.p_woodcutting_lvl}</td>
+                    </tr>
+                </table>
             </p>
         </div>
     </div>

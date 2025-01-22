@@ -8,6 +8,7 @@ export async function get({ params }: { params: { playerId: string } }) {
     const players = await getPlayerData();
     console.log(players)
     const player = players.find((p) => p.uuid === playerId);
+    console.log(player)
     return { props: { player } };
 }
 
@@ -16,7 +17,7 @@ interface Player {
     username: string;
 }
 
-const player = Astro.props;
+const { player } = Astro.props;
 export const prerender = false;
 ---
 

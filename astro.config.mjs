@@ -10,9 +10,11 @@ import icon from 'astro-icon';
 
 import node from '@astrojs/node';
 
+
 // https://astro.build/config
 export default defineConfig({
-  integrations: [react(), tailwind(), partytown(), sitemap(), icon()],
+  site: 'https://divnectar.com',
+  integrations: [react(), tailwind(), partytown(), sitemap(), icon(), sitemap()],
   vite: {
     ssr: {
       noExternal: ['@builder.io']

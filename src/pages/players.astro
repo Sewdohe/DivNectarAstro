@@ -14,7 +14,7 @@ const players = await getPlayerData();
 ---
 
 <Layout title={title} description={description} image={image}>
-  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" transition:animate="slide">
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
     {
       players.map((player) => (
         <a
@@ -22,7 +22,7 @@ const players = await getPlayerData();
           class="flex flex-col items-center rounded-lg shadow md:flex-row md:max-w-xl dark:border-gray-700 dark:bg-ctp-crust dark:hover:bg-ctp-mantle"
         >
           <img
-            transition:name={`playerImage-${player.uuid}`}
+            transition:name={player.uuid}
             class="object-contain aspect-auto w-full rounded-t-lg h-48 md:w-48 md:rounded-none md:rounded-s-lg"
             src={`https://mc-heads.net/body/${player.uuid}`}
             alt=""
@@ -31,9 +31,6 @@ const players = await getPlayerData();
             <h5 class="mb-2 prose-xl font-bold tracking-tight text-white">
               {player.username}
             </h5>
-            <p class="mb-3 prose-sm text-gray-400">
-              {player.username}'s stats:
-            </p>
           </div>
         </a>
       ))

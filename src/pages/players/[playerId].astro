@@ -26,7 +26,7 @@ export const prerender = false;
 >
     <div class="flex flex-col items-center">
         <img
-            transition:name={`playerImage-${player.uuid}`}
+            transition:name={player.uuid}
             class="object-contain aspect-auto w-full rounded-lg h-48 md:w-48 md:rounded-none md:rounded-s-lg"
             src={`https://mc-heads.net/body/${player.uuid}`}
             alt=""

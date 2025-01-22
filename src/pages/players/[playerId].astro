@@ -1,11 +1,12 @@
 ---
 // src/pages/players/[playerId].astro
+import type { SqlPlayerData } from "../../db/interfaces";
 import { getPlayerData } from "../../db/queries";
 import Layout from "../../layouts/Layout.astro";
 
 const { playerId } = Astro.params;
 const players = await getPlayerData();
-const player = players.find((p) => p.uuid === playerId);
+const player: SqlPlayerData = players.find((p) => p.uuid === playerId)!;
 
 interface Player {
     uuid: string;

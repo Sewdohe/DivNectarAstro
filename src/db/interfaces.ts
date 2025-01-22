@@ -1,5 +1,4 @@
-import mysql2 from 'mysql2/promise';
-const { RowDataPacket } = mysql2;
+import type { RowDataPacket } from 'mysql2';
 
 export interface SqlPlayerData extends RowDataPacket {
   uuid: string;
@@ -24,6 +23,9 @@ export interface SqlPlayerData extends RowDataPacket {
   p_mining_lvl: number;
   p_smelting_lvl: number;
   p_enchanting_lvl: number;
+  bluemap_x: string | null;
+  bluemap_y: string | null;
+  bluemap_z: string | null;
   skills: { [key: string]: { level: number } };
 }
 

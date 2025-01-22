@@ -55,6 +55,8 @@ const pathname = new URL(Astro.request.url).pathname;
         const modal = document.querySelector('#modal');
         const navOpen = document.querySelector('#nav-open');
         const navClose = document.querySelector('#nav-close');
+        const navLinks = document.querySelectorAll('#modal nav a');
+
         
         if (navOpen) {
             navOpen.addEventListener('click', () => {
@@ -71,6 +73,14 @@ const pathname = new URL(Astro.request.url).pathname;
                 }
             });
         }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (modal) {
+                    modal.classList.add('hidden');
+                }
+            });
+        });
     }
 
     createHamburgerListeners();

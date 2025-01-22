@@ -1,7 +1,7 @@
 ---
 import Navigation from "../components/Navigation.astro";
 import { SEO } from "astro-seo";
-const { pageInfo } = Astro.props;
+const { title, description, image } = Astro.props;
 ---
 
 <!doctype html>
@@ -17,13 +17,13 @@ const { pageInfo } = Astro.props;
 			src="https://analytics.divnectar.com/script.js"></script>
 		<title>DivNectar</title>
 		<SEO
-			title={pageInfo.title}
+			title={title}
 			description="A heavily optimized description full of well-researched keywords."
 			openGraph={{
 				basic: {
-					title: pageInfo.title,
+					title: title,
 					type: "A type.",
-					image: pageInfo.image.url,
+					image: image.url,
 				},
 			}}
 			twitter={{
@@ -41,7 +41,7 @@ const { pageInfo } = Astro.props;
 					},
 					{
 						name: "twitter:title",
-						content: pageInfo.description,
+						content: description,
 					},
 					{ name: "twitter:description", content: "Agent" },
 				],

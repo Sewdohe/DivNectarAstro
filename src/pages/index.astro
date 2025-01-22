@@ -1,5 +1,4 @@
 ---
-import Example from "../components/Example.astro";
 import Layout from "../layouts/Layout.astro";
 
 const title = "DivNectar";
@@ -12,7 +11,7 @@ const image = {
 export const prerender = true;
 ---
 
-<Layout {...{ title, description, image }}>
+<Layout title={title} description={description} image={image}>
 	<p>
 		Class tellus est aenean. Platea pretium faucibus malesuada rhoncus ac.
 		Viverra vehicula vulputate condimentum augue velit. Malesuada imperdiet

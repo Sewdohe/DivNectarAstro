@@ -1,40 +1,47 @@
 ---
+import path from "path";
 import Hamburger from "./Hamburger.astro";
 const links = [
     {
         name: "Home",
         url: "/",
+        path: "",
     },
     {
         name: "Blog",
         url: "/blog",
+        path: "blog",
     },
     {
         name: "Discord",
         url: "/discord",
+        path: "discord",
     },
     {
         name: "SkyNectar",
         url: "/skynectar",
+        path: "skynectar",
     },
     {
         name: "About",
         url: "/about",
+        path: "about",
     },
 ];
+
+const pathname = new URL(Astro.request.url).pathname;
+// const currentPath = pathname.slice(1); // remove the first "/"
 ---
 
-<div class="fixed top-0 p4 w-screen max-w-screen h-16 bg-ctp-crust flex flex-row align-middle justify-center">
-    <div class="mocha px-4 h-16 items-start flex-1 text-ctp-text text-2xl font-bold">
-        <a href="/">DivNectar</a>
-    </div>
+<div class="fixed top-0 p4 w-screen max-w-screen h-16 bg-ctp-crust flex items-center">
+    <a class="mocha flex px-4 flex-1 text-ctp-text prose-2xl font-bold" href="/">DivNectar</a>
     <div
-        class="hidden md:flex lg:flexs w-full justify-self-center items-center text-ctp-text"
+        class="hidden md:flex md:flex-1 w-full justify-self-center items-center text-ctp-text"
     >
         {
             links.map((link) => (
                 <a
-                    class="text-ctp-text no-underline px-2 lg:prose-lg hover:text-ctp-teal duration-150s cursor-default transition-all"
+                    class={`${pathname === link.url ? "active" : ""} text-ctp-text no-underline px-2 lg:prose-lg hover:text-ctp-teal duration-150s cursor-default transition-all`}
                     href={link.url}
                 >
                     {link.name}
@@ -48,3 +55,10 @@ const links = [
  to keep the content from going below it on page load. -->
 <!-- throw extra margin on the bottom to make content look nice -->
 <div class="h-16 mb-4"></div>
+
+<style>
+    .active {
+        color: orange !important;
+        text-decoration: underline;
+    }
+</style>

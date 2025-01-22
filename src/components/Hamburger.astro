@@ -20,12 +20,13 @@ interface NavLink {
 }
 
 const { navLinks }: { navLinks: NavLink[] } = Astro.props as { navLinks: NavLink[] }
+
+const pathname = new URL(Astro.request.url).pathname;
+
 ---
 
 <div class="p-4 text-4xl md:hidden">
-    <button id="nav-open">
-        <Icon name="line-md:menu" />
-    </button>
+        <Icon id="nav-open" name="line-md:menu" />
 </div>
 
 <div id="modal" class="fixed prose-2xl inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
@@ -37,7 +38,7 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as { navLinks: NavLink
             {
                 navLinks.map((link) => (
                     <a
-                        class="text-ctp-text no-underline px-2 lg:prose-lg hover:text-ctp-teal duration-150s cursor-default transition-all"
+                        class={`${pathname === link.url ? "active" : ""} text-ctp-text no-underline px-2 lg:prose-lg hover:text-ctp-teal duration-150s cursor-default transition-all`}
                         href={link.url}
                     >
                         {link.name}
@@ -69,3 +70,10 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as { navLinks: NavLink
         });
     }
 </script>
+
+<style>
+    .active {
+        color: orange !important;
+        text-decoration: underline;
+    }
+</style>

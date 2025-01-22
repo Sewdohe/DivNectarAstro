@@ -3,36 +3,12 @@
 import { getPlayerData } from "../../db/queries";
 import Layout from "../../layouts/Layout.astro";
 
-export async function getStaticPaths() {
-    const players = await getPlayerData();
-    return players.map((player) => ({
-        params: { playerId: player.uuid },
-    }));
-}
-
 export async function get({ params }: { params: { playerId: string } }) {
     const playerId = params.playerId;
     const players = await getPlayerData();
+    console.log(players)
     const player = players.find((p) => p.uuid === playerId);
-    console.log('got player from param')
-    console.log(player);
     return { props: { player } };
-}
-
-export async function getServerSideProps({ params }) {
-    const { playerId } = params;
-    const players = await getPlayerData();
-    const player = players.find((p) => p.uuid === playerId);
-
-    if (!player) {
-        return {
-            notFound: true,
-        };
-    }
-
-    return {
-        props: { player },
-    };
 }
 
 interface Player {
@@ -41,6 +17,7 @@ interface Player {
 }
 
 const player = Astro.props;
+export const prerender = false;
 ---
 
 <Layout

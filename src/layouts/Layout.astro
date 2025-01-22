@@ -1,5 +1,6 @@
 ---
-import Navigation from '../components/Navigation.astro'
+import Navigation from "../components/Navigation.astro";
+import { SEO } from "astro-seo";
 const { pageInfo } = Astro.props;
 ---
 
@@ -10,9 +11,46 @@ const { pageInfo } = Astro.props;
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
+		<script
+			type="text/partytown"
+			data-website-id="18091b9b-ce52-4b2b-8372-32b854387db7"
+			src="https://analytics.divnectar.com/script.js"></script>
 		<title>DivNectar</title>
+		<SEO
+			title={pageInfo.title}
+			description="A heavily optimized description full of well-researched keywords."
+			openGraph={{
+				basic: {
+					title: pageInfo.title,
+					type: "A type.",
+					image: pageInfo.image.url,
+				},
+			}}
+			twitter={{
+				creator: "@Sewdohe",
+			}}
+			extend={{
+				// extending the default link tags
+				link: [{ rel: "icon", href: "/favicon.ico" }],
+				// extending the default meta tags
+				meta: [
+					{
+						name: "twitter:image",
+						content:
+							"https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png",
+					},
+					{
+						name: "twitter:title",
+						content: pageInfo.description,
+					},
+					{ name: "twitter:description", content: "Agent" },
+				],
+			}}
+		/>
 	</head>
-	<body class="bg-ctp-base container m-0 p-0 text-ctp-text prose-orange lg:prose-xl">
+	<body
+		class="bg-ctp-base container m-0 p-0 text-ctp-text prose-orange lg:prose-xl"
+	>
 		<Navigation />
 		<div class="px-8 lg:px-10">
 			<slot />

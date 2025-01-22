@@ -3,12 +3,16 @@ import Example from "../components/Example.astro";
 import Layout from "../layouts/Layout.astro";
 
 const title = "DivNectar";
+const description = 'DivNectar - FOSS software and the Minecrafts.'
+const image = {
+	url: "https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png",
+	alt: "DivNectar Logo",
+}
+
 export const prerender = true;
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<Layout title={title}>
+<Layout {...{ title, description, image }}>
 	<p>
 		Class tellus est aenean. Platea pretium faucibus malesuada rhoncus ac.
 		Viverra vehicula vulputate condimentum augue velit. Malesuada imperdiet

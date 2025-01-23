@@ -40,6 +40,10 @@ export async function GET({ url }) {
 
     return {
       status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': 'https://divnectar.com',
+        'Access-Control-Allow-Methods': 'GET',
+      },
       body: JSON.stringify({ message: 'OAuth success!', user: userData }),
     };
   } catch (error) {

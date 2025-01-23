@@ -31,20 +31,10 @@ export const GET = async ({ request }) => {
         const user = await users.findOne({ id: userId });
 
         if (!user) {
-            return {
-                body: JSON.stringify({ error: 'User not found' }),
-                status: 404,
-            };
+            return new Response(JSON.stringify({ error: 'User not found' }), { status: 404 });
         }
-
-        return {
-            body: JSON.stringify(user),
-            status: 200,
-        };
+        return new Response(JSON.stringify(user), { status: 200 });
     } catch (error) {
-        return {
-            body: JSON.stringify({ error: error.message }),
-            status: 500,
-        };
+        return new Response(JSON.stringify({ error: error.message }), { status: 500 });
     }
 };

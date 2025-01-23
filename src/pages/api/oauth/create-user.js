@@ -1,11 +1,10 @@
-import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = 'https://YOUR_SUPABASE_URL';
 const supabaseKey = 'YOUR_SUPABASE_KEY';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-export const get: APIRoute = async ({ request }) => {
+export const GET = async ({ request }) => {
   const url = new URL(request.url);
   const token = url.searchParams.get('token');
 

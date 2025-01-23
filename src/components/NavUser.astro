@@ -12,6 +12,7 @@ if (userId !== "0") {
   //@ts-ignore
   user = await response.json();
 }
+
 ---
 
 <div class="mr-5">
@@ -31,18 +32,20 @@ if (userId !== "0") {
         title="click to link with Discord"
         class="flex align-middle items-center"
       >
-        <Icon
-          class="text-4xl hover:text-ctp-sky hover:scale-105 transition-all duration-100"
-          id="nav-open"
-          name="mdi:anonymous"
-        />
+        <a href={import.meta.env.BACKEND_OAUTH_URI}>
+          <Icon
+            class="text-4xl hover:text-ctp-sky hover:scale-105 transition-all duration-100"
+            id="nav-open"
+            name="mdi:anonymous"
+          />
+        </a>
       </div>
     )
   }
 </div>
 
-<script>
+<!-- <script>
   document.getElementById("login")!.addEventListener("click", () => {
-    window.location.href = "https://backend.divnectar.com/api/oauth/discord";
+    window.location.href = import.meta.env.BACKEND_OAUTH_URI;
   });
-</script>
+</script> -->

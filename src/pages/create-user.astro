@@ -13,7 +13,7 @@ const id = Astro.url.searchParams.get('id') || '';
 const userCookie = !!Astro.cookies.get('userId')
 
 export async function GET({ request, params, url }: { request: Request, params: any, url: URL }) {
-    const userId = url.searchParams.get('userId');
+    const userId = url.searchParams.get('id');
     let user = null;
     let error = null;
 

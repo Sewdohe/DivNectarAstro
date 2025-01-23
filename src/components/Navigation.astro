@@ -36,9 +36,9 @@ console.log(pathname);
 ---
 
 <div class="fixed top-0 p4 w-screen max-w-screen h-16 bg-ctp-crust flex items-center">
-    <a class="mocha flex px-4 flex-1 md:flex-0 text-ctp-text prose-2xl font-bold" href="/">DivNectar</a>
+    <a class="mocha flex-grow md:flex-grow-0 px-4 justify-start text-ctp-text prose-2xl font-bold" href="/">DivNectar</a>
     <div
-        class="hidden md:flex md:flex-1 w-full justify-self-center items-center text-ctp-text"
+        class="hidden md:flex md:flex-grow justify-center items-center text-ctp-text"
     >
         {
             links.map((link) => (
@@ -51,8 +51,8 @@ console.log(pathname);
             ))
         }
     </div>
-    <Hamburger class="flex-1 items-end" navLinks={links} />
-    <User />
+    <Hamburger class="justify-self-end items-end" navLinks={links} />
+    <User class="justify-self-end items-end" />
 </div>
 <!-- this div just matches the height of the navbar
  to keep the content from going below it on page load. -->

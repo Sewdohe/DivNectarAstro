@@ -13,8 +13,10 @@ export async function GET({ query }) {
 
   try {
     // Send the code to your backend server to exchange for tokens
-    const response = await axios.get(`http://backend.divnectar.com/api/oauth/callback?code=${code}`);
-    const userData = response.data;
+    const response = await axios.get(`https://backend.divnectar.com/api/oauth/callback?code=${code}`);
+    const userData = await response.data;
+
+    console.log(response.data)
 
     // Optionally, store user data in a cookie or pass it to the frontend
     return {

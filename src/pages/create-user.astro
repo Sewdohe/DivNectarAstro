@@ -1,29 +1,31 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Layout from '../layouts/Layout.astro';
+import { GET as getUser } from './api/oauth/get-user';
 
-const title = "DivNectar - New User";
-const description = 'thank you for regisering with DivNectar.';
 const image = {
-	url: "https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png",
-	alt: "DivNectar Logo",
+  url: "https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png",
+  alt: "DivNectar Logo",
+};
+
+const userId = Astro.cookies.get('userId')?.value ?? '0';
+let user = null;
+
+if (userId !== '0') {
+  const response = await getUser({
+    request: new Request(`http://localhost/api/oauth/get-user?id=${userId}`)
+  });
+  user = await response.json();
 }
-
-
 ---
 
-<Layout title={title} description={description} image={image}>
+<Layout title="Account Created" description="Your account was created successfully." image={image}>
   <p>Your account was created successfully.</p>
-  <div>
+  {user ? (
+    <div>
       <h1>{user.username}</h1>
       <img src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`} alt="User Avatar" />
-  </div>
+    </div>
+  ) : (
+    <p>Something went wrong. Please try again.</p>
+  )}
 </Layout>
-
-<script>
-  const userId = Astro.cookies.get('userId')!.value ?? '0';
-  import { GET } from './api/oauth/get-user'
-  //@ts-ignore
-  let response = await GET({ userId: userId})
-  const user = await response.body
-  console.log(user)
-</script>

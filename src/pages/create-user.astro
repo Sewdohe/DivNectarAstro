@@ -9,9 +9,15 @@ const image = {
 }
 
 const id = Astro.url.searchParams.get('id') || '';
+
+const userCookie = !!Astro.cookies.get('userId')
 ---
 
 <Layout title={title} description={description} image={image}>
   <p>Your account was created successfully.</p>
   <p>Your user ID is: {id}</p>
 </Layout>
+
+<script data-userCookie={userCookie}>
+  console.log('userCookie', userCookie);
+</script>

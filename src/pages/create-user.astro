@@ -12,7 +12,7 @@ const id = Astro.url.searchParams.get('id') || '';
 
 const userCookie = !!Astro.cookies.get('userId')
 
-export async function get({ request, params, url }: { request: Request; params: any; url: URL }) {
+export async function GET({ request, params, url }: { request: Request, params: any, url: URL }) {
     const userId = url.searchParams.get('userId');
     let user = null;
     let error = null;
@@ -29,19 +29,8 @@ export async function get({ request, params, url }: { request: Request; params: 
                 error = 'Error fetching user data';
             }
         } catch (err) {
-            if (err instanceof Error) {
-                if (err instanceof Error) {
-                    if (err instanceof Error) {
-                        error = err.message;
-                    } else {
-                        error = String(err);
-                    }
-                } else {
-                    error = String(err);
-                }
-            } else {
-                error = String(err);
-            }
+            //@ts-ignore
+            error = err.message;
         }
     } else {
         // Check for existing cookie
@@ -55,7 +44,7 @@ export async function get({ request, params, url }: { request: Request; params: 
                     error = 'Error fetching user data';
                 }
             } catch (err) {
-                // @ts-ignore
+                //@ts-ignore
                 error = err.message;
             }
         } else {

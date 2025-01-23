@@ -61,3 +61,17 @@ export async function GET({ request }) {
     };
   }
 }
+
+export async function OPTIONS() {
+  const headers = {
+    'Access-Control-Allow-Origin': 'https://divnectar.com',  // Allow your frontend domain
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',  // Allow methods (including OPTIONS for preflight)
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',  // Allowed headers
+  };
+
+  return {
+    status: 200,
+    headers,
+    body: JSON.stringify({ message: 'CORS preflight successful!' }),
+  };
+}

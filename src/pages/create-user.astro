@@ -14,6 +14,7 @@ if (userId !== '0') {
   const response = await getUser({
     request: new Request(`http://localhost/api/oauth/get-user?id=${userId}`)
   });
+  //@ts-ignore
   user = await response.json();
 }
 ---

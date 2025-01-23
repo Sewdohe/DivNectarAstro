@@ -1,0 +1,28 @@
+---
+import { GET as getUser } from "../pages/api/oauth/get-user";
+
+const userId = Astro.cookies.get("userId")?.value ?? "0";
+let user = null;
+
+if (userId !== "0") {
+  const response = await getUser({
+    request: new Request(`http://localhost/api/oauth/get-user?id=${userId}`),
+  });
+  //@ts-ignore
+  user = await response.json();
+}
+---
+
+{
+  user ? (
+    <div class="flex align-middle items-center">
+      <img
+        class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
+        src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`}
+        alt="User Avatar"
+      />
+    </div>
+  ) : (
+    <div></div>
+  )
+}

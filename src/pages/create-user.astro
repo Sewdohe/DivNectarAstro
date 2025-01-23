@@ -8,9 +8,7 @@ const image = {
 	alt: "DivNectar Logo",
 }
 
-import { GET } from './api/oauth/get-user'
-let response = await GET(Astro)
-const user = await response.body
+
 ---
 
 <Layout title={title} description={description} image={image}>
@@ -23,4 +21,9 @@ const user = await response.body
 
 <script>
   const userId = Astro.cookies.get('userId')!.value ?? '0';
+  import { GET } from './api/oauth/get-user'
+  //@ts-ignore
+  let response = await GET({ userId: userId})
+  const user = await response.body
+  console.log(user)
 </script>

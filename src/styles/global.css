@@ -1,1 +1,9 @@
 
+.tippy-box[data-theme='default'] {
+  background-color: #181825;
+  color: #bac2de;
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 0.15rem;
+  padding: 0.5rem;
+  word-wrap: break-word;
+}

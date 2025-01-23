@@ -2,6 +2,8 @@
 import Navigation from "../components/Navigation.astro";
 import { SEO } from "astro-seo";
 const { title, description, image } = Astro.props;
+import { Tooltips } from 'astro-tooltips';
+
 
 // use our global styles
 import '../styles/global.css';
@@ -17,6 +19,7 @@ import { ClientRouter } from 'astro:transitions';
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.png" />
 		<link rel="sitemap" href="/sitemap-index.xml" />
+		<Tooltips interactive={false} delay={[15, 14000]} />
 		<meta name="generator" content={Astro.generator} />
 		<ClientRouter />
 		<script

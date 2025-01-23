@@ -4,7 +4,9 @@ const { frontmatter } = Astro.props;
 ---
 
 <Layout title={frontmatter.title} description={frontmatter.description} image={frontmatter.image}>
-    <h1>{frontmatter.title}</h1>
-    <span>Written by {frontmatter.author}</span>
-    <slot />
+    <div id="page-content" class="mx-4 md:mx-6">
+        <h1>{frontmatter.title}</h1>
+        <span>Written by {frontmatter.author}</span>
+        <slot />
+    </div>
 </Layout>

@@ -3,31 +3,31 @@ import path from "path";
 import Hamburger from "./Hamburger.astro";
 import User from "../components/NavUser.astro";
 const links = [
-    {
-        name: "Home",
-        url: "/",
-        path: "",
-    },
-    {
-        name: "Blog",
-        url: "/blog",
-        path: "blog",
-    },
-    {
-        name: "Discord",
-        url: "/discord",
-        path: "discord",
-    },
-    {
-        name: "SkyNectar",
-        url: "/skynectar",
-        path: "skynectar",
-    },
-    {
-        name: "About",
-        url: "/about",
-        path: "about",
-    },
+  {
+    name: "Home",
+    url: "/",
+    path: "",
+  },
+  {
+    name: "Blog",
+    url: "/blog",
+    path: "blog",
+  },
+  {
+    name: "Discord",
+    url: "/discord",
+    path: "discord",
+  },
+  {
+    name: "SkyNectar",
+    url: "/skynectar",
+    path: "skynectar",
+  },
+  {
+    name: "About",
+    url: "/about",
+    path: "about",
+  },
 ];
 
 const pathname = new URL(Astro.request.url).pathname;
@@ -35,24 +35,32 @@ console.log(pathname);
 // const currentPath = pathname.slice(1); // remove the first "/"
 ---
 
-<div class="fixed top-0 p4 w-screen max-w-screen h-16 bg-ctp-crust flex items-center">
-    <a class="mocha flex-grow md:flex-grow-0 px-4 justify-start text-ctp-text prose-2xl font-bold" href="/">DivNectar</a>
-    <div
-        class="hidden md:flex md:flex-grow justify-center items-center text-ctp-text"
-    >
-        {
-            links.map((link) => (
-                <a
-                    class={`${pathname === link.url ? "active" : ""} text-ctp-text no-underline px-2 lg:prose-lg hover:text-ctp-teal duration-150s cursor-default transition-all`}
-                    href={link.url}
-                >
-                    {link.name}
-                </a>
-            ))
-        }
-    </div>
-    <Hamburger class="justify-self-end items-end" navLinks={links} />
-    <User class="justify-self-end items-end" />
+<div
+  class="fixed top-0 p4 w-screen max-w-screen h-16 bg-ctp-crust flex items-center"
+>
+  <a
+    class="mocha hover:scale-105 hover:text-ctp-peach transition-all duration-100 flex-grow md:flex-grow-0 px-4 justify-start text-ctp-text prose-2xl font-bold"
+    href="/">DivNectar</a
+  >
+  <div
+    class="hidden md:flex md:flex-grow justify-center items-center text-ctp-text"
+  >
+    {
+      links.map((link) => (
+        <a
+          class={`${pathname === link.url ? "active" : ""} text-ctp-text no-underline px-2 lg:prose-lg hover:scale-105 hover:text-ctp-teal duration-150s cursor-default transition-all`}
+          href={link.url}
+        >
+          {link.name}
+        </a>
+      ))
+    }
+  </div>
+  <Hamburger
+    class="justify-self-end hover:scale-105 items-end"
+    navLinks={links}
+  />
+  <User class="justify-self-end items-end" />
 </div>
 <!-- this div just matches the height of the navbar
  to keep the content from going below it on page load. -->
@@ -60,15 +68,15 @@ console.log(pathname);
 <div class="h-16 mb-4"></div>
 
 <style>
-    .active {
-        color: #74c7ec !important;
-    }
-    .active::before {
-        color: #cba6f7;
-        content: '[';
-    }
-    .active::after {
-        color: #cba6f7;
-        content: ']';
-    }
+  .active {
+    color: #74c7ec !important;
+  }
+  .active::before {
+    color: #cba6f7;
+    content: "[";
+  }
+  .active::after {
+    color: #cba6f7;
+    content: "]";
+  }
 </style>

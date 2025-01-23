@@ -1,4 +1,5 @@
 ---
+import { Icon } from "astro-icon/components";
 import { GET as getUser } from "../pages/api/oauth/get-user";
 
 const userId = Astro.cookies.get("userId")?.value ?? "0";
@@ -13,20 +14,35 @@ if (userId !== "0") {
 }
 ---
 
-<div>
+<div class="mr-5">
   {
     user ? (
       <div class="flex align-middle items-center">
         <img
-          class="w-10 h-10 p-1 mx-2 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
+          class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
           src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`}
           alt="User Avatar"
         />
       </div>
     ) : (
-      <div>
-        Log In
+      <div
+        id="login"
+        data-tooltip-placement="bottom"
+        title="click to link with Discord"
+        class="flex align-middle items-center"
+      >
+        <Icon
+          class="text-4xl hover:text-ctp-sky hover:scale-105 transition-all duration-100"
+          id="nav-open"
+          name="mdi:anonymous"
+        />
       </div>
     )
   }
 </div>
+
+<script>
+  document.getElementById("login")!.addEventListener("click", () => {
+    window.location.href = "https://backend.divnectar.com/api/oauth/discord";
+  });
+</script>

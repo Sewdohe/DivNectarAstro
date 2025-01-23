@@ -1,7 +1,7 @@
 ---
 import path from "path";
 import Hamburger from "./Hamburger.astro";
-import User from "../pages/user.astro";
+import User from "../components/NavUser.astro";
 const links = [
     {
         name: "Home",
@@ -52,7 +52,7 @@ console.log(pathname);
         }
     </div>
     <Hamburger class="flex-1 items-end" navLinks={links} />
-    <!-- <User /> -->
+    <User />
 </div>
 <!-- this div just matches the height of the navbar
  to keep the content from going below it on page load. -->

@@ -1,33 +1,53 @@
-// src/pages/api/oauth/callback.js
-import axios from "axios";
+import axios from 'axios';
 
-export async function GET({ query }) {
-  const code = query.get("code");
+export async function GET({ url }) {
+  const code = url.searchParams.get('code'); // Extract the `code` from the query string
 
   if (!code) {
     return {
-      body: JSON.stringify({ error: "Authorization code missing" }),
       status: 400,
+      body: JSON.stringify({ error: 'Authorization code missing' }),
     };
   }
 
   try {
-    // Send the code to your backend server to exchange for tokens
-    const response = await axios.get(`https://backend.divnectar.com/api/oauth/callback?code=${code}`);
-    const userData = await response.data;
+    // Exchange the authorization code for an access token
+    const tokenResponse = await axios.post(
+      'https://discord.com/api/oauth2/token',
+      new URLSearchParams({
+        client_id: process.env.DISCORD_CLIENT_ID,
+        client_secret: process.env.DISCORD_CLIENT_SECRET,
+        grant_type: 'authorization_code',
+        code, // Use the code from the query parameters
+        redirect_uri: process.env.DISCORD_REDIRECT_URI,
+      }).toString(),
+      {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      }
+    );
 
-    console.log(response.data)
+    const accessToken = tokenResponse.data.access_token;
 
-    // Optionally, store user data in a cookie or pass it to the frontend
+    // Fetch user information from Discord using the access token
+    const userResponse = await axios.get('https://discord.com/api/users/@me', {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    const userData = userResponse.data;
+
+    // Log the data to the server console
+    console.log('OAuth Data:', { code, accessToken, userData });
+
     return {
-      body: JSON.stringify(userData),
       status: 200,
+      body: JSON.stringify({ message: 'OAuth success!', user: userData }),
     };
   } catch (error) {
-    console.error("Error during OAuth callback", error);
+    console.error('OAuth Error:', error.response?.data || error.message);
+
     return {
-      body: JSON.stringify({ error: "OAuth process failed" }),
       status: 500,
+      body: JSON.stringify({ error: 'OAuth callback failed' }),
     };
   }
 }

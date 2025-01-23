@@ -1,24 +1,29 @@
-import axios from 'axios';
+export async function GET({ request }) {
+  // Add CORS headers to allow your frontend domain
+  const headers = {
+    'Access-Control-Allow-Origin': 'https://divnectar.com',  // Allow your frontend domain
+    'Access-Control-Allow-Methods': 'GET, POST',  // Allowed methods
+    'Access-Control-Allow-Headers': 'Content-Type',  // Allowed headers
+  };
 
-export async function GET({ url }) {
-  const code = url.searchParams.get('code'); // Extract the `code` from the query string
-
+  // Add your logic to handle the OAuth callback
+  const code = new URL(request.url).searchParams.get('code');
   if (!code) {
     return {
       status: 400,
+      headers,
       body: JSON.stringify({ error: 'Authorization code missing' }),
     };
   }
 
   try {
-    // Exchange the authorization code for an access token
     const tokenResponse = await axios.post(
       'https://discord.com/api/oauth2/token',
       new URLSearchParams({
         client_id: process.env.DISCORD_CLIENT_ID,
         client_secret: process.env.DISCORD_CLIENT_SECRET,
         grant_type: 'authorization_code',
-        code, // Use the code from the query parameters
+        code,
         redirect_uri: process.env.DISCORD_REDIRECT_URI,
       }).toString(),
       {
@@ -28,30 +33,31 @@ export async function GET({ url }) {
 
     const accessToken = tokenResponse.data.access_token;
 
-    // Fetch user information from Discord using the access token
     const userResponse = await axios.get('https://discord.com/api/users/@me', {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
 
-    const userData = userResponse.data;
-
-    // Log the data to the server console
-    console.log('OAuth Data:', { code, accessToken, userData });
+    console.log('OAuth Data:', {
+      code,
+      accessToken,
+      userData: userResponse.data,
+    });
 
     return {
       status: 200,
-      headers: {
-        'Access-Control-Allow-Origin': 'https://divnectar.com',
-        'Access-Control-Allow-Methods': 'GET',
-      },
-      body: JSON.stringify({ message: 'OAuth success!', user: userData }),
+      headers,
+      body: JSON.stringify({ message: 'OAuth success!', user: userResponse.data }),
     };
   } catch (error) {
     console.error('OAuth Error:', error.response?.data || error.message);
 
     return {
       status: 500,
-      body: JSON.stringify({ error: 'OAuth callback failed' }),
+      headers,
+      body: JSON.stringify({
+        error: 'OAuth callback failed',
+        details: error.response?.data || error.message,
+      }),
     };
   }
 }

@@ -1,7 +1,7 @@
 // src/pages/api/oauth/callback.js
 import axios from "axios";
 
-export async function get({ query }) {
+export async function GET({ query }) {
   const code = query.get("code");
 
   if (!code) {

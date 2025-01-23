@@ -8,59 +8,19 @@ const image = {
 	alt: "DivNectar Logo",
 }
 
-export async function GET({ request }: { request: Request }) {
-    const cookies = request.headers.get('cookie');
-    const userIdMatch = cookies && cookies.match(/userId=([^;]+)/);
-    const userId = userIdMatch ? userIdMatch[1] : null;
-
-    console.log('Cookies:', cookies);
-    console.log('User ID:', userId);
-
-    let user = null;
-    let error = null;
-
-    if (userId) {
-        try {
-            const response = await fetch(`https://divnectar.com/api/get-user?id=${userId}`);
-            console.log('API Response Status:', response.status);
-            if (response.ok) {
-                user = await response.json();
-                console.log('User Data:', user);
-            } else {
-                error = 'Error fetching user data';
-                console.log('API Error:', error);
-            }
-        } catch (err) {
-            //@ts-ignore
-            error = err.message;
-            console.log('Fetch Error:', error);
-        }
-    } else {
-        error = 'User ID not found in cookies';
-        console.log('Cookie Error:', error);
-    }
-
-    return {
-        props: {
-            user,
-            error,
-        },
-    };
-}
-
-const { user, error } = Astro.props;
+import { GET } from './api/oauth/get-user'
+let response = await GET(Astro)
+const user = await response.body
 ---
 
 <Layout title={title} description={description} image={image}>
   <p>Your account was created successfully.</p>
-  {error ? (
-        <p>{error}</p>
-    ) : user ? (
-        <div>
-            <h1>{user.username}</h1>
-            <img src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`} alt="User Avatar" />
-        </div>
-    ) : (
-        <p>Loading...</p>
-    )}
+  <div>
+      <h1>{user.username}</h1>
+      <img src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`} alt="User Avatar" />
+  </div>
 </Layout>
+
+<script>
+  const userId = Astro.cookies.get('userId')!.value ?? '0';
+</script>

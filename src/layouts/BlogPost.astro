@@ -4,7 +4,7 @@ const { article } = Astro.props;
 
 console.log("title:", article.title);
 const image = {
-    url: article.cover.url,
+    url: "https://cms.divnectar.com/uploads" + article.cover.url,
     alt: article.cover.alternativeText,
 };
 ---

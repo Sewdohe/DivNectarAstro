@@ -1,12 +1,16 @@
 ---
 import Layout from "./Layout.astro";
-const { frontmatter } = Astro.props;
+const { article } = Astro.props;
+
+console.log("title:", article.title);
+const image = {
+    url: article.cover.url,
+    alt: article.cover.alternativeText,
+};
 ---
 
-<Layout title={frontmatter.title} description={frontmatter.description} image={frontmatter.image}>
+<Layout title={article.title} description={article.description} image={image}>
     <div id="page-content" class="mx-4 md:mx-6">
-        <h1>{frontmatter.title}</h1>
-        <span>Written by {frontmatter.author}</span>
         <slot />
     </div>
 </Layout>

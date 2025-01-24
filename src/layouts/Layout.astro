@@ -29,11 +29,11 @@ import { ClientRouter } from 'astro:transitions';
 		<title>DivNectar</title>
 		<SEO
 			title={title}
-			description="A heavily optimized description full of well-researched keywords."
+			description={description}
 			openGraph={{
 				basic: {
 					title: title,
-					type: "A type.",
+					type: "image",
 					image: image.url,
 				},
 			}}
@@ -60,10 +60,10 @@ import { ClientRouter } from 'astro:transitions';
 		/>
 	</head>
 	<body
-		class="bg-ctp-base container m-0 p-0 text-ctp-text prose prose-catpuccin lg:prose-xl"
+		class="bg-ctp-base container m-0 p-0 text-ctp-text prose prose-catpuccin w-full lg:prose-xl"
 	>
 		<Navigation transition:persist transition:animation="none" />
-		<div id="content" class="px-3 lg:px-10" transition:animate="slide">
+		<div id="content" class="px-3 w-full lg:px-10" transition:animate="slide">
 			<slot />
 		</div>
 	</body>

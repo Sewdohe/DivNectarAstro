@@ -1,0 +1,31 @@
+---
+import fetchApi from "../../lib/strapi";
+import type Article from "../../interfaces/article";
+import BlogPost from "../../layouts/BlogPost.astro";
+import { Markdown } from "astro-remote";
+
+const { slug } = Astro.params;
+
+let article: Article;
+
+try {
+  article = await fetchApi<Article>({
+    endpoint: "articles?populate=cover",
+    wrappedByKey: "data",
+    wrappedByList: true,
+    query: {
+      "filters[slug][$eq]": slug || "",
+    },
+  });
+} catch (error) {
+  return Astro.redirect("/404");
+}
+---
+
+<BlogPost article={article}>
+  <img transition:name={article.cover.url} transition:persist src={import.meta.env.STRAPI_URL + article.cover.url} />
+  
+  <h1>{article.title}</h1>
+  
+  <Markdown content={article.content} />
+</BlogPost>

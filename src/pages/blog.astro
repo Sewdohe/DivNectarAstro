@@ -1,17 +1,58 @@
 ---
-import Layout from '../layouts/Layout.astro'
-
-const allPosts = Object.values(import.meta.glob('./posts/*.md', { eager: true }));
+import Layout from "../layouts/Layout.astro";
 
 const title = "SkyNectar";
-const description = 'SkyNectar - ultimate skyblock experiene.'
+const description = "SkyNectar - ultimate skyblock experiene.";
 const image = {
-	url: "https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png",
-	alt: "SkyNectar Logo",
-}
+  url: "https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png",
+  alt: "SkyNectar Logo",
+};
+
+import fetchApi from "../lib/strapi";
+import type Article from "../interfaces/article";
+
+const articles = await fetchApi<Article[]>({
+  endpoint: "articles?populate=cover", // the content type to fetch
+  wrappedByKey: "data", // the key to unwrap the response
+});
+
+console.log("articles:");
+console.log(articles);
 ---
+
 <Layout title={title} description={description} image={image}>
-    <div class="text-ctp-text">
-        {allPosts.map((post: any) => <li><a class="text-ctp-teal" href={post.url}>{post.frontmatter.title}</a></li>)}
-    </div>
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 place-items-center">
+  {
+    articles &&
+      articles.map((article) => (
+        <div class="max-w-sm rounded-lg md:w-auto shadow-md dark:bg-ctp-crust dark:border-l-ctp-sapphire">
+          <a href={`/blog/${article.slug}`}>
+            <img
+              class="rounded-t-lg p-4 border-ctp-sapphire"
+              transition:name={article.cover.url}
+              transition:persist
+              src={`${import.meta.env.STRAPI_URL}${article.cover.url}`}
+              alt=""
+            />
+          </a>
+          <div class="p-5">
+            <a href={`/blog/${article.slug}`}>
+              <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                {article.title}
+              </h5>
+            </a>
+            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+              {article.description}
+            </p>
+            <a href={`/blog/${article.slug}`}
+              class="inline-flex items-center hover:scale-105 hover:bg-ctp-sky
+              hover:text-ctp-mantle transition-all duration-100 px-3 py-2
+              text-sm font-medium shadow-md rounded-md text-center focus:ring-4
+              focus:outline-none text-ctp-text bg-ctp-mantle
+              focus:ring-blue-300" > Read more
+            </a>
+          </div>
+        </div>
+      ))
+  }
 </Layout>

@@ -40,7 +40,10 @@ if (userId !== "0") {
 <script>
   import { navigate } from "astro:transitions/client";
 
-  document.getElementById("login")!.addEventListener("click", () => {
-    navigate(import.meta.env.BACKEND_OAUTH_URI);
+  document.addEventListener("astro:page-load", () => {
+    // This runs on first page load and after every navigation.
+    document.getElementById("login")!.addEventListener("click", () => {
+      navigate(import.meta.env.BACKEND_OAUTH_URI);
+    });
   });
 </script>

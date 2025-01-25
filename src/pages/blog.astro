@@ -29,8 +29,6 @@ console.log(articles);
           <a href={`/blog/${article.slug}`}>
             <img
               class="rounded-t-lg p-4 border-ctp-sapphire"
-              transition:name={article.cover.url}
-              transition:persist
               src={`${import.meta.env.STRAPI_URL}${article.cover.url}`}
               alt=""
             />

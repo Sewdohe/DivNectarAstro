@@ -1,37 +1,49 @@
 ---
-import { Icon } from 'astro-icon/components'
-let isOpen = false
-
-function toggleMenu() {
-  isOpen = !isOpen
-  const modal = document.querySelector('#modal')
-  if (modal) {
-    if (isOpen) {
-      modal.classList.remove('hidden')
-    } else {
-      modal.classList.add('hidden')
-    }
-  }
-}
+import { Icon } from "astro-icon/components";
 
 interface NavLink {
     url: string;
     name: string;
 }
 
-const { navLinks }: { navLinks: NavLink[] } = Astro.props as { navLinks: NavLink[] }
+// hold state of the menu
+let isOpen = false;
 
+// function to toggle the menu
+function toggleMenu() {
+    isOpen = !isOpen;
+    const modal = document.querySelector("#modal");
+    if (modal) {
+        if (isOpen) {
+            modal.classList.remove("hidden");
+        } else {
+            modal.classList.add("hidden");
+        }
+    }
+}
+
+// variable declaration
+const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
+    navLinks: NavLink[];
+};
 const pathname = new URL(Astro.request.url).pathname;
 
 ---
 
-<div class="p-4 text-4xl md:hidden">
+<div transition:persist class="p-4 text-4xl md:hidden">
     <Icon id="nav-open" name="line-md:menu" />
 </div>
 
 <!-- Mobile modal menu -->
-<div id="modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-30 hidden">
-    <div id="modal-content" class="bg-ctp-crust p-8 rounded-lg shadow-lg z-40 w-full max-w-md relative">
+<div
+    id="modal"
+    transition:persist
+    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-30 hidden"
+>
+    <div
+        id="modal-content"
+        class="bg-ctp-crust p-8 rounded-lg shadow-lg z-40 w-full max-w-md relative"
+    >
         <button id="nav-close" class="absolute text-ctp-red top-4 right-4">
             &times;
         </button>
@@ -52,38 +64,50 @@ const pathname = new URL(Astro.request.url).pathname;
 
 <script>
     function createHamburgerListeners() {
-        const modal = document.querySelector('#modal');
-        const navOpen = document.querySelector('#nav-open');
-        const navClose = document.querySelector('#nav-close');
-        const navLinks = document.querySelectorAll('#modal nav a');
+        const modal = document.querySelector("#modal");
+        const navOpen = document.querySelector("#nav-open");
+        const navClose = document.querySelector("#nav-close");
+        const navLinks = document.querySelectorAll("#modal nav a");
 
         if (navOpen) {
-            navOpen.addEventListener('click', () => {
+            navOpen.addEventListener("click", () => {
+                console.log("clicked nav open");
                 if (modal) {
-                    modal.classList.remove('hidden');
+                    modal.classList.remove("hidden");
+                    console.log('removed hidden class')
                 }
             });
         }
 
         if (navClose) {
-            navClose.addEventListener('click', () => {
+            navClose.addEventListener("click", () => {
+                console.log("clicked nav closed");
                 if (modal) {
-                    modal.classList.add('hidden');
+                    modal.classList.add("hidden");
+                    console.log('added hidden class')
                 }
             });
         }
 
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                if (modal) {
-                    modal.classList.add('hidden');
+        if (modal) {
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) {
+                    modal.classList.add("hidden");
                 }
             });
-        });
+        }
+
+        // navLinks.forEach((link) => {
+        //     link.addEventListener("click", () => {
+        //         if (modal) {
+        //             modal.classList.add("hidden");
+        //         }
+        //     });
+        // });
     }
 
     createHamburgerListeners();
-    document.addEventListener('astro:beforeload', createHamburgerListeners);
+    document.addEventListener("astro:beforeload", createHamburgerListeners);
 </script>
 
 <style>
@@ -92,10 +116,10 @@ const pathname = new URL(Astro.request.url).pathname;
     }
     .active::before {
         color: #cba6f7;
-        content: '[';
+        content: "[";
     }
     .active::after {
         color: #cba6f7;
-        content: ']';
+        content: "]";
     }
 </style>

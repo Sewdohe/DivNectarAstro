@@ -23,8 +23,7 @@ try {
 ---
 
 <BlogPost article={article}>
-  <img transition:name={article.cover.url} transition:persist src={import.meta.env.STRAPI_URL + article.cover.url} />
-  
+  <img src={import.meta.env.STRAPI_URL + article.cover.url} />
   <h1>{article.title}</h1>
   
   <Markdown content={article.content} />

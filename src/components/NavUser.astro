@@ -12,7 +12,6 @@ if (userId !== "0") {
   //@ts-ignore
   user = await response.json();
 }
-
 ---
 
 <div class="mr-5">
@@ -26,27 +25,22 @@ if (userId !== "0") {
         />
       </div>
     ) : (
-      <div
-        id="login"
-        class="flex align-middle items-center"
-      >
-        <a href={import.meta.env.BACKEND_OAUTH_URI}>
-          <button class="bg-black p-1 rounded-md ring-1 hover:scale-105 transition-all duration-100">
-            <Icon
-              class="text-4xl hover:text-ctp-sky hover:scale-105 transition-all duration-100"
-              id="nav-open"
-              href={import.meta.env.BACKEND_OAUTH_URI}
-              name="mdi:anonymous"
-            />
-          </button>
-        </a>
+      <div id="login" class="flex align-middle items-center">
+        <Icon
+          class="text-4xl hover:text-ctp-sky hover:scale-105 transition-all duration-100"
+          id="nav-open"
+          href={import.meta.env.BACKEND_OAUTH_URI}
+          name="mdi:anonymous"
+        />
       </div>
     )
   }
 </div>
 
-<!-- <script>
+<script>
+  import { navigate } from "astro:transitions/client";
+
   document.getElementById("login")!.addEventListener("click", () => {
-    window.location.href = import.meta.env.BACKEND_OAUTH_URI;
+    navigate(import.meta.env.BACKEND_OAUTH_URI);
   });
-</script> -->
+</script>

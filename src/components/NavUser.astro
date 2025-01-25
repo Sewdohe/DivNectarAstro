@@ -12,6 +12,7 @@ if (userId !== "0") {
   //@ts-ignore
   user = await response.json();
 }
+const backend_url = import.meta.env.BACKEND_OAUTH_URI;
 ---
 
 <div class="mr-5">
@@ -25,23 +26,12 @@ if (userId !== "0") {
         />
       </div>
     ) : (
-      <div id="login" class="flex align-middle items-center">
+      <a href={backend_url} id="login" class="flex align-middle items-center">
         <Icon
           class="text-4xl hover:text-ctp-sky hover:scale-105 transition-all duration-100"
           name="mdi:anonymous"
         />
-      </div>
+      </a>
     )
   }
 </div>
-
-<script>
-  import { navigate } from "astro:transitions/client";
-
-  document.addEventListener("astro:page-load", () => {
-    // This runs on first page load and after every navigation.
-    document.getElementById("login")!.addEventListener("click", () => {
-      navigate(import.meta.env.BACKEND_OAUTH_URI);
-    });
-  });
-</script>

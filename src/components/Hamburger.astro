@@ -26,12 +26,13 @@ const pathname = new URL(Astro.request.url).pathname;
 ---
 
 <div class="p-4 text-4xl md:hidden">
-        <Icon id="nav-open" name="line-md:menu" />
+    <Icon id="nav-open" name="line-md:menu" />
 </div>
 
-<div id="modal" class="fixed prose-2xl inset-0 bg-black bg-opacity-50 backdrop-blur-sm align-middle items-center justify-center z-50 hidden">
-    <div class="bg-ctp-crust p-8 rounded-lg shadow-lg w-full max-w-md relative">
-        <button id="nav-close" class="absolute text-ctp-red top-4 right-4 prose-2xl">
+<!-- Mobile modal menu -->
+<div id="modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-30 hidden">
+    <div id="modal-content" class="bg-ctp-crust p-8 rounded-lg shadow-lg z-40 w-full max-w-md relative">
+        <button id="nav-close" class="absolute text-ctp-red top-4 right-4">
             &times;
         </button>
         <nav class="flex flex-col space-y-4">
@@ -50,14 +51,12 @@ const pathname = new URL(Astro.request.url).pathname;
 </div>
 
 <script>
-
     function createHamburgerListeners() {
         const modal = document.querySelector('#modal');
         const navOpen = document.querySelector('#nav-open');
         const navClose = document.querySelector('#nav-close');
         const navLinks = document.querySelectorAll('#modal nav a');
 
-        
         if (navOpen) {
             navOpen.addEventListener('click', () => {
                 if (modal) {
@@ -85,7 +84,6 @@ const pathname = new URL(Astro.request.url).pathname;
 
     createHamburgerListeners();
     document.addEventListener('astro:beforeload', createHamburgerListeners);
-    document.addEventListener('astro:page-load', createHamburgerListeners);
 </script>
 
 <style>

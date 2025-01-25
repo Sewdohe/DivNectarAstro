@@ -28,17 +28,17 @@ if (userId !== "0") {
     ) : (
       <div
         id="login"
-        data-tooltip-placement="bottom"
-        title="click to link with Discord"
         class="flex align-middle items-center"
       >
         <a href={import.meta.env.BACKEND_OAUTH_URI}>
-          <Icon
-            class="text-4xl hover:text-ctp-sky hover:scale-105 transition-all duration-100"
-            id="nav-open"
-            href={import.meta.env.BACKEND_OAUTH_URI}
-            name="mdi:anonymous"
-          />
+          <button class="bg-black p-1 rounded-md ring-1 hover:scale-105 transition-all duration-100">
+            <Icon
+              class="text-4xl hover:text-ctp-sky hover:scale-105 transition-all duration-100"
+              id="nav-open"
+              href={import.meta.env.BACKEND_OAUTH_URI}
+              name="mdi:anonymous"
+            />
+          </button>
         </a>
       </div>
     )

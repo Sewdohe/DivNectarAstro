@@ -22,7 +22,6 @@ const players = await getPlayerData();
           class="flex flex-col items-center rounded-lg shadow md:flex-row md:max-w-xl dark:border-gray-700 dark:bg-ctp-crust dark:hover:bg-ctp-mantle"
         >
           <img
-            transition:name={player.uuid}
             class="object-contain aspect-auto w-full rounded-t-lg h-48 md:w-48 md:rounded-none md:rounded-s-lg"
             src={`https://mc-heads.net/body/${player.uuid}`}
             alt=""

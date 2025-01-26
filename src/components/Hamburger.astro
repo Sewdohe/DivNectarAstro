@@ -23,11 +23,11 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
 <!-- Mobile modal menu -->
 <div
   id="modal"
-  class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm items-center justify-center z-30 hidden"
+  class="fixed inset-0 flex bg-black bg-opacity-50 items-center justify-center backdrop-blur-sm z-30 hidden"
 >
   <div
     id="modal-content"
-    class="bg-ctp-crust p-8 rounded-lg shadow-lg z-40 w-full m-auto"
+    class="bg-ctp-crust w-full max-w-md my-auto mx-2 p-8 rounded-lg shadow-lg z-40"
   >
     <button id="nav-close" class="absolute text-ctp-red top-4 right-4">
       &times;

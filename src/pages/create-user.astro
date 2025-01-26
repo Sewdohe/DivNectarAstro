@@ -42,5 +42,5 @@ const returning = Astro.url.searchParams.get('returning') || '';
 
 <script>
   //@ts-ignore
-  umami.track("user log in");
+  window.umami.track("user log in");
 </script>

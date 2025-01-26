@@ -3,10 +3,6 @@ import Layout from "../layouts/Layout.astro";
 
 const title = "DivNectar - About";
 const description = "Learn more about DivNectar and Sewdohe";
-const image = {
-  url: "https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png",
-  alt: "DivNectar Logo",
-};
 
 const identity = {
   firstName: "Josh",
@@ -24,7 +20,7 @@ const identity = {
 const skills = ["HTML", "CSS", "JavaScript", "React", "Astro", "Angular", "Server Management", "Linux (all of it)"];
 ---
 
-<Layout title={title} description={description} image={image}>
+<Layout title={title} description={description}>
   <p><b>Here are a few facts about me:</b></p>
   <ul>
     <li>My name is {identity.firstName}.</li>

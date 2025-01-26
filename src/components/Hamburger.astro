@@ -16,14 +16,13 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
 // var pathname = new URL(Astro.request.url).pathname;
 ---
 
-<div transition:persist class="p-4 text-4xl md:hidden">
+<div class="p-4 text-4xl md:hidden">
   <Icon id="nav-open" name="line-md:menu" />
 </div>
 
 <!-- Mobile modal menu -->
 <div
   id="modal"
-  transition:persist
   class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm items-center justify-center z-30 hidden"
 >
   <div

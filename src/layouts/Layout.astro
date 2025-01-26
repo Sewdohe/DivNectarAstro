@@ -43,14 +43,19 @@ async function handleOGImage() {
         } else {
 					console.log('Image doesnt exist, defaulting...')
 					console.log('we will generate on the next run')
+					generateOgImage(currentRoute);
           image = {
 						url: 'https://divnectar.com/site-logo.webp',
 						alt: 'DivNectar Logo'
 					}
         }
       } else {
-				console.log('error checking OG image')
-        await generateOgImage(currentRoute);
+				console.log('error checking OG image. Something wrong with API.')
+				image = {
+						url: 'https://divnectar.com/site-logo.webp',
+						alt: 'DivNectar Logo'
+					}
+        // await generateOgImage(currentRoute);
       }
     } catch (error) {
       console.error("Error checking OG image:", error);

@@ -27,7 +27,10 @@ const backend_url = import.meta.env.BACKEND_OAUTH_URI;
       </div>
     ) : (
       <a href={backend_url}>
-        oAuth
+        <Icon
+          class="text-4xl hover:text-ctp-sky"
+          name="mdi:anonymous"
+        />
       </a>
     )
   }

@@ -17,10 +17,19 @@ if (userId !== '0') {
   //@ts-ignore
   user = await response.json();
 }
+
+const returning = Astro.url.searchParams.get('returning') || '';
 ---
 
 <Layout title="Account Created" description="Your account was created successfully." image={image}>
-  <p>Your account was created successfully.</p>
+  {
+    returning === 'true' ? (
+      <p>Welcome back!</p>
+    ) : (
+      <p>Your account was created successfully.</p>
+      <p>Welcome to DivNectar!</p>
+    )
+  }
   {user ? (
     <div>
       <h1>{user.username}</h1>

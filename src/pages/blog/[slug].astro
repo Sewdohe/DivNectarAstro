@@ -25,6 +25,5 @@ try {
 <BlogPost article={article}>
   <img src={import.meta.env.STRAPI_URL + article.cover.url} />
   <h1>{article.title}</h1>
-  
   <Markdown content={article.content} />
 </BlogPost>

@@ -15,8 +15,9 @@ const currentRoute = Astro.url.pathname;
 console.log("currentRoute:", currentRoute);
 
 if (!image) {
+	console.log('generating opengraph image')
 	image = {
-		url: await fetch(`https://backend.divnectar.com/api/og-image?https://divnectar.com${Astro.url.pathname}`),
+		url: await fetch(`https://backend.divnectar.com/api/og-image?url=https://divnectar.com${Astro.url.pathname}`),
 		alt: `Screenshot of https://divnectar.com${Astro.url.pathname}`,
 	}
 }

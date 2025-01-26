@@ -39,3 +39,8 @@ const returning = Astro.url.searchParams.get('returning') || '';
     <p>Something went wrong. Please try again.</p>
   )}
 </Layout>
+
+<script>
+  //@ts-ignore
+  umami.track("user log in");
+</script>

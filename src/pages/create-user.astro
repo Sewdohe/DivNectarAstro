@@ -21,7 +21,8 @@ if (userId !== '0') {
 const returning = Astro.url.searchParams.get('returning') || '';
 ---
 
-<Layout title="Account Created" description="Your account was created successfully." image={image}>
+<Layout center={true} title="Account Created" description="Your account was created successfully." image={image}>
+  <div class="flex flex-col items-center justify-center h-screen">
   {
     returning === 'true' ? (
       <p>Welcome back!</p>
@@ -31,13 +32,14 @@ const returning = Astro.url.searchParams.get('returning') || '';
     )
   }
   {user ? (
-    <div>
+    <div class="flex flex-col items-center justify-center">
       <h1>{user.username}</h1>
       <img src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`} alt="User Avatar" />
     </div>
   ) : (
     <p>Something went wrong. Please try again.</p>
   )}
+  </div>
 </Layout>
 
 <script>

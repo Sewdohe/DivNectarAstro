@@ -27,25 +27,25 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
 >
   <div
     id="modal-content"
-    class="bg-ctp-crust w-full max-w-md my-auto mx-2 p-8 rounded-lg shadow-lg z-40"
+    class="bg-ctp-crust border border-white w-full max-w-md my-auto mx-2 p-8 rounded-lg shadow-lg z-40"
   >
-    <button id="nav-close" class="absolute text-ctp-red top-4 right-4">
-      &times;
-    </button>
-    <nav class="flex flex-col space-y-4">
-      {
-        navLinks.map((link) => (
-          <div class="flex flex-row align-middle items-center">
-            <a
-              class={`text-ctp-text no-underline px-2 lg:prose-lg hover:text-ctp-teal duration-150s cursor-default transition-all`}
-              href={link.url}
-            >
-              {link.name}
-            </a>
-          </div>
-        ))
-      }
-    </nav>
+    <div class="flex flex-col">
+      <h4 class=" text-4xl not-prose text-ctp-pink font-extrabold mb-4 self-center justify-self-center">Menu</h4>
+      <nav class="flex flex-col space-y-4">
+        {
+          navLinks.map((link) => (
+            <div class="flex flex-row align-middle items-center">
+              <a
+                class={`text-ctp-text no-underline px-2 lg:prose-lg hover:text-ctp-teal duration-150s cursor-default transition-all`}
+                href={link.url}
+              >
+                {link.name}
+              </a>
+            </div>
+          ))
+        }
+      </nav>
+    </div>
   </div>
 </div>
 
@@ -53,8 +53,6 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
   function createHamburgerListeners() {
     const modal = document.querySelector("#modal");
     const navOpen = document.querySelector("#nav-open");
-    const navClose = document.querySelector("#nav-close");
-    const navLinks = document.querySelectorAll("#modal nav a");
 
     if (navOpen) {
       navOpen.addEventListener("click", () => {
@@ -62,16 +60,6 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
         if (modal) {
           modal.classList.remove("hidden");
           console.log("removed hidden class");
-        }
-      });
-    }
-
-    if (navClose) {
-      navClose.addEventListener("click", () => {
-        console.log("clicked nav closed");
-        if (modal) {
-          modal.classList.add("hidden");
-          console.log("added hidden class");
         }
       });
     }
@@ -87,15 +75,23 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
 
   function updateActiveLink() {
     const pathname = window.location.pathname;
-    const links = document.querySelectorAll('#modal nav a');
+    const links = document.querySelectorAll("#modal nav a");
 
-    links.forEach(link => {
+    links.forEach((link) => {
       const dot = link.previousElementSibling;
-      if (link.getAttribute('href') === pathname) {
+      if (link.getAttribute("href") === pathname) {
         if (!dot) {
-          const newDot = document.createElement('span');
-          newDot.classList.add('bg-ctp-green', 'w-2', 'h-2', 'rounded-full', 'relative', 'left-2', 'mr-2');
-          newDot.setAttribute('transition:persist', 'active');
+          const newDot = document.createElement("span");
+          newDot.classList.add(
+            "bg-ctp-green",
+            "w-2",
+            "h-2",
+            "rounded-full",
+            "relative",
+            "left-2",
+            "mr-2"
+          );
+          newDot.setAttribute("transition:persist", "active");
           if (link.parentElement) {
             link.parentElement.insertBefore(newDot, link);
           }

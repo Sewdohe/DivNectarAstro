@@ -13,12 +13,30 @@ if (userId !== "0") {
   user = await response.json();
 }
 const backend_url = import.meta.env.BACKEND_OAUTH_URI;
+
+const adminLinks = [
+  {
+    name: "Admin Panel",
+    url: "https://coolify.divnectar.com/project/lo8g4c0c08g44ko8ww0o4ssc/environment/v8oos4ossgckck4o8g0848os",
+    icon: "mdi:administrator-outline",
+  },
+  {
+    name: "View Analytics",
+    url: "https://analytics.divnectar.com/dashboard",
+    icon: "mdi:google-analytics",
+  },
+  {
+    name: "Manage Minecraft",
+    url: "https://panel.divnectar.com/server/073ccd59",
+    icon: "mdi:minecraft",
+  },
+];
 ---
 
 <div class="mr-5">
   {
     user ? (
-      <div class="flex align-middle items-center">
+      <div id="user-avatar" class="flex align-middle items-center">
         <img
           class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
           src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`}
@@ -26,12 +44,131 @@ const backend_url = import.meta.env.BACKEND_OAUTH_URI;
         />
       </div>
     ) : (
-      <a id="signup-button" data-umami-event="Signup button" href={backend_url}>
-        <Icon
-          class="text-4xl hover:text-ctp-sky"
-          name="mdi:anonymous"
-        />
-      </a>
+      <Icon
+        id="anon-button"
+        class="text-4xl hover:text-ctp-sky"
+        name="mdi:anonymous"
+      />
     )
   }
+
+  <div
+    id="nav-modal"
+    class="fixed inset-0 flex bg-black bg-opacity-50 items-center justify-center backdrop-blur-sm z-30 hidden"
+  >
+    <div
+      id="nav-modal-content"
+      class="bg-ctp-crust w-full max-w-md my-auto mx-2 p-8 rounded-lg shadow-lg z-40 flex border-ctp-green border items-center justify-center"
+    >
+      <div
+        class="flex flex-col w-full align-middle items-center justify-center mb-4 space-y-4"
+      >
+        {
+          user ? (
+            <p class="not-prose self-center text-3xl">
+              Hello, <b>{user.username}</b>
+            </p>
+          ) : (
+          <p class="not-prose self-center text-3xl">
+              Please login
+            </p>
+          )
+        }
+        {
+          user && user.username == "sewdohe" ? (
+            // Admin links
+            <div class="flex flex-col w-full justify-center align-middle justify-self-center self-center">
+              {adminLinks.map((link) => (
+                <div class="my-2 bg-ctp-mantle rounded-lg shadow-lg p-1 text-center self-center inline-flex align-middle items-center hover:scale-105 hover:text-ctp-sky transition-all duration-150s">
+                  <Icon
+                    class="ml-2 text-ctp-text inline-flex align-middle justify-self-center"
+                    name={link.icon}
+                  />
+                  <a
+                    class={`not-prose text-ctp-text cursor-default no-underline px-2 lg:text-2xl`}
+                    href={link.url}
+                  >
+                    <span class="ml-2">{link.name}</span>
+                  </a>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <span />
+          )
+        }
+        {
+          user ? (
+            <div>
+              <a href="/logout">
+                <button
+                  class="bg-ctp-red w-36 self-center p-2 text-ctp-mantle font-extrabold rounded-sm shadow-md"
+                  id="logout"
+                >
+                  Logout
+                </button>
+              </a>
+            </div>
+          ) : (
+            <div>
+              <button
+                class="my-2 text-ctp-mantle bg-ctp-mauve rounded-lg shadow-lg px-2 py-1 text-center self-center inline-flex align-middle items-center hover:scale-105 hover:text-ctp-sky transition-all duration-150s"
+                id="logout"
+              >
+                <a
+                  class="not-prose text-ctp-mantle font-extrabold cursor-default no-underline px-2 lg:text-2xl"
+                  href={backend_url}
+                >
+                  <Icon
+                    name="fa6-brands:discord"
+                    class="ml-2 text-ctp-mantle inline-flex align-middle justify-self-center"
+                  />
+                  Login
+                </a>
+              </button>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
 </div>
+
+<script define:vars={{ backend_url }}>
+  function createProfileButtonListeners() {
+    const modal = document.querySelector("#nav-modal");
+    const profileOpen = document.querySelector("#user-avatar");
+    const anonButton = document.querySelector("#anon-button");
+
+    if (profileOpen) {
+      profileOpen.addEventListener("click", () => {
+        console.log("clicked nav open");
+        if (modal) {
+          modal.classList.remove("hidden");
+          console.log("removed hidden class");
+        }
+      });
+    }
+
+    if (modal) {
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.classList.add("hidden");
+        }
+      });
+    }
+
+    if (anonButton) {
+      anonButton.addEventListener("click", () => {
+        console.log("clicked nav open");
+        if (modal) {
+          modal.classList.remove("hidden");
+          console.log("removed hidden class");
+        }
+      });
+    }
+  }
+
+  createProfileButtonListeners();
+  document.addEventListener("astro:page-load", createProfileButtonListeners);
+</script>

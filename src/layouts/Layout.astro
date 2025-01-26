@@ -16,12 +16,12 @@ console.log("currentRoute:", currentRoute);
 
 if (!image) {
 	console.log('generating opengraph image')
-	const screenshotResponse = await fetch(`https://backend.divnectar.com/api/og-image?url=https://divnectar.com${Astro.url.pathname}`);
+	const screenshotResponse = await fetch(`${import.meta.env.BACKEND_URL}/og-image?url=https://divnectar.com${Astro.url.pathname}`);
 	const screenshotUrl = await screenshotResponse.text();
 	console.log('screenshotUrl:', screenshotUrl);
 
 	image = {
-		url: await fetch(`https://backend.divnectar.com/api/og-image?url=https://divnectar.com${Astro.url.pathname}`),
+		url: await fetch(`${import.meta.env.BACKEND_URL}/og-image?url=https://divnectar.com${Astro.url.pathname}`),
 		alt: `Screenshot of https://divnectar.com${Astro.url.pathname}`,
 	}
 	console.log('OG - image:', image.url)

@@ -36,7 +36,7 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
           navLinks.map((link) => (
             <div class="flex flex-row align-middle items-center">
               <a
-                class={`text-ctp-text no-underline px-2 lg:prose-lg hover:text-ctp-teal duration-150s cursor-default transition-all`}
+                class={`text-ctp-text font-extrabold no-underline px-2 lg:prose-lg hover:text-ctp-teal duration-150s cursor-default transition-all`}
                 href={link.url}
               >
                 {link.name}

@@ -22,7 +22,7 @@ const returning = Astro.url.searchParams.get('returning') || '';
 ---
 
 <Layout center={true} title="Account Created" description="Your account was created successfully." image={image}>
-  <div class="flex flex-col items-center justify-center h-screen">
+  <div class="flex prose prose-catpuccin md:w-screen flex-col items-center justify-center h-screen">
   {
     returning === 'true' ? (
       <p>Welcome back!</p>

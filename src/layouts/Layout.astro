@@ -120,10 +120,10 @@ console.log("image:", image);
     />
   </head>
   <body
-    class="bg-ctp-base container m-0 p-0 text-ctp-text w-full"
+    class="bg-ctp-base container m-0 p-0 md:w-screen text-ctp-text w-full"
   >
     <Navigation transition:persist />
-    <div id="content" class=`px-3 w-full lg:px-10`>
+    <div id="content" class=`px-3 flex ${center && 'justify-center'} w-full md:w-screen lg:px-10`>
       <slot />
     </div>
   </body>

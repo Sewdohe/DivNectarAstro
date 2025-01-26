@@ -7,6 +7,12 @@ Astro.cookies.delete("userToken");
 
 <Layout title="Logout" desctiption="Logging out of DivNectar">
   <div class="flex flex-col items-center justify-center h-screen">
-    <h1 class="text-4xl">Logging out...</h1>
+    <h1 class="text-4xl text-ctp-red font-extrabold">You are logged out.</h1>
   </div>
 </Layout>
+
+<script>
+  setTimeout(() => {
+    window.location.replace('/')
+  }, 1500);
+</script>

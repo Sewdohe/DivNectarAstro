@@ -1,7 +1,7 @@
 ---
 import Navigation from "../components/Navigation.astro";
 import { SEO } from "astro-seo";
-const { title, description, image } = Astro.props;
+var { title, description, image } = Astro.props;
 import { Tooltips } from 'astro-tooltips';
 
 
@@ -10,6 +10,16 @@ import '../styles/global.css';
 
 //
 import { ClientRouter } from 'astro:transitions';
+
+const currentRoute = Astro.url.pathname;
+console.log("currentRoute:", currentRoute);
+
+if (!image) {
+	image = {
+		url: await fetch(`https://backend.divnectar.com/api/og-image?https://divnectar.com${Astro.url.pathname}`),
+		alt: `Screenshot of https://divnectar.com${Astro.url.pathname}`,
+	}
+}
 ---
 
 <!doctype html>

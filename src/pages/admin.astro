@@ -25,7 +25,7 @@ if (Astro.request.method === "POST") {
       const command_param = data.get("command");
       console.log("try and execute command", command_param);
       const commandResponse = await axios.post(
-        `${import.meta.env.BACKEND_URL}/skyblock/command?command=${command}`
+        `${import.meta.env.BACKEND_URL}/skyblock/command?command=${command_param}`
       );
       if (commandResponse.status === 200) {
         command_success = true;
@@ -50,7 +50,7 @@ if (Astro.request.method === "POST") {
     data-drawer-toggle="default-sidebar"
     aria-controls="default-sidebar"
     type="button"
-    class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+    class="fixed bottom-12 right-12 inline-flex items-center p-2 mt-2 ms-3 text-sm text-ctp-red bg-ctp-mantle rounded-lg sm:hidden hover:bg-ctp-crust focus:outline-none focus:ring-2 focus:ring-ctp-red"
   >
     <span class="sr-only">Open sidebar</span>
     <svg
@@ -70,7 +70,7 @@ if (Astro.request.method === "POST") {
 
   <aside
     id="default-sidebar"
-    class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+    class="fixed border-r border-ctp-red md:border-none top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
     aria-label="Sidebar"
   >
     <div class="h-full px-3 py-4 overflow-y-auto bg-ctp-crust">
@@ -82,20 +82,10 @@ if (Astro.request.method === "POST") {
           <a
             class="flex items-center p-2 rounded-lg text-white hover:bg-ctp-mantle group"
           >
-            <svg
+            <Icon
+              name="mdi:terminal"
               class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 22 21"
-            >
-              <path
-                d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"
-              ></path>
-              <path
-                d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"
-              ></path>
-            </svg>
+            />
             <span class="ms-3">Commands</span>
           </a>
         </li>
@@ -103,20 +93,10 @@ if (Astro.request.method === "POST") {
           <a
             class="flex items-center p-2 rounded-lg text-white hover:bg-ctp-mantle group"
           >
-            <svg
+            <Icon
+              name="mdi:people"
               class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 22 21"
-            >
-              <path
-                d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"
-              ></path>
-              <path
-                d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"
-              ></path>
-            </svg>
+            />
             <span class="ms-3">Players</span>
           </a>
         </li>
@@ -134,13 +114,13 @@ if (Astro.request.method === "POST") {
             <h2 class="text-center mb-2 font-extrabold text-2xl md:text-4xl text-ctp-red">
               Execute Commands
             </h2>
-            {
-              command_success != null && command !=null ? (
+            <div id="command-output" class="w-full transition-all duration-150">
+              {command_success != null && command != null ? (
                 <p class="mb-3 text-ctp-green font-extrabold text-3xl">{`Command \`${command}\` executed successfully`}</p>
               ) : (
                 <p class="mb-3 text-ctp-red font-extrabold text-3xl">{`Command ${command} failed to execute`}</p>
-              )
-            }
+              )}
+            </div>
             <form method="post" id="command-controls w-full my-2">
               <div id="command" class="relative">
                 <label
@@ -178,3 +158,19 @@ if (Astro.request.method === "POST") {
     </div>
   </div>
 </Layout>
+<script src="https://cdn.jsdelivr.net/npm/flowbite@3.0.0/dist/flowbite.min.js"
+></script>
+
+<script>
+  // make the previous command message fade after 5s
+  function initPage() {
+    const commandOutput = document.getElementById("command-output");
+    setTimeout(() => {
+      if (commandOutput) {
+        commandOutput.style.opacity = "0";
+      }
+    }, 3000);
+  }
+
+  document.addEventListener("astro:page-load", () => initPage());
+</script>

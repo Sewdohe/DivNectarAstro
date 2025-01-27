@@ -1,0 +1,180 @@
+---
+import { Icon } from "astro-icon/components";
+import Layout from "../layouts/Layout.astro";
+import axios from "axios";
+import { GET as getUser } from "../pages/api/oauth/get-user";
+
+const userId = Astro.cookies.get("userId")?.value ?? "0";
+let user = null;
+
+if (userId !== "0") {
+  const response = await getUser({
+    request: new Request(`http://localhost/api/oauth/get-user?id=${userId}`),
+  });
+  //@ts-ignore
+  user = await response.json();
+}
+
+var command = null;
+var command_success = null;
+
+if (Astro.request.method === "POST") {
+  try {
+    const data = await Astro.request.formData();
+    if (data) {
+      const command_param = data.get("command");
+      console.log("try and execute command", command_param);
+      const commandResponse = await axios.post(
+        `${import.meta.env.BACKEND_URL}/skyblock/command?command=${command}`
+      );
+      if (commandResponse.status === 200) {
+        command_success = true;
+        command = command_param;
+      } else {
+        command_success = false;
+      }
+    } else {
+      throw new Error("No data was sent");
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+}
+---
+
+<Layout title="Skyblock Server Panel" description="Manage the Skyblock server">
+  <button
+    data-drawer-target="default-sidebar"
+    data-drawer-toggle="default-sidebar"
+    aria-controls="default-sidebar"
+    type="button"
+    class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+  >
+    <span class="sr-only">Open sidebar</span>
+    <svg
+      class="w-6 h-6"
+      aria-hidden="true"
+      fill="currentColor"
+      viewBox="0 0 20 20"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        clip-rule="evenodd"
+        fill-rule="evenodd"
+        d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
+      ></path>
+    </svg>
+  </button>
+
+  <aside
+    id="default-sidebar"
+    class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+    aria-label="Sidebar"
+  >
+    <div class="h-full px-3 py-4 overflow-y-auto bg-ctp-crust">
+      <h3 class="font-extrabold text-ctp-red text-2xl mb-4 text-center">
+        Admin Dash
+      </h3>
+      <ul class="space-y-2 font-medium">
+        <li slot="tab 1">
+          <a
+            class="flex items-center p-2 rounded-lg text-white hover:bg-ctp-mantle group"
+          >
+            <svg
+              class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 22 21"
+            >
+              <path
+                d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"
+              ></path>
+              <path
+                d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"
+              ></path>
+            </svg>
+            <span class="ms-3">Commands</span>
+          </a>
+        </li>
+        <li slot="tab 1">
+          <a
+            class="flex items-center p-2 rounded-lg text-white hover:bg-ctp-mantle group"
+          >
+            <svg
+              class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 22 21"
+            >
+              <path
+                d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"
+              ></path>
+              <path
+                d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"
+              ></path>
+            </svg>
+            <span class="ms-3">Players</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </aside>
+
+  <div class="p-4 sm:ml-64 w-full">
+    <div
+      class="p-4 border-2 w-full flex flex-col items-center justify-center border-dashed rounded-lg border-gray-700"
+    >
+      {
+        user && user.username == "sewdohe" ? (
+          <div>
+            <h2 class="text-center mb-2 font-extrabold text-2xl md:text-4xl text-ctp-red">
+              Execute Commands
+            </h2>
+            {
+              command_success && command ? (
+                <p class="mb-3 text-ctp-green font-extrabold text-3xl">{`Command \`${command}\` executed successfully`}</p>
+              ) : (
+                <p class="mb-3 text-ctp-red font-extrabold text-3xl">{`Command ${command} failed to execute`}</p>
+              )
+            }
+            <form method="post" id="command-controls w-full my-2">
+              <div id="command" class="relative">
+                <label
+                  for="command"
+                  class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto"
+                >
+                  command to execute
+                </label>
+                <input
+                  aria-label=""
+                  type="text"
+                  class="bg-ctp-mantle w-full border border-ctp-yellow text-ctp-text focus:outline-none focus:border-2 rounded-md px-1 py-2"
+                  name="command"
+                />
+              </div>
+              <button
+                id="send-command"
+                type="submit"
+                class="bg-ctp-yellow my-3 inline-flex align-middle justify-center text-ctp-mantle p-2 rounded-lg"
+              >
+                <Icon
+                  class="text-ctp-mantle self-center mr-2"
+                  name="mdi:send"
+                />
+                <span>Send</span>
+              </button>
+            </form>
+          </div>
+        ) : (
+          <div>
+            <h2>You're not allowed here.</h2>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</Layout>

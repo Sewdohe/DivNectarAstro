@@ -135,7 +135,7 @@ if (Astro.request.method === "POST") {
               Execute Commands
             </h2>
             {
-              command_success && command ? (
+              command_success != null && command !=null ? (
                 <p class="mb-3 text-ctp-green font-extrabold text-3xl">{`Command \`${command}\` executed successfully`}</p>
               ) : (
                 <p class="mb-3 text-ctp-red font-extrabold text-3xl">{`Command ${command} failed to execute`}</p>

@@ -3,6 +3,7 @@ import { Icon } from "astro-icon/components";
 import Layout from "../layouts/Layout.astro";
 import axios from "axios";
 import { GET as getUser } from "../pages/api/oauth/get-user";
+import { initFlowbite } from 'flowbite'
 
 const userId = Astro.cookies.get("userId")?.value ?? "0";
 let user = null;
@@ -19,28 +20,28 @@ var command = null;
 var command_success = null;
 
 if (Astro.request.method === "POST") {
-  try {
-    const data = await Astro.request.formData();
-    if (data) {
-      const command_param = data.get("command");
-      console.log("try and execute command", command_param);
-      const commandResponse = await axios.post(
-        `${import.meta.env.BACKEND_URL}/skyblock/command?command=${command_param}`
-      );
-      if (commandResponse.status === 200) {
-        command_success = true;
-        command = command_param;
+    try {
+      const data = await Astro.request.formData();
+      if (data) {
+        const command_param = data.get("command");
+        console.log("try and execute command", command_param);
+        const commandResponse = await axios.post(
+          `${import.meta.env.BACKEND_URL}/skyblock/command?command=${command_param}`
+        );
+        if (commandResponse.status === 200) {
+          command_success = true;
+          command = command_param;
+        } else {
+          command_success = false;
+        }
       } else {
-        command_success = false;
+        throw new Error("No data was sent");
       }
-    } else {
-      throw new Error("No data was sent");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      }
     }
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    }
-  }
 }
 ---
 
@@ -49,23 +50,16 @@ if (Astro.request.method === "POST") {
     data-drawer-target="default-sidebar"
     data-drawer-toggle="default-sidebar"
     aria-controls="default-sidebar"
+    transition:persist
     type="button"
     class="fixed bottom-12 right-12 inline-flex items-center p-2 mt-2 ms-3 text-sm text-ctp-red bg-ctp-mantle rounded-lg sm:hidden hover:bg-ctp-crust focus:outline-none focus:ring-2 focus:ring-ctp-red"
   >
     <span class="sr-only">Open sidebar</span>
-    <svg
+    <Icon
       class="w-6 h-6"
-      aria-hidden="true"
-      fill="currentColor"
-      viewBox="0 0 20 20"
-      xmlns="http://www.w3.org/2000/svg"
+      name="mdi:menu"
     >
-      <path
-        clip-rule="evenodd"
-        fill-rule="evenodd"
-        d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
-      ></path>
-    </svg>
+    </Icon>
   </button>
 
   <aside
@@ -115,17 +109,23 @@ if (Astro.request.method === "POST") {
               Execute Commands
             </h2>
             <div id="command-output" class="w-full transition-all duration-150">
-              {command_success != null && command != null ? (
+              {command_success ? (
                 <p class="mb-3 text-ctp-green font-extrabold text-3xl">{`Command \`${command}\` executed successfully`}</p>
               ) : (
-                <p class="mb-3 text-ctp-red font-extrabold text-3xl">{`Command ${command} failed to execute`}</p>
+                // <p class="mb-3 text-ctp-red font-extrabold text-3xl">{`Command ${command} failed to execute`}</p>
+                <span></span>
               )}
+              {
+                command == null ? (
+                  <p class="mb-3 text-ctp-yellow font-extrabold text-3xl">Awaiting command...</p>
+                ) : null
+              }
             </div>
             <form method="post" id="command-controls w-full my-2">
-              <div id="command" class="relative">
+              <div id="command" class="">
                 <label
                   for="command"
-                  class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto"
+                  class="text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4s origin-[0] start-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto"
                 >
                   command to execute
                 </label>
@@ -158,10 +158,9 @@ if (Astro.request.method === "POST") {
     </div>
   </div>
 </Layout>
-<script src="https://cdn.jsdelivr.net/npm/flowbite@3.0.0/dist/flowbite.min.js"
-></script>
 
 <script>
+  import { initFlowbite } from 'flowbite';
   // make the previous command message fade after 5s
   function initPage() {
     const commandOutput = document.getElementById("command-output");
@@ -172,5 +171,8 @@ if (Astro.request.method === "POST") {
     }, 3000);
   }
 
-  document.addEventListener("astro:page-load", () => initPage());
+  document.addEventListener("astro:page-load", () => {
+    initPage();
+    initFlowbite();
+  });
 </script>

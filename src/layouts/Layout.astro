@@ -12,7 +12,7 @@ import { ClientRouter } from "astro:transitions";
 import { url } from "inspector";
 
 const currentRoute = Astro.url.pathname;
-console.log("currentRoute:", currentRoute);
+// console.log("currentRoute:", currentRoute);
 
 async function generateOgImage(path: string) {
   try {
@@ -23,7 +23,7 @@ async function generateOgImage(path: string) {
       throw new Error("Failed to generate OG image");
     }
     const screenshotUrl = await response.text();
-    console.log("Generated OG image:", screenshotUrl);
+    // console.log("Generated OG image:", screenshotUrl);
   } catch (error) {
     console.error("Error generating OG image:", error);
   }
@@ -37,12 +37,12 @@ async function handleOGImage() {
       if (response.ok) {
         const data = await response.json();
         if (data.exists) {
-					console.log('Image exists already!', data)
+					// console.log('Image exists already!', data)
           image.url = data.url;
           image.alt = `Screenshot of https://divnectar.com${currentRoute}`;
         } else {
-					console.log('Image doesnt exist, defaulting...')
-					console.log('we will generate on the next run')
+					// console.log('Image doesnt exist, defaulting...')
+					// console.log('we will generate on the next run')
 					generateOgImage(currentRoute);
           image = {
 						url: 'https://divnectar.com/site-logo.webp',
@@ -70,7 +70,7 @@ if (!image) { // if no image use the check OG image API
   await handleOGImage();
 }
 
-console.log("image:", image);
+// console.log("image:", image);
 ---
 
 <!doctype html>
@@ -127,7 +127,10 @@ console.log("image:", image);
       <slot />
     </div>
   </body>
+  <div>
+  </div>
 </html>
+
 
 <style>
   html,

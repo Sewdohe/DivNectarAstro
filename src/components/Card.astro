@@ -1,0 +1,7 @@
+---
+const { direction } = Astro.props;
+---
+
+<div class=`flex flex-row ${direction == "col" && 'flex-col'} p-4 items-center rounded-lg shadow md:flex-row md:max-w-xl dark:border-gray-700 dark:bg-ctp-crust dark:hover:bg-ctp-mantle`>
+  <slot />
+</div>

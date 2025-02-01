@@ -3,6 +3,10 @@
 import type { SqlPlayerData } from "../../db/interfaces";
 import { getPlayerData } from "../../db/queries";
 import Layout from "../../layouts/Layout.astro";
+import Card from "../../components/Card.astro";
+
+import moment from 'moment';
+
 
 const { playerId } = Astro.params;
 const players = await getPlayerData();
@@ -13,8 +17,14 @@ interface Player {
     username: string;
 }
 
+
+function timePassedSince(epochTimestamp: string): string {
+    // @ts-ignore
+    return moment(parseInt(epochTimestamp)).fromNow();
+}
+
 export const prerender = false;
----
+---s
 
 <Layout
     title={`${player.username}'s Skyblock Profile'`}
@@ -24,71 +34,96 @@ export const prerender = false;
         alt: `${player.username}'s avatar`,
     }}
 >
-    <div class="flex flex-col  items-center">
+    <div class="flex flex-col justify-center align-middle items-center">
         <img
             class="object-contain rounded-lg h-48 md:w-48 md:rounded-none md:rounded-s-lg"
             src={`https://mc-heads.net/body/${player.uuid}`}
             alt=""
         />
         <div class="flex flex-col w-full md:w-fit justify-between p-4 leading-normal">
-            <h5
-                class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+            <h2
+                class="mb-0 text-2xl md:text-4xl self-center font-extrabold tracking-tight text-gray-900 dark:text-white"
             >
                 {player.username}
-            </h5>
-            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                {player.username}'s stats:
-                <table>
-                    <tr>
-                        <td>Coins:</td>
-                        <td>${player.money}</td>
-                    </tr>
-                    <tr>
-                        <td>Level:</td>
-                        <td>{player.level}</td>
-                    </tr>
-                    <tr>
-                        <td>Rank:</td>
-                        <td>{player.primary_group}</td>
-                    </tr>
-                    <tr>
-                        <td>Experience:</td>
-                        <td>{player.experience}</td>
-                    </tr>
-                    <tr>
-                        <td>Alchemy:</td>
-                        <td>{player.p_alchemy_lvl}</td>
-                    </tr>
-                    <tr>
-                        <td>Enchanting:</td>
-                        <td>{player.p_enchanting_lvl}</td>
-                    </tr>
-                    <tr>
-                        <td>Farming:</td>
-                        <td>{player.p_farming_lvl}</td>
-                    </tr>
-                    <tr>
-                        <td>Fishing:</td>
-                        <td>{player.p_fishing_lvl}</td>
-                    </tr>
-                    <tr>
-                        <td>Mining:</td>
-                        <td>{player.p_mining_lvl}</td>
-                    </tr>
-                    <tr>
-                        <td>Smelting:</td>
-                        <td>{player.p_smelting_lvl}</td>
-                    </tr>
-                    <tr>
-                        <td>Smithing:</td>
-                        <td>{player.p_smithing_lvl}</td>
-                    </tr>
-                    <tr>
-                        <td>Woodcutting:</td>
-                        <td>{player.p_woodcutting_lvl}</td>
-                    </tr>
-                </table>
-            </p>
+            </h2>
+            <span class="mt-0 text-ctp-subtext0 text-sm self-center mb-6">Last seen {timePassedSince(player.last_login)}</span>
+            <div class="grid justify-self-center px-8 md:px-4 w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <Card direction="col">
+                    <div class="w-full">
+                        <div class="flex flex-row justify-between">
+                            <span class="mr-3">Wallet:</span>
+                            <span class="flex flex-row justify-between">${player.money}</span>
+                        </div>
+                        <div class="flex flex-row justify-between">
+                            <span>Level:</span>
+                            <span class="flex flex-row justify-between">{player.level}</span>
+                        </div>
+                        <div class="flex flex-row justify-between">
+                            <span>Rank:</span>
+                            <span class="flex flex-row justify-between">{player.primary_group}</span>
+                        </div>
+                        <div class="flex flex-row justify-between">
+                            <span>Experience:</span>
+                            <span class="flex flex-row justify-between">{player.experience}</span>
+                        </div>
+                    </div>
+                </Card>
+                <Card direction="col">
+                        <div class="w-full">
+                            <div class="flex flex-row justify-between">
+                                <span>Alchemy:</span>
+                                <span class="flex flex-row justify-between">{player.alchemy.level}</span>
+                            </div>
+                            <div class="flex flex-row justify-between">
+                                <span>Enchanting:</span>
+                                <span>{player.enchanting.level}</span>
+                            </div>
+                            <div class="flex flex-row justify-between">
+                                <span>Farming:</span>
+                                <span>{player.farming.level}</span>
+                            </div>
+                            <div class="flex flex-row justify-between">
+                                <span>Fishing:</span>
+                                <span>{player.fishing.level}</span>
+                            </div>
+                            <div class="flex flex-row justify-between">
+                                <span>Mining:</span>
+                                <span>{player.mining.level}</span>
+                            </div>
+                            <div class="flex flex-row justify-between">
+                                <span>Smelting:</span>
+                                <span>{player.smelting.level}</span>
+                            </div>
+                            <div class="flex flex-row justify-between">
+                                <span>Smithing:</span>
+                                <span>{player.smithing.level}</span>
+                            </div>
+                            <div class="flex flex-row justify-between">
+                                <span>Woodcutting:</span>
+                                <span>{player.woodcutting.level}</span>
+                            </div>
+                        </div>
+                </Card>
+                <Card direction="col">
+                    <div class="w-full">
+                        <!-- @ts-ignore -->
+                        {player.skills.map(skill => (
+                            <div class="flex flex-row justify-between">
+                                <span>{skill.name}:</span>
+                                <span class="flex flex-row justify-between">{skill.level}</span>
+                            </div>
+                        ))}
+                    </div>
+            </Card>
+            </div>
+
         </div>
     </div>
 </Layout>
+
+<style>
+    td {
+        align-self: flex-end;
+        justify-self: flex-end;
+    }
+</style>

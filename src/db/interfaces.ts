@@ -6,7 +6,7 @@ export interface SqlPlayerData extends RowDataPacket {
   experience: number;
   class: string;
   guild: string;
-  last_login: number;
+  last_login: string;
   money: number;
   interest: number;
   debt: number;

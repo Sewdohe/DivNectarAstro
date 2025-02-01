@@ -3,7 +3,7 @@ import { Icon } from "astro-icon/components";
 import Layout from "../layouts/Layout.astro";
 import axios from "axios";
 import { GET as getUser } from "../pages/api/oauth/get-user";
-import { initFlowbite } from 'flowbite'
+import { initFlowbite } from "flowbite";
 
 const userId = Astro.cookies.get("userId")?.value ?? "0";
 let user = null;
@@ -20,28 +20,28 @@ var command = null;
 var command_success = null;
 
 if (Astro.request.method === "POST") {
-    try {
-      const data = await Astro.request.formData();
-      if (data) {
-        const command_param = data.get("command");
-        console.log("try and execute command", command_param);
-        const commandResponse = await axios.post(
-          `${import.meta.env.BACKEND_URL}/skyblock/command?command=${command_param}`
-        );
-        if (commandResponse.status === 200) {
-          command_success = true;
-          command = command_param;
-        } else {
-          command_success = false;
-        }
+  try {
+    const data = await Astro.request.formData();
+    if (data) {
+      const command_param = data.get("command");
+      console.log("try and execute command", command_param);
+      const commandResponse = await axios.post(
+        `${import.meta.env.BACKEND_URL}/skyblock/command?command=${command_param}`
+      );
+      if (commandResponse.status === 200) {
+        command_success = true;
+        command = command_param;
       } else {
-        throw new Error("No data was sent");
+        command_success = false;
       }
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(error.message);
-      }
+    } else {
+      throw new Error("No data was sent");
     }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
 }
 ---
 
@@ -55,11 +55,7 @@ if (Astro.request.method === "POST") {
     class="fixed bottom-12 right-12 inline-flex items-center p-2 mt-2 ms-3 text-sm text-ctp-red bg-ctp-mantle rounded-lg sm:hidden hover:bg-ctp-crust focus:outline-none focus:ring-2 focus:ring-ctp-red"
   >
     <span class="sr-only">Open sidebar</span>
-    <Icon
-      class="w-6 h-6"
-      name="mdi:menu"
-    >
-    </Icon>
+    <Icon class="w-6 h-6" name="mdi:menu" />
   </button>
 
   <aside
@@ -113,13 +109,13 @@ if (Astro.request.method === "POST") {
                 <p class="mb-3 text-ctp-green font-extrabold text-3xl">{`Command \`${command}\` executed successfully`}</p>
               ) : (
                 // <p class="mb-3 text-ctp-red font-extrabold text-3xl">{`Command ${command} failed to execute`}</p>
-                <span></span>
+                <span />
               )}
-              {
-                command == null ? (
-                  <p class="mb-3 text-ctp-yellow font-extrabold text-3xl">Awaiting command...</p>
-                ) : null
-              }
+              {command == null ? (
+                <p class="mb-3 text-ctp-yellow font-extrabold text-3xl">
+                  Awaiting command...
+                </p>
+              ) : null}
             </div>
             <form method="post" id="command-controls w-full my-2">
               <div id="command" class="">
@@ -160,7 +156,7 @@ if (Astro.request.method === "POST") {
 </Layout>
 
 <script>
-  import { initFlowbite } from 'flowbite';
+  import { initFlowbite } from "flowbite";
   // make the previous command message fade after 5s
   function initPage() {
     const commandOutput = document.getElementById("command-output");

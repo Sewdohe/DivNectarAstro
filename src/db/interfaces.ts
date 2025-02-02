@@ -23,6 +23,7 @@ export interface SqlPlayerData extends RowDataPacket {
   p_mining_lvl: number;
   p_smelting_lvl: number;
   p_enchanting_lvl: number;
+  onlineStatus?: "yes" | "no";
   bluemap_x: string | null;
   bluemap_y: string | null;
   bluemap_z: string | null;

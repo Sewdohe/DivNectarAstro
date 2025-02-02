@@ -80,7 +80,7 @@ export async function getPlayerData() {
     })
   );
 
-  console.log("got players data from queries.ts");
+  // console.log("got players data from queries.ts");
   // console.log(placeHolderRes)
   return placeHolderRes;
 }

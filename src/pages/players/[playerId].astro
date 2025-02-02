@@ -1,7 +1,6 @@
 ---
-// src/pages/players/[playerId].astro
 import type { SqlPlayerData } from "../../db/interfaces";
-import { getPlayerData } from "../../db/queries";
+import { getPlayerData, getCoinsLeaderBoard } from "../../db/queries";
 import Layout from "../../layouts/Layout.astro";
 import Card from "../../components/Card.astro";
 import { GET as getUser } from "../../pages/api/oauth/get-user";
@@ -11,6 +10,11 @@ import moment from "moment";
 const { playerId } = Astro.params;
 const players = await getPlayerData();
 const player: SqlPlayerData = players.find((p) => p.uuid === playerId)!;
+
+const coinsLeaderboard = await getCoinsLeaderBoard();
+const coinsRank = coinsLeaderboard.findIndex((p) => p.uuid === playerId) + 1;
+
+console.log(coinsLeaderboard);
 
 interface Player {
   uuid: string;
@@ -94,23 +98,25 @@ export const prerender = false;
             </div>
             <div class="flex flex-row justify-between">
               <span class="mr-3">Bank:</span>
-							<span class="flex text-ctp-green flex-row justify-between"
-							>{
-								new Intl.NumberFormat("en-US", {
-									style: "currency",
-									currency: "USD",
-								}).format(player.money)
-							}</span>
+              <span class="flex text-ctp-green flex-row justify-between"
+                >{
+                  new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  }).format(player.money)
+                }</span
+              >
             </div>
-						<div class="flex flex-row justify-between">
+            <div class="flex flex-row justify-between">
               <span class="mr-3">Island Value:</span>
-							<span class="flex text-ctp-green flex-row justify-between"
-							>{
-								new Intl.NumberFormat("en-US", {
-									style: "currency",
-									currency: "USD",
-								}).format(player.island_worth)
-							}</span>
+              <span class="flex text-ctp-green flex-row justify-between"
+                >{
+                  new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  }).format(player.island_worth)
+                }</span
+              >
             </div>
             <div class="flex flex-row justify-between">
               <span>RPG Level:</span>
@@ -128,13 +134,13 @@ export const prerender = false;
                 >{player.mmo_experience}</span
               >
             </div>
-						<div class="flex flex-row justify-between">
+            <div class="flex flex-row justify-between">
               <span>Vanilla Exp:</span>
               <span class="flex flex-row justify-between"
                 >{player.vanilla_experience}</span
               >
             </div>
-						<div class="flex flex-row justify-between">
+            <div class="flex flex-row justify-between">
               <span>Vanilla Level:</span>
               <span class="flex flex-row justify-between"
                 >{player.vanilla_experience_level}</span
@@ -195,18 +201,49 @@ export const prerender = false;
             }
           </div>
         </Card>
-				<Card title="Ranks" direction="col">
-					<div class="flex flex-col justify-between">
-						<span class="text-center text-xl text-ctp-peach font-extrabold">Island Worth</span>
-						<span class="text-center font-extrabold text-3xl">
-							#{player.rank_island_worth}
-						</span>
-					</div>
-				</Card>
+        <Card title="Ranks" direction="col">
+          <div class="flex flex-col justify-between">
+            <span class="text-center text-xl text-ctp-peach font-extrabold"
+              >Island Worth</span
+            >
+            <span class="text-center font-extrabold text-3xl">
+              #{player.rank_island_worth}
+            </span>
+          </div>
+          <div class="flex flex-col justify-between">
+            <span class="text-center text-xl text-ctp-peach font-extrabold"
+              >Player Worth</span
+            >
+            <span class="text-center font-extrabold text-3xl">
+              #{coinsRank}
+            </span>
+          </div>
+        </Card>
       </div>
     </div>
+    <button id="toggle-map" class="bg-ctp-peach mb-4 text-black font-extrabold p-2 rounded-md"
+      >Toggle Map</button
+    >
+    <div id="map-container" class="w-full h-[100vh] rounded-md"></div>
   </div>
 </Layout>
+
+<script define:vars={{ player }}>
+	const toggleMapButton = document.getElementById("toggle-map");
+  const mapContainer = document.getElementById("map-container");
+
+	toggleMapButton?.addEventListener("click", () => {
+		if (mapContainer?.innerHTML === "") {
+			const iframe = document.createElement("iframe");
+			iframe.id = "player-map";
+			iframe.className = "w-full h-[100vh] rounded-md";
+			iframe.src = `https://map.divnectar.com/#world_private_islands:${player.bluemap_x}:${player.bluemap_y}:${player.bluemap_z}:25:0:0:0:0:flat`;
+			mapContainer.appendChild(iframe);
+		} else {
+			mapContainer.innerHTML = "";
+		}
+	});
+</script>
 
 <style>
   td {

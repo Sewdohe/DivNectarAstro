@@ -1,4 +1,4 @@
-import type { SqlPlayerData } from "./interfaces";
+import type { CoinLeaderboardData, CoinRow, SqlPlayerData } from "./interfaces";
 import connection from "./connection";
 
 export async function getPlayerData() {
@@ -102,6 +102,32 @@ export async function getPlayerData() {
   // console.log("got players data from queries.ts");
   // console.log(placeHolderRes)
   return placeHolderRes;
+}
+
+export async function getCoinsLeaderBoard() {
+  const [rows]: [CoinRow[], any] = await connection.query(`
+    SELECT * FROM coinsengine_users ORDER BY coin DESC LIMIT 10;
+  `);
+
+  const leaderboardData: CoinLeaderboardData[] = rows.map(
+    (row: CoinRow, index) => {
+      return { coins: row.coin, position: index + 1, uuid: row.uuid };
+    }
+  );
+  return leaderboardData;
+}
+
+export async function getBankLeaderboard() {
+  const [rows]: [CoinRow[], any] = await connection.query(`
+    SELECT * FROM coinsengine_users ORDER BY coin DESC LIMIT 10;
+  `);
+
+  const leaderboardData: CoinLeaderboardData[] = rows.map(
+    (row: CoinRow, index) => {
+      return { coins: row.coin, position: index + 1, uuid: row.uuid };
+    }
+  );
+  return leaderboardData;
 }
 
 // Get placeholder data

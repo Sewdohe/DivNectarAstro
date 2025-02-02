@@ -33,6 +33,20 @@ export interface SqlPlayerData extends RowDataPacket {
   skills: { [key: string]: { level: number } };
 }
 
+export interface CoinLeaderboardData {
+  uuid: string;
+  coins: number;
+  position: number;
+}
+
+export interface CoinRow extends RowDataPacket {
+  id: number,
+  uuid: string,
+  name: string,
+  coin: number,
+  ruby: number,
+}
+
 export interface WordpressPlayer {
   id: string;
   date: Date;

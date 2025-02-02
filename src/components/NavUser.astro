@@ -36,6 +36,13 @@ const adminLinks = [
     icon: "mdi:minecraft",
   },
 ];
+const profileLinks = [
+  {
+    name: "User Profile",
+    url: "/profile",
+    icon: "mdi:person",
+  },
+];
 ---
 
 <div class="mr-5">
@@ -74,9 +81,7 @@ const adminLinks = [
               Hello, <b>{user.username}</b>
             </p>
           ) : (
-          <p class="not-prose self-center text-3xl">
-              Please login
-            </p>
+            <p class="not-prose self-center text-3xl">Please login</p>
           )
         }
         {
@@ -104,15 +109,29 @@ const adminLinks = [
         }
         {
           user ? (
-            <div>
-              <a href="/logout">
-                <button
-                  class="bg-ctp-red w-36 self-center p-2 text-ctp-mantle font-extrabold rounded-sm shadow-md"
-                  id="logout"
+            <div class="flex flex-col w-full justify-center align-middle justify-self-center self-center">
+              {profileLinks.map((link) => (
+                <div class="my-2 bg-ctp-mantle rounded-lg shadow-lg p-1 text-center self-center inline-flex align-middle items-center hover:scale-105 hover:text-ctp-sky transition-all duration-150s">
+                  <Icon
+                    class="ml-2 text-ctp-text inline-flex align-middle justify-self-center"
+                    name={link.icon}
+                  />
+                  <a
+                    class={`not-prose text-ctp-text cursor-default no-underline px-2 lg:text-2xl`}
+                    href={link.url}
+                  >
+                    <span class="ml-2">{link.name}</span>
+                  </a>
+                </div>
+              ))}
+              <div class="my-2 bg-ctp-mantle rounded-lg shadow-lg p-1 text-center self-center inline-flex align-middle items-center hover:scale-105 hover:text-ctp-sky transition-all duration-150s">
+                <a
+                  class={`not-prose text-ctp-text cursor-default no-underline px-2 lg:text-2xl`}
+                  href="/logout"
                 >
                   Logout
-                </button>
-              </a>
+                </a>
+              </div>
             </div>
           ) : (
             <div>

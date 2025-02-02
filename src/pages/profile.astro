@@ -1,0 +1,82 @@
+---
+import { Icon } from "astro-icon/components";
+import Card from "../components/Card.astro";
+import Layout from "../layouts/Layout.astro";
+import { GET as getUser } from "../pages/api/oauth/get-user";
+
+const userId = Astro.cookies.get("userId")?.value ?? "0";
+let user = null;
+
+const just_linked = Astro.url.searchParams.get('just_linked') || null;
+const err = Astro.url.searchParams.get('err') || null;
+
+if (userId !== "0") {
+  const response = await getUser({
+    request: new Request(`http://localhost/api/oauth/get-user?id=${userId}`),
+  });
+  //@ts-ignore
+  user = await response.json();
+}
+const backend_url = import.meta.env.BACKEND_URL;
+console.log(backend_url)
+---
+
+<Layout
+  title="DivNectar | User Profile"
+  description="view and edit your user profile"
+>
+  <div class="flex flex-col items-center w-full">
+    <div class="flex justify-center mb-4 lg:justify-start align-middle">
+      <h1 class="text-2xl self-center mr-4 md:text-4xl font-extrabold">
+        {user?.username}'s Profile
+      </h1>
+      <div class="">
+        <img
+          src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`}
+          alt="avatar"
+        />
+      </div>
+    </div>
+    {just_linked && (
+      <div class="flex items-center">
+        <span class="text-2xl font-bold text-ctp-green">Account Link Successful.</span>
+      </div>
+    )}
+    {err && (
+      <div class="flex items-center">
+        <span class="text-2xl font-bold text-ctp-red">ERROR: {err}</span>
+      </div>
+    )}
+    <div
+      class="grid px-8 md:px-4 w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+    >
+      <Card title="User Info">
+        <div class="flex flex-row">
+          <span class="flex-grow mr-4 font-bold"> Email: </span>
+          <span>
+            {user?.email}
+          </span>
+        </div>
+      </Card>
+      <Card title="Minecraft Status">
+        <div class="flex flex-row flex-nowrap">
+          <span class="flex-grow mr-2 font-bold"> Minecraft Linked: </span>
+          <span class="self-center">
+            {
+              user?.minecraft_uuid ? (
+                <Icon class="text-ctp-green" title="you are linked" name="mdi:check" />
+              ) : (
+                <div class="flex">
+                  <Icon title="not linked" class="text-2xl text-ctp-red" name="mdi:close-thick" />
+                  <a href={`${backend_url}/discord/link-minecraft?discord_id=${user.id}`} class="ml-1">
+                    <Icon title="click to link" class="hover:scale-110 transition-all text-2xl text-ctp-teal" name="mdi:link-variant" />
+                  </a>
+                </div>
+              )
+            }
+          </span>
+        </div>
+      </Card>
+    </div>
+  </div></Layout
+>

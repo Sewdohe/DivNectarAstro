@@ -60,9 +60,6 @@ export async function getPlayerData() {
   const professionTransResults: SqlPlayerData[] = bluemapTransResults.map(
     (element: SqlPlayerData) => {
       const professionData = JSON.parse(element.professions);
-      console.log("parsed professions");
-      // console.log(professionData);
-      // var parseAgain = JSON.parse(professionData);s
       return { ...element, ...professionData };
     }
   );

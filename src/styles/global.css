@@ -3,7 +3,7 @@
   background-color: #181825;
   color: #bac2de;
   border: 1px solid var(--vscode-editorWidget-border);
-  border-radius: 0.15rem;
+  border-radius: 8px;
   padding: 0.5rem;
   word-wrap: break-word;
 }

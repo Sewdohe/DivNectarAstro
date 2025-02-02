@@ -7,7 +7,9 @@ export async function getPlayerData() {
     SELECT
       playerdata.uuid,
       playerdata.level,
-      playerdata.experience,
+      playerdata.experience as mmo_experience,
+      exp.total_exp as vanilla_experience,
+      exp.exp_lvl as vanilla_experience_level,
       playerdata.class,
       playerdata.guild,
       playerdata.last_login,
@@ -15,9 +17,11 @@ export async function getPlayerData() {
       bank.money,
       bank.interest,
       bank.debt,
+      coins.coin,
       lp.username,
       lp.primary_group,
       isl.center,
+      isl_homes.location as island_home,
       asUser.user_id,
       GROUP_CONCAT(CONCAT(asSkills.skill_name, ':', asSkills.skill_level) SEPARATOR ',') AS skills
       FROM mmocore_playerdata AS playerdata
@@ -25,7 +29,10 @@ export async function getPlayerData() {
       JOIN auraskills_skill_levels as asSkills ON asUser.user_id = asSkills.user_id
       JOIN luckperms_players as lp ON playerdata.uuid = lp.uuid
       LEFT JOIN bank ON playerdata.uuid = bank.uuid
+      LEFT JOIN mpdb_experience as exp ON playerdata.uuid = exp.player_uuid
+      LEFT JOIN coinsengine_users as coins ON playerdata.uuid = coins.uuid
       LEFT JOIN islands as isl ON playerdata.uuid = isl.owner
+      LEFT JOIN islands_homes as isl_homes ON isl_homes.island = isl.uuid
       GROUP BY playerdata.uuid;
   `);
 
@@ -41,7 +48,7 @@ export async function getPlayerData() {
       });
       element.skills = skillsArray;
 
-      if (element.center) {
+      if (element.island_home) {
         var numbers = extractNumbers(element.center);
         element.bluemap_x = numbers![0];
         element.bluemap_y = numbers![1];

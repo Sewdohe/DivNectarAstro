@@ -1,0 +1,12 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const err = Astro.url.searchParams.get('err') || 'generic error. Contact Sewdohe.';
+---
+
+<Layout title="DivNectar | Error" description="DivNectar - A problem has occured">
+  <div class="flex flex-col items-center justify-center w-full h-full">
+    <span class="text-4xl font-extrabold text-ctp-red">Error</span>
+    <span class="text-2xl font-bold text-ctp-text">{ err }</span>
+  </div>
+</Layout>

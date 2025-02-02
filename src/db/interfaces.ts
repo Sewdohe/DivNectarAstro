@@ -3,13 +3,15 @@ import type { RowDataPacket } from 'mysql2';
 export interface SqlPlayerData extends RowDataPacket {
   uuid: string;
   level: number;
-  experience: number;
+  vanilla_experience: number;
+  mmo_experience: number;
   class: string;
   guild: string;
   last_login: string;
   money: number;
   interest: number;
   debt: number;
+  coin: number;
   username: string;
   professions: string;
   primary_group: string;

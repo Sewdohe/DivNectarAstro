@@ -1,0 +1,27 @@
+---
+import { Icon } from "astro-icon/components";
+
+const { icon, text, link } = Astro.props;
+---
+
+{
+  link == null ? (
+    <div class="flex justify-center px-1 py-2 max-w-48 bg-ctp-crust text-ctp-text rounded-md hover:text-ctp-teal hover:scale-110 transistion-all duration-100 cursor-default">
+      {icon && <Icon name={icon} class="w-6 h-6 mr-2" />}
+      {text && <span class="font-extrabold">{text}</span>}
+      {link && (
+        <a href={link} class="ml-2">
+          {text}
+        </a>
+      )}
+    </div>
+  ) : (
+    <a
+      href={link}
+      class="flex justify-center px-1 py-2 max-w-48 bg-ctp-crust text-ctp-text rounded-md hover:text-ctp-teal hover:scale-110 transistion-all duration-100 cursor-default"
+    >
+      {icon && <Icon name={icon} class="w-6 h-6 mr-2" />}
+      {text && <span class="font-extrabold">{text}</span>}
+    </a>
+  )
+}

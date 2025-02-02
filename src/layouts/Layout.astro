@@ -1,7 +1,8 @@
 ---
 import Navigation from "../components/Navigation.astro";
 import { SEO } from "astro-seo";
-var { title, description, image, center } = Astro.props;
+var { title, description, image, center, direction } = Astro.props;
+
 import { Tooltips } from "astro-tooltips";
 
 // use our global styles
@@ -123,7 +124,7 @@ if (!image) { // if no image use the check OG image API
     class="bg-ctp-base container m-0 p-0 md:w-screen text-ctp-text w-full"
   >
     <Navigation transition:persist />
-    <div id="content" class=`px-3 flex ${center && 'justify-center'} w-full md:w-screen lg:px-10`>
+    <div id="content" class=`px-3 flex ${direction && 'flex-col'} ${center && 'justify-center'} w-full md:w-screen lg:px-10`>
       <slot />
     </div>
   </body>

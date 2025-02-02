@@ -32,7 +32,7 @@ if (userId !== "0") {
   //@ts-ignore
   user = await response.json();
 }
-console.log(player)
+// console.log(player)
 export const prerender = false;
 ---
 
@@ -83,7 +83,7 @@ export const prerender = false;
           <div class="w-full">
             <div class="flex flex-row justify-between">
               <span class="mr-3">Wallet:</span>
-              <span class="flex flex-row justify-between"
+              <span class="flex text-ctp-green flex-row justify-between"
                 >{
                   new Intl.NumberFormat("en-US", {
                     style: "currency",
@@ -94,7 +94,7 @@ export const prerender = false;
             </div>
             <div class="flex flex-row justify-between">
               <span class="mr-3">Bank:</span>
-							<span class="flex flex-row justify-between"
+							<span class="flex text-ctp-green flex-row justify-between"
 							>{
 								new Intl.NumberFormat("en-US", {
 									style: "currency",
@@ -102,16 +102,26 @@ export const prerender = false;
 								}).format(player.money)
 							}</span>
             </div>
+						<div class="flex flex-row justify-between">
+              <span class="mr-3">Island Value:</span>
+							<span class="flex text-ctp-green flex-row justify-between"
+							>{
+								new Intl.NumberFormat("en-US", {
+									style: "currency",
+									currency: "USD",
+								}).format(player.island_worth)
+							}</span>
+            </div>
             <div class="flex flex-row justify-between">
               <span>RPG Level:</span>
               <span class="flex flex-row justify-between">{player.level}</span>
             </div>
-            <div class="flex flex-row justify-between">
+            <!-- <div class="flex flex-row justify-between">
               <span>Rank:</span>
               <span class="flex flex-row justify-between"
                 >{player.primary_group}</span
               >
-            </div>
+            </div> -->
             <div class="flex flex-row justify-between">
               <span>MMO Exp:</span>
               <span class="flex flex-row justify-between"
@@ -185,6 +195,14 @@ export const prerender = false;
             }
           </div>
         </Card>
+				<Card title="Ranks" direction="col">
+					<div class="flex flex-col justify-between">
+						<span class="text-center text-xl text-ctp-peach font-extrabold">Island Worth</span>
+						<span class="text-center font-extrabold text-3xl">
+							#{player.rank_island_worth}
+						</span>
+					</div>
+				</Card>
       </div>
     </div>
   </div>

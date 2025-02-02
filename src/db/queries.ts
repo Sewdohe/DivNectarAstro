@@ -1,7 +1,6 @@
 import type { SqlPlayerData } from "./interfaces";
 import connection from "./connection";
 
-
 export async function getPlayerData() {
   const [rows]: [SqlPlayerData[], any] = await connection.query(`
     SELECT
@@ -43,7 +42,7 @@ export async function getPlayerData() {
       //@ts-ignore
       const skillsArray = element.skills.split(",").map((skill) => {
         const [_name, level] = skill.split(":");
-        const [ _garbage, name ] = _name.split('/')
+        const [_garbage, name] = _name.split("/");
         return { name, level: parseInt(level) };
       });
       element.skills = skillsArray;
@@ -73,17 +72,30 @@ export async function getPlayerData() {
 
   const placeHolderRes = await Promise.all(
     professionTransResults.map(async (player) => {
-      const onlineResponse = await isPlayerOnline(player.uuid);
-      if (onlineResponse) {
-        const vaultResponse = await getPlaceholderData(
-          "%vault_eco_balance_formatted%",
-          player.uuid
-        );
-        player.vault_balance = vaultResponse!;
-        return { ...player, vault_balance: vaultResponse! };
-      } else {
-        return { ...player };
-      }
+      const island_worth = await getPlaceholderData(
+        "%superior_island_worth%",
+        player.uuid
+      );
+      const rank_island_worth = await getPlaceholderData(
+        "%superior_island_top_worth_position%",
+        player.uuid
+      );
+      const parsedIslandWorth = parseInt(
+        island_worth!.replace(/['",]+/g, ""),
+        10
+      );
+      // Remove double quotes and commas, then parse as integer
+      const parsedIslandWorthRank = parseInt(
+        rank_island_worth!.replace(/['",]+/g, ""),
+        10
+      );
+      player.island_worth = parsedIslandWorth;
+      player.rank_island_worth = parsedIslandWorthRank;
+      return {
+        ...player,
+        island_worth: parsedIslandWorth,
+        island_worth_rank: parsedIslandWorthRank,
+      };
     })
   );
 

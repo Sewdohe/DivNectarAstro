@@ -16,7 +16,8 @@ export interface SqlPlayerData extends RowDataPacket {
   professions: string;
   primary_group: string;
   center: string;
-  vault_balance: string;
+  island_worth: number;
+  rank_island_worth: number;
   p_smithing_lvl: number;
   p_woodcutting_lvl: number;
   p_farming_lvl: number;

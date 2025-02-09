@@ -12,13 +12,7 @@ const backend_url = import.meta.env.BACKEND_URL;
   const eventsList = document.getElementById("events-list");
 
   // Fetch the last events when the page loads
-  fetch(backend_url + "/skyblock/events", {
-    headers: {
-      "Access-Control-Allow-Origin": "https://divnectar.com", // Allow your frontend domain
-      "Access-Control-Allow-Methods": "GET, POST", // Allowed methods
-      "Access-Control-Allow-Headers": "Content-Type", // Allowed headers
-    },
-  })
+  fetch('localhost:4477/api' + "/skyblock/events")
     .then((response) => response.json())
     .then((events) => {
       events.forEach((event) => {

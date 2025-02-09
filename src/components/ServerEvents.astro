@@ -14,6 +14,7 @@ const wsUrl = "ws://localhost:3000";
 
   ws.onmessage = (event) => {
     const newEvent = JSON.parse(event.data);
+    console.log(newEvent);
     const listItem = document.createElement("li");
     listItem.innerHTML = `<strong>${newEvent.eventType}</strong>: ${newEvent.joinMessage || newEvent.player.displayName}`;
     eventsList?.prepend(listItem);

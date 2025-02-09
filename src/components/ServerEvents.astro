@@ -12,10 +12,16 @@ const backend_url = import.meta.env.BACKEND_URL;
   const eventsList = document.getElementById("events-list");
 
   // Fetch the last events when the page loads
-  fetch(backend_url + "/skyblock/events")
-    .then(response => response.json())
-    .then(events => {
-      events.forEach(event => {
+  fetch(backend_url + "/skyblock/events", {
+    headers: {
+      "Access-Control-Allow-Origin": "https://divnectar.com", // Allow your frontend domain
+      "Access-Control-Allow-Methods": "GET, POST", // Allowed methods
+      "Access-Control-Allow-Headers": "Content-Type", // Allowed headers
+    },
+  })
+    .then((response) => response.json())
+    .then((events) => {
+      events.forEach((event) => {
         const listItem = document.createElement("li");
         listItem.classList.add("my-2");
         switch (event.eventType) {
@@ -40,7 +46,7 @@ const backend_url = import.meta.env.BACKEND_URL;
     const newEvent = JSON.parse(event.data);
     const listItem = document.createElement("li");
     listItem.classList.add("my-2");
-    console.log(newEvent)
+    console.log(newEvent);
     switch (newEvent.eventType) {
       case "PlayerChat":
         listItem.innerHTML = `<span class="font-extrabold rounded-md mx-2 bg-ctp-mantle p-2">${newEvent.player.displayName}:</span> ${newEvent.message}`;

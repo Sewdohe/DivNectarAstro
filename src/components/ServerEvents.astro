@@ -9,7 +9,7 @@ const wsUrl = "ws://localhost:3000";
 </div>
 
 <script>
-  const ws = new WebSocket("ws://localhost:3000");
+  const ws = new WebSocket("ws://api.divnectar.com:4477");
   const eventsList = document.getElementById("events-list");
 
   ws.onmessage = (event) => {

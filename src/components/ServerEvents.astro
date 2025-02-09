@@ -1,0 +1,25 @@
+---
+// filepath: /home/sewdohe/Code/DivnectarAstro/src/components/ServerEvents.astro
+const wsUrl = "ws://localhost:3000";
+---
+
+<div>
+  <h2>Server Events</h2>
+  <ul id="events-list"></ul>
+</div>
+
+<script>
+  const ws = new WebSocket("ws://localhost:3000");
+  const eventsList = document.getElementById("events-list");
+
+  ws.onmessage = (event) => {
+    const newEvent = JSON.parse(event.data);
+    const listItem = document.createElement("li");
+    listItem.innerHTML = `<strong>${newEvent.eventType}</strong>: ${newEvent.joinMessage || newEvent.player.displayName}`;
+    eventsList?.prepend(listItem);
+  };
+
+  window.addEventListener("beforeunload", () => {
+    ws.close();
+  });
+</script>

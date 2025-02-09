@@ -4,6 +4,7 @@ import { Icon } from "astro-icon/components";
 interface NavLink {
   url: string;
   name: string;
+  children?: NavLink[];
 }
 
 // hold state of the menu
@@ -33,7 +34,7 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
       <h4 class=" text-4xl not-prose text-ctp-pink font-extrabold mb-4 self-center justify-self-center">Menu</h4>
       <nav class="flex flex-col space-y-4">
         {
-          navLinks.map((link) => (
+          navLinks.map((link, index) => (
             <div class="flex flex-row align-middle items-center">
               <a
                 class={`text-ctp-text font-extrabold no-underline px-2 lg:prose-lg hover:text-ctp-teal duration-150s cursor-default transition-all`}
@@ -41,6 +42,27 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
               >
                 {link.name}
               </a>
+              {link.children && link.children.length > 0 && (
+                <div class="relative group">
+                  <Icon class="sublink-open self-end text-ctp-peach text-3xl font-extrabold" name="mdi:chevron-down"></Icon>
+                  <div id="sublinks">
+                    <div class="absolute top-0 left-0 bg-ctp-crust border border-white w-full max-w-md my-auto mx-2 p-8 rounded-lg shadow-lg z-40 hidden">
+                      <nav class="flex flex-col space-y-4">
+                        {
+                          link.children.map((child, index) => (
+                            <a
+                              class={`text-ctp-text font-extrabold no-underline px-2 lg:prose-lg hover:text-ctp-teal duration-150s cursor-default transition-all`}
+                              href={child.url}
+                            >
+                              {child.name}
+                            </a>
+                          ))
+                        }
+                      </nav>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           ))
         }

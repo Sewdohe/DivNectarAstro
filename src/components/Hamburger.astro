@@ -56,7 +56,7 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
                   />
                 )}
               </div>
-              {link.children && link.children.length > 0 && (
+              {link.children && (
                 <div
                   id={`submenu-${link.name}`}
                   class="p-2 relative bg-ctp-mantle w-32 top-2 max-w-md my-auto mx-2 rounded-lg shadow-lg z-40 transition-all opacity-0 duration-300 hidden"
@@ -152,13 +152,11 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
           if (sublinks.classList.contains("hidden")) {
             console.log("sublinks visible");
             sublinks.classList.remove("hidden");
-            sublinks.classList.remove("opacity-0");
             sublinks.classList.add("flex");
             sublinks.classList.add("opacity-100");
           } else {
             console.log("sublinks hide");
             sublinks.classList.remove("flex");
-            sublinks.classList.remove("opacity-0");
             sublinks.classList.add("hidden");
             sublinks.classList.add("opacity-100");
           }
@@ -169,8 +167,6 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
     });
   }
 
-  // createHamburgerListeners();
-  // createSubmenuToggles();
   document.addEventListener("astro:page-load", updateActiveLink);
   document.addEventListener("astro:page-load", createSubmenuToggles);
   document.addEventListener("astro:page-load", createHamburgerListeners);

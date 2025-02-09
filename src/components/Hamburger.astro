@@ -28,7 +28,7 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
 >
   <div
     id="modal-content"
-    class="bg-ctp-crust border border-white w-full max-w-md my-auto mx-2 p-8 rounded-lg shadow-lg z-40"
+    class="bg-ctp-crust border  border-white w-full max-w-md my-auto mx-2 p-8 rounded-lg shadow-lg z-40"
   >
     <div class="flex flex-col">
       <h4
@@ -59,9 +59,9 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
               {link.children && link.children.length > 0 && (
                 <div
                   id={`submenu-${link.name}`}
-                  class="top-5 left-0 bg-ctp-crust w-full max-w-md my-auto mx-2 rounded-lg shadow-lg z-40 transition-all opacity-0 duration-300 hidden"
+                  class="p-2 relative bg-ctp-mantle w-32 top-2 max-w-md my-auto mx-2 rounded-lg shadow-lg z-40 transition-all opacity-0 duration-300 hidden"
                 >
-                  <nav class="flex w-full flex-col">
+                  <nav class="flex w-full flex-col space-y-2">
                     {link.children.map((child) => (
                       <a
                         class={`text-ctp-text font-extrabold no-underline px-2 lg:prose-lg hover:text-ctp-teal duration-150s cursor-default transition-all`}

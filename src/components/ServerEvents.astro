@@ -7,6 +7,8 @@ const backend_url = import.meta.env.BACKEND_URL;
   <ul id="events-list"></ul>
 </div>
 
+
+
 <script define:vars={{ backend_url }}>
   const ws = new WebSocket("wss://backend.divnectar.com");
   const eventsList = document.getElementById("events-list");
@@ -23,16 +25,19 @@ const backend_url = import.meta.env.BACKEND_URL;
     .then((events) => {
       events.forEach((event) => {
         const listItem = document.createElement("li");
-        listItem.classList.add("my-2");
+        listItem.classList.add("my-4");
         switch (event.eventType) {
           case "PlayerChat":
-            listItem.innerHTML = `<span class="font-extrabold rounded-md mx-2 bg-ctp-mantle p-2">${event.player.displayName}:</span> ${event.message}`;
+            listItem.innerHTML = `<span class="font-extrabold rounded-md mx-2 bg-ctp-mantle p-2">${event.player.displayName}:</span> <span class="press-start-2p-regular text-sm">${event.message}</span>`;
             break;
           case "PlayerJoin":
-            listItem.innerHTML = `<span class="font-extrabold">${event.player.displayName}</span> joined the server`;
+            listItem.innerHTML = `<span class="font-extrabold rounded-md mx-2 bg-ctp-mantle p-2">${event.player.displayName}</span> <span class="text-ctp-green font-extrabold"> joined the server </span>`;
             break;
-          case "PlayerLeave":
-            listItem.innerHTML = `<span class="font-extrabold">${event.player.displayName}</span> left the server`;
+          case "PlayerQuit":
+            listItem.innerHTML = `<span class="font-extrabold rounded-md mx-2 bg-ctp-mantle p-2">${event.player.displayName}</span> <span class="text-ctp-red font-extrabold">left the server</span>`;
+            break;
+            case "PlayerDeath":
+            listItem.innerHTML = `<span class="font-extrabold rounded-md mx-2 bg-ctp-mantle p-2">${event.player.displayName}</span> died!`;
             break;
           default:
             listItem.innerHTML = `<span class="font-extrabold">${event.player.displayName}</span> event occurred`;
@@ -68,3 +73,11 @@ const backend_url = import.meta.env.BACKEND_URL;
     ws.close();
   });
 </script>
+
+<style>
+  .press-start-2p-regular {
+    font-family: "Press Start 2P", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+</style>

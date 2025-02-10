@@ -1,4 +1,5 @@
 ---
+// filepath: /home/sewdohe/Code/DivnectarAstro/src/components/Hamburger.astro
 import { Icon } from "astro-icon/components";
 
 interface NavLink {
@@ -7,14 +8,10 @@ interface NavLink {
   children?: NavLink[];
 }
 
-// hold state of the menu
-let isOpen = false;
-
 // variable declaration
 const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
   navLinks: NavLink[];
 };
-// var pathname = new URL(Astro.request.url).pathname;
 ---
 
 <div class="p-4 text-4xl md:hidden">
@@ -28,7 +25,7 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
 >
   <div
     id="modal-content"
-    class="bg-ctp-crust border  border-white w-full max-w-md my-auto mx-2 p-8 rounded-lg shadow-lg z-40"
+    class="bg-ctp-crust border border-white w-full max-w-md my-auto mx-2 p-8 rounded-lg shadow-lg z-40"
   >
     <div class="flex flex-col">
       <h4
@@ -38,7 +35,7 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
       </h4>
       <nav class="flex flex-col items-center space-y-4">
         {
-          navLinks.map((link, index) => (
+          navLinks.map((link) => (
             <div class="flex flex-col align-middle items-center">
               <div class="flex align-middle justify-center items-center flex-row">
                 <a
@@ -56,15 +53,15 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
                   />
                 )}
               </div>
-              {link.children && (
+              {link.children && link.children.length > 0 && (
                 <div
                   id={`submenu-${link.name}`}
-                  class="p-2 relative bg-ctp-mantle w-32 top-2 max-w-md my-auto mx-2 rounded-lg shadow-lg z-40 transition-all opacity-0 duration-300 hidden"
+                  class="p-2 bg-ctp-mantle h-full w-32 top-2 max-w-md my-auto mx-2 rounded-lg shadow-lg z-40 hidden"
                 >
                   <nav class="flex w-full flex-col space-y-2">
                     {link.children.map((child) => (
                       <a
-                        class={`text-ctp-text font-extrabold no-underline px-2 lg:prose-lg hover:text-ctp-teal duration-150s cursor-default transition-all`}
+                        class={`text-ctp-text font-extrabold no-underline px-2 lg:prose-lg hover:text-ctp-teal cursor-default`}
                         href={child.url}
                       >
                         {child.name}
@@ -88,10 +85,8 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
 
     if (navOpen) {
       navOpen.addEventListener("click", () => {
-        console.log("clicked nav open");
         if (modal) {
           modal.classList.remove("hidden");
-          console.log("removed hidden class");
         }
       });
     }
@@ -105,36 +100,36 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
     }
   }
 
-  function updateActiveLink() {
-    const pathname = window.location.pathname;
-    const links = document.querySelectorAll("#modal nav a");
+  // function updateActiveLink() {
+  //   const pathname = window.location.pathname;
+  //   const links = document.querySelectorAll("#modal nav a");
 
-    links.forEach((link) => {
-      const dot = link.previousElementSibling;
-      if (link.getAttribute("href") === pathname) {
-        if (!dot) {
-          const newDot = document.createElement("span");
-          newDot.classList.add(
-            "bg-ctp-green",
-            "w-2",
-            "h-2",
-            "rounded-full",
-            "relative",
-            "left-2",
-            "mr-2"
-          );
-          newDot.setAttribute("transition:persist", "active");
-          if (link.parentElement) {
-            link.parentElement.insertBefore(newDot, link);
-          }
-        }
-      } else {
-        if (dot) {
-          dot.remove();
-        }
-      }
-    });
-  }
+  //   links.forEach((link) => {
+  //     const dot = link.previousElementSibling;
+  //     if (link.getAttribute("href") === pathname) {
+  //       if (!dot) {
+  //         const newDot = document.createElement("span");
+  //         newDot.classList.add(
+  //           "bg-ctp-green",
+  //           "w-2",
+  //           "h-2",
+  //           "rounded-full",
+  //           "relative",
+  //           "left-2",
+  //           "mr-2"
+  //         );
+  //         newDot.setAttribute("transition:persist", "active");
+  //         if (link.parentElement) {
+  //           link.parentElement.insertBefore(newDot, link);
+  //         }
+  //       }
+  //     } else {
+  //       if (dot) {
+  //         dot.remove();
+  //       }
+  //     }
+  //   });
+  // }
 
   function createSubmenuToggles() {
     const sublinkButtons = document.querySelectorAll("[data-sublink-open]");
@@ -142,32 +137,22 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
     sublinkButtons.forEach((button) => {
       button.addEventListener("click", (e) => {
         // @ts-ignore
-        // the code below def. works!
         const linkName = e.currentTarget.id.split("-")[1];
-        console.log(linkName);
-        // @ts-ignore
         const sublinks = document.querySelector(`#submenu-${linkName}`);
         if (sublinks) {
-          console.log(sublinks);
           if (sublinks.classList.contains("hidden")) {
-            console.log("sublinks visible");
             sublinks.classList.remove("hidden");
             sublinks.classList.add("flex");
-            sublinks.classList.add("opacity-100");
           } else {
-            console.log("sublinks hide");
             sublinks.classList.remove("flex");
             sublinks.classList.add("hidden");
-            sublinks.classList.add("opacity-100");
           }
-        } else {
-          console.log("no sublinks");
         }
       });
     });
   }
 
-  document.addEventListener("astro:page-load", updateActiveLink);
+  // document.addEventListener("astro:page-load", updateActiveLink);
   document.addEventListener("astro:page-load", createSubmenuToggles);
   document.addEventListener("astro:page-load", createHamburgerListeners);
 </script>

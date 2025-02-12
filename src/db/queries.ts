@@ -1,4 +1,4 @@
-import type { CoinLeaderboardData, CoinRow, SqlPlayerData } from "./interfaces";
+import type { CoinLeaderboardData, CoinRow, SqlPlayerData, LeaderboardData } from "./interfaces";
 import connection from "./connection";
 
 export async function getPlayerData() {
@@ -102,6 +102,19 @@ export async function getPlayerData() {
   // console.log("got players data from queries.ts");
   // console.log(placeHolderRes)
   return placeHolderRes;
+}
+
+export async function getLeaderboard(leaderboardName: string) {
+  const [rows]: [LeaderboardData[], any] = await connection.query(`
+    SELECT
+      namecache as playername,
+      value,
+      id
+      FROM ajlb_${leaderboardName} AS playerdata
+      ORDER BY value DESC LIMIT 10;
+  `);
+
+  return rows;
 }
 
 export async function getCoinsLeaderBoard() {

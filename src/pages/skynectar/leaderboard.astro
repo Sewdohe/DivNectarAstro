@@ -1,9 +1,57 @@
 ---
+import axios from "axios";
 import Layout from "../../layouts/Layout.astro";
+import { getLeaderboard } from "../../db/queries";
 
-
+const islandLeaderboard = await getLeaderboard("superior_island_worth");
+const coinsLeaderboard = await getLeaderboard("coinsengine_balance_raw_coin");
+console.log(islandLeaderboard);
 ---
 
-<Layout title="SkyNectar Leaderboard" description="SkyNectar Leaderboard">
-
+<Layout
+  title="SkyNectar Leaderboard"
+  direction="col"
+  description="SkyNectar Leaderboard"
+>
+  <div>
+    <h2 class="text-5xl text-center w-full font-extrabold text-ctp-yellow">
+      Leaderboards
+    </h2>
+  </div>
+  <div class="flex flex-col md:flex-row">
+    <div class="mx-4">
+      <h2 class="text-2xl text-ctp-peach text-center w-full">Island Worth</h2>
+      {
+        islandLeaderboard.map((row, index) => (
+          <div class="flex bg-ctp-mantle p-2 m-2 rounded-md flex-col items-center">
+            <div class="flex items-center">
+              <span class="text-3xl mr-1 font-extrabold">#{index + 1}: </span>
+              <span class="text-xl">{row.playername}</span>
+              <img src={`https://mc-heads.net/avatar/${row.id}/64`} alt="player head" class="h-5 w-5 ml-2" />
+            </div>
+            <div class="flex">
+              <span class="text-ctp-green text-xl font-extrabold">${row.value}</span>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+    <div class="mx-4">
+      <h2 class="text-2xl text-ctp-peach text-center w-full">Coins</h2>
+      {
+        coinsLeaderboard.map((row, index) => (
+          <div class="flex bg-ctp-mantle p-2 m-2 rounded-md flex-col items-center">
+            <div class="flex items-center">
+              <span class="text-3xl mr-1 font-extrabold">#{index + 1}: </span>
+              <span class="text-xl">{row.playername}</span>
+              <img src={`https://mc-heads.net/avatar/${row.id}/64`} alt="player head" class="h-5 w-5 ml-2" />
+            </div>
+            <div class="flex">
+              <span class="text-ctp-green text-xl font-extrabold">${row.value}</span>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
 </Layout>

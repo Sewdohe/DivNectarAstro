@@ -39,6 +39,12 @@ export interface CoinLeaderboardData {
   position: number;
 }
 
+export interface LeaderboardData extends RowDataPacket{
+  id: string,
+  value: number,
+  playername: string
+}
+
 export interface CoinRow extends RowDataPacket {
   id: number,
   uuid: string,

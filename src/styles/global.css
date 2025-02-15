@@ -1,4 +1,6 @@
 
+@import "../minecraft-items/minecraft-items-spritesheet.css";
+
 .tippy-box[data-theme='default'] {
   background-color: #181825;
   color: #bac2de;

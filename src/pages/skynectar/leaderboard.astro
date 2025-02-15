@@ -2,6 +2,10 @@
 import axios from "axios";
 import Layout from "../../layouts/Layout.astro";
 import { getLeaderboard } from "../../db/queries";
+import { Image } from "astro:assets";
+
+import islandImage from "../../assets/icons/island.png";
+import bankImage from "../../assets/icons/bank.png";
 
 const islandLeaderboard = await getLeaderboard("superior_island_worth");
 const coinsLeaderboard = await getLeaderboard("coinsengine_balance_raw_coin");
@@ -28,26 +32,54 @@ function ticksToTimeFormat(ticks: number) {
   if (hours > 0) timeString += `${hours} hour${hours > 1 ? "s" : ""} `;
   // if (minutes > 0) timeString += `${minutes} minute${minutes > 1 ? "s" : ""} `;
   // if (seconds > 0 || timeString === "")
-    // timeString += `${seconds} second${seconds > 1 ? "s" : ""}`;
+  // timeString += `${seconds} second${seconds > 1 ? "s" : ""}`;
 
   return timeString.trim();
 }
+
+function formatToUSD(value: number) {
+  return value.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
+}
+
+const formatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+
+  // These options can be used to round to whole numbers.
+  trailingZeroDisplay: "stripIfInteger", // This is probably what most people
+  // want. It will only stop printing
+  // the fraction when the input
+  // amount is a round number (int)
+  // already. If that's not what you
+  // need, have a look at the options
+  // below.
+  //minimumFractionDigits: 0, // This suffices for whole numbers, but will
+  // print 2500.10 as $2,500.1
+  //maximumFractionDigits: 0, // Causes 2500.99 to be printed as $2,501
+});
 ---
 
 <Layout
   title="SkyNectar Leaderboard"
   direction="col"
   description="SkyNectar Leaderboard"
+  class="items-center"
 >
   <div>
     <h2 class="text-5xl text-center w-full font-extrabold text-ctp-yellow">
       Leaderboards
     </h2>
-    {ticksToTimeFormat(8064433)}
   </div>
-  <div class="flex flex-col md:flex-row">
+  <div class="flex flex-col md:flex-row md:justify-center mt-3">
     <div class="mx-4">
-      <h2 class="text-2xl text-ctp-peach text-center w-full">Island Worth</h2>
+      <div class="flex justify-around items-center">
+        <h2 class="text-2xl font-extrabold text-ctp-peach text-center">
+          Island Worth
+        </h2><Image src={islandImage} height={32} alt="island worth" />
+      </div>
       {
         islandLeaderboard.map((row, index) => (
           <div class="flex bg-ctp-mantle p-2 m-2 rounded-md flex-col items-center">
@@ -62,7 +94,7 @@ function ticksToTimeFormat(ticks: number) {
             </div>
             <div class="flex">
               <span class="text-ctp-green text-xl font-extrabold">
-                ${row.value}
+                {formatter.format(row.value)}
               </span>
             </div>
           </div>
@@ -70,7 +102,11 @@ function ticksToTimeFormat(ticks: number) {
       }
     </div>
     <div class="mx-4">
-      <h2 class="text-2xl text-ctp-peach text-center w-full">Coins</h2>
+      <div class="flex justify-around items-center">
+        <h2 class="text-2xl font-extrabold text-ctp-peach text-center">
+          Coins
+        </h2><Image src={bankImage} height={32} alt="coins" />
+      </div>
       {
         coinsLeaderboard.map((row, index) => (
           <div class="flex bg-ctp-mantle p-2 m-2 rounded-md flex-col items-center">
@@ -85,7 +121,7 @@ function ticksToTimeFormat(ticks: number) {
             </div>
             <div class="flex">
               <span class="text-ctp-green text-xl font-extrabold">
-                ${row.value}
+                {formatter.format(row.value)}
               </span>
             </div>
           </div>
@@ -93,7 +129,11 @@ function ticksToTimeFormat(ticks: number) {
       }
     </div>
     <div class="mx-4">
-      <h2 class="text-2xl text-ctp-peach text-center w-full">Play Time</h2>
+      <div class="flex justify-around items-center">
+        <h2 class="text-2xl font-extrabold text-ctp-peach text-center">
+          Play-Time
+        </h2><div class="icon-32 ml-4 clock"></div>
+      </div>
       {
         playertimeLeaderboard.map((row, index) => (
           <div class="flex bg-ctp-mantle p-2 m-2 rounded-md flex-col items-center">

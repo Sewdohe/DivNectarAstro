@@ -20,21 +20,23 @@ const identity = {
 const skills = ["HTML", "CSS", "JavaScript", "React", "Astro", "Angular", "Server Management", "Linux (all of it)"];
 ---
 
-<Layout title={title} description={description}>
-  <p><b>Here are a few facts about me:</b></p>
-  <ul>
-    <li>My name is {identity.firstName}.</li>
-    <li>I live in {identity.country} and I work as a {identity.occupation}.</li>
-    {
-      identity.hobbies.length >= 2 && (
-        <li>
-          Two of my hobbies are: {identity.hobbies[0]} and {identity.hobbies[1]}
-        </li>
-      )
-    }
-  </ul>
-  <p><b>Skills:</b></p>
-  <ul>
-    {skills.map((skill) => <li>{skill}</li>)}
-  </ul>
+<Layout title={title} direction="col" description={description}>
+  <div class="prose prose-catpuccin text-ctp-text">
+    <p><b>Here are a few facts about me:</b></p>
+    <ul>
+      <li>My name is {identity.firstName}.</li>
+      <li>I live in {identity.country} and I work as a {identity.occupation}.</li>
+      {
+        identity.hobbies.length >= 2 && (
+          <li>
+            Two of my hobbies are: {identity.hobbies[0]} and {identity.hobbies[1]}
+          </li>
+        )
+      }
+    </ul>
+    <p><b>Skills:</b></p>
+    <ul>
+      {skills.map((skill) => <li>{skill}</li>)}
+    </ul>
+  </div>
 </Layout>

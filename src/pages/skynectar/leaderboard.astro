@@ -27,20 +27,15 @@ function ticksToTimeFormat(ticks: number) {
   // Convert ticks to total seconds (1 tick = 1/20 of a second)
   const totalSeconds = ticks / 20;
 
-  // Convert to days, hours, minutes, and seconds
+  // Convert to days, hours
   const days = Math.floor(totalSeconds / (24 * 3600));
   const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
-  // const minutes = Math.floor((totalSeconds % 3600) / 60);
-  // const seconds = Math.floor(totalSeconds % 60);
 
   // Format the time into a readable string
   let timeString = "";
 
   if (days > 0) timeString += `${days} day${days > 1 ? "s" : ""} `;
   if (hours > 0) timeString += `${hours} hour${hours > 1 ? "s" : ""} `;
-  // if (minutes > 0) timeString += `${minutes} minute${minutes > 1 ? "s" : ""} `;
-  // if (seconds > 0 || timeString === "")
-  // timeString += `${seconds} second${seconds > 1 ? "s" : ""}`;
 
   return timeString.trim();
 }

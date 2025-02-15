@@ -79,7 +79,7 @@ if (Astro.request.method === "POST") {
             <span class="ms-3">Commands</span>
           </a>
         </li>
-        <li slot="tab 1">
+        <li slot="tab 2">
           <a
             class="flex items-center p-2 rounded-lg text-white hover:bg-ctp-mantle group"
           >
@@ -88,6 +88,17 @@ if (Astro.request.method === "POST") {
               class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
             />
             <span class="ms-3">Players</span>
+          </a>
+        </li>
+        <li slot="tab 3">
+          <a
+            class="flex items-center p-2 rounded-lg text-white hover:bg-ctp-mantle group"
+          >
+            <Icon
+              name="mdi:people"
+              class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+            />
+            <span class="ms-3">Site Users</span>
           </a>
         </li>
       </ul>

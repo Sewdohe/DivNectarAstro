@@ -6,10 +6,18 @@ import { Image } from "astro:assets";
 
 import islandImage from "../../assets/icons/island.png";
 import bankImage from "../../assets/icons/bank.png";
+import goldBarsImage from "../../assets/icons/goldbars.png";
+import expOrbAnimatedImage from "../../assets/icons/exp-orb-animated.webp";
 
 const islandLeaderboard = await getLeaderboard("superior_island_worth");
 const coinsLeaderboard = await getLeaderboard("coinsengine_balance_raw_coin");
 const playertimeLeaderboard = await getLeaderboard("shortcut_playertime");
+const rpgLevelLeaderboard = await getLeaderboard("mmocore_level");
+const fishingLeaderboard = await getLeaderboard("shortcut_fishing");
+const bankLeaderboard = await getLeaderboard("bankplus_balance_long");
+const damageDealtLeaderboard = await getLeaderboard("shortcut_damage_dealt");
+const enchantingLeaderboard = await getLeaderboard("shortcut_enchanting");
+
 console.log(islandLeaderboard);
 
 function ticksToTimeFormat(ticks: number) {
@@ -131,6 +139,33 @@ const formatter = new Intl.NumberFormat("en-US", {
     <div class="mx-4">
       <div class="flex justify-around items-center">
         <h2 class="text-2xl font-extrabold text-ctp-peach text-center">
+          Bank Balance
+        </h2><Image src={goldBarsImage} height={32} alt="bank" />
+      </div>
+      {
+        bankLeaderboard.map((row, index) => (
+          <div class="flex bg-ctp-mantle p-2 m-2 rounded-md flex-col items-center">
+            <div class="flex items-center">
+              <span class="text-3xl mr-1 font-extrabold">#{index + 1}: </span>
+              <span class="text-xl">{row.playername}</span>
+              <img
+                src={`https://mc-heads.net/avatar/${row.id}/64`}
+                alt="player head"
+                class="h-5 w-5 ml-2"
+              />
+            </div>
+            <div class="flex">
+              <span class="text-ctp-green text-xl font-extrabold">
+                {formatter.format(row.value)}
+              </span>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+    <div class="mx-4">
+      <div class="flex justify-around items-center">
+        <h2 class="text-2xl font-extrabold text-ctp-peach text-center">
           Play-Time
         </h2><div class="icon-32 ml-4 clock"></div>
       </div>
@@ -149,6 +184,60 @@ const formatter = new Intl.NumberFormat("en-US", {
             <div class="flex">
               <span class="text-ctp-green text-xl font-extrabold">
                 {ticksToTimeFormat(row.value)}
+              </span>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+    <div class="mx-4">
+      <div class="flex justify-around items-center">
+        <h2 class="text-2xl font-extrabold text-ctp-peach text-center">
+          RPG-Level
+        </h2><Image src={expOrbAnimatedImage} height={32} alt="island worth" />
+      </div>
+      {
+        rpgLevelLeaderboard.map((row, index) => (
+          <div class="flex bg-ctp-mantle p-2 m-2 rounded-md flex-col items-center">
+            <div class="flex items-center">
+              <span class="text-3xl mr-1 font-extrabold">#{index + 1}: </span>
+              <span class="text-xl">{row.playername}</span>
+              <img
+                src={`https://mc-heads.net/avatar/${row.id}/64`}
+                alt="player head"
+                class="h-5 w-5 ml-2"
+              />
+            </div>
+            <div class="flex">
+              <span class="text-ctp-green text-xl font-extrabold">
+                Level {Math.floor(row.value)}
+              </span>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+    <div class="mx-4">
+      <div class="flex justify-around items-center">
+        <h2 class="text-2xl font-extrabold text-ctp-peach text-center">
+          Fish Caught
+        </h2><div class="icon-32 ml-4 fishing-rod"></div>
+      </div>
+      {
+        fishingLeaderboard.map((row, index) => (
+          <div class="flex bg-ctp-mantle p-2 m-2 rounded-md flex-col items-center">
+            <div class="flex items-center">
+              <span class="text-3xl mr-1 font-extrabold">#{index + 1}: </span>
+              <span class="text-xl">{row.playername}</span>
+              <img
+                src={`https://mc-heads.net/avatar/${row.id}/64`}
+                alt="player head"
+                class="h-5 w-5 ml-2"
+              />
+            </div>
+            <div class="flex">
+              <span class="text-ctp-green text-xl font-extrabold">
+                {Math.floor(row.value)} Fish
               </span>
             </div>
           </div>

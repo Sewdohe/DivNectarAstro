@@ -5,7 +5,33 @@ import { getLeaderboard } from "../../db/queries";
 
 const islandLeaderboard = await getLeaderboard("superior_island_worth");
 const coinsLeaderboard = await getLeaderboard("coinsengine_balance_raw_coin");
+const playertimeLeaderboard = await getLeaderboard("shortcut_playertime");
 console.log(islandLeaderboard);
+
+function ticksToTimeFormat(ticks: number) {
+  // Minecraft tick rate: 20 ticks per second
+  const secondsInTick = 1 / 20;
+
+  // Convert ticks to total seconds (1 tick = 1/20 of a second)
+  const totalSeconds = ticks / 20;
+
+  // Convert to days, hours, minutes, and seconds
+  const days = Math.floor(totalSeconds / (24 * 3600));
+  const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
+  // const minutes = Math.floor((totalSeconds % 3600) / 60);
+  // const seconds = Math.floor(totalSeconds % 60);
+
+  // Format the time into a readable string
+  let timeString = "";
+
+  if (days > 0) timeString += `${days} day${days > 1 ? "s" : ""} `;
+  if (hours > 0) timeString += `${hours} hour${hours > 1 ? "s" : ""} `;
+  // if (minutes > 0) timeString += `${minutes} minute${minutes > 1 ? "s" : ""} `;
+  // if (seconds > 0 || timeString === "")
+    // timeString += `${seconds} second${seconds > 1 ? "s" : ""}`;
+
+  return timeString.trim();
+}
 ---
 
 <Layout
@@ -17,6 +43,7 @@ console.log(islandLeaderboard);
     <h2 class="text-5xl text-center w-full font-extrabold text-ctp-yellow">
       Leaderboards
     </h2>
+    {ticksToTimeFormat(8064433)}
   </div>
   <div class="flex flex-col md:flex-row">
     <div class="mx-4">
@@ -27,10 +54,16 @@ console.log(islandLeaderboard);
             <div class="flex items-center">
               <span class="text-3xl mr-1 font-extrabold">#{index + 1}: </span>
               <span class="text-xl">{row.playername}</span>
-              <img src={`https://mc-heads.net/avatar/${row.id}/64`} alt="player head" class="h-5 w-5 ml-2" />
+              <img
+                src={`https://mc-heads.net/avatar/${row.id}/64`}
+                alt="player head"
+                class="h-5 w-5 ml-2"
+              />
             </div>
             <div class="flex">
-              <span class="text-ctp-green text-xl font-extrabold">${row.value}</span>
+              <span class="text-ctp-green text-xl font-extrabold">
+                ${row.value}
+              </span>
             </div>
           </div>
         ))
@@ -44,10 +77,39 @@ console.log(islandLeaderboard);
             <div class="flex items-center">
               <span class="text-3xl mr-1 font-extrabold">#{index + 1}: </span>
               <span class="text-xl">{row.playername}</span>
-              <img src={`https://mc-heads.net/avatar/${row.id}/64`} alt="player head" class="h-5 w-5 ml-2" />
+              <img
+                src={`https://mc-heads.net/avatar/${row.id}/64`}
+                alt="player head"
+                class="h-5 w-5 ml-2"
+              />
             </div>
             <div class="flex">
-              <span class="text-ctp-green text-xl font-extrabold">${row.value}</span>
+              <span class="text-ctp-green text-xl font-extrabold">
+                ${row.value}
+              </span>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+    <div class="mx-4">
+      <h2 class="text-2xl text-ctp-peach text-center w-full">Play Time</h2>
+      {
+        playertimeLeaderboard.map((row, index) => (
+          <div class="flex bg-ctp-mantle p-2 m-2 rounded-md flex-col items-center">
+            <div class="flex items-center">
+              <span class="text-3xl mr-1 font-extrabold">#{index + 1}: </span>
+              <span class="text-xl">{row.playername}</span>
+              <img
+                src={`https://mc-heads.net/avatar/${row.id}/64`}
+                alt="player head"
+                class="h-5 w-5 ml-2"
+              />
+            </div>
+            <div class="flex">
+              <span class="text-ctp-green text-xl font-extrabold">
+                {ticksToTimeFormat(row.value)}
+              </span>
             </div>
           </div>
         ))

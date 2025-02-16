@@ -7,6 +7,7 @@ import { Image } from "astro:assets";
 import islandImage from "../../assets/icons/island.png";
 import bankImage from "../../assets/icons/bank.png";
 import goldBarsImage from "../../assets/icons/goldbars.png";
+import chipImage from "../../assets/icons/chip.png";
 import expOrbAnimatedImage from "../../assets/icons/exp-orb-animated.webp";
 
 const islandLeaderboard = await getLeaderboard("superior_island_worth");
@@ -17,6 +18,7 @@ const fishingLeaderboard = await getLeaderboard("shortcut_fishing");
 const bankLeaderboard = await getLeaderboard("bankplus_balance_long");
 const damageDealtLeaderboard = await getLeaderboard("shortcut_damage_dealt");
 const enchantingLeaderboard = await getLeaderboard("shortcut_enchanting");
+const vegasWinningsLeaderboard = await getLeaderboard("vegas_won_balance");
 
 console.log(islandLeaderboard);
 
@@ -139,6 +141,33 @@ const formatter = new Intl.NumberFormat("en-US", {
       </div>
       {
         bankLeaderboard.map((row, index) => (
+          <div class="flex bg-ctp-mantle p-2 m-2 rounded-md flex-col items-center">
+            <div class="flex items-center">
+              <span class="text-3xl mr-1 font-extrabold">#{index + 1}: </span>
+              <span class="text-xl">{row.playername}</span>
+              <img
+                src={`https://mc-heads.net/avatar/${row.id}/64`}
+                alt="player head"
+                class="h-5 w-5 ml-2"
+              />
+            </div>
+            <div class="flex">
+              <span class="text-ctp-green text-xl font-extrabold">
+                {formatter.format(row.value)}
+              </span>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+    <div class="mx-4">
+      <div class="flex justify-around items-center">
+        <h2 class="text-2xl font-extrabold text-ctp-peach text-center">
+          Vegas Winnings
+        </h2><Image src={chipImage} height={32} alt="bank" />
+      </div>
+      {
+        vegasWinningsLeaderboard.map((row, index) => (
           <div class="flex bg-ctp-mantle p-2 m-2 rounded-md flex-col items-center">
             <div class="flex items-center">
               <span class="text-3xl mr-1 font-extrabold">#{index + 1}: </span>

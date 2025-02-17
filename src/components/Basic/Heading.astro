@@ -1,0 +1,28 @@
+---
+const { as: Component, href } = Astro.props;
+
+var styles = "";
+
+switch(Component) {
+  case'h1':
+    styles = "text-5xl underline font-extrabold text-ctp-pink";
+    break;
+  case 'h2':
+    styles = "ml-2 text-4xl underline font-extrabold text-ctp-sky";
+    break;
+  case 'h3':
+    styles = "ml-3 text-3xl underline font-extrabold text-ctp-mauve";
+    break;
+  case 'h4':
+    styles = "ml-4 text-xl font-bold text-ctp-sky";
+    break;
+  case 'h5':
+    styles = "ml-5 text-xl font-bold text-ctp-green";
+    break;
+  case 'h6':
+    styles = "ml-6 text-base font-bold text-ctp-yellow";
+    break;
+}
+---
+
+<Component class={`${styles} mb-2`}><slot /></Component>

@@ -3,6 +3,12 @@ import fetchApi from "../../lib/strapi";
 import type Article from "../../interfaces/article";
 import BlogPost from "../../layouts/BlogPost.astro";
 import { Markdown } from "astro-remote";
+import Heading from "../../components/Basic/Heading.astro";
+import Paragraph from "../../components/Basic/Paragraph.astro";
+import Img from "../../components/Basic/Img.astro";
+import Link from "../../components/Basic/Link.astro";
+import CodeBlock from "../../components/Basic/CodeBlock.astro";
+import InlineCode from "../../components/Basic/InlineCode.astro";
 
 const { slug } = Astro.params;
 
@@ -23,7 +29,12 @@ try {
 ---
 
 <BlogPost article={article}>
-  <img src={import.meta.env.STRAPI_URL + article.cover.url} />
-  <h1>{article.title}</h1>
-  <Markdown content={article.content} />
+  <div class="bg-ctp-crust justify-center items-center align-middle mx-auto not-prose left-0 absolute top-12 w-screen flex">
+    <img class="rounded-lg h-14 shadow-md" src={import.meta.env.STRAPI_URL + article.cover.url} />
+    <h1 class="text-4xl text-ctp-peach font-extrabold my-8 ml-4">{article.title}</h1>
+  </div>
+  <div class="h-11"></div>
+  <div class="mt-8">
+    <Markdown sanitize={{ allowComponents: true }} content={article.content} components={{ p: Paragraph, img: Img, Heading: Heading, a: Link, CodeBlock: CodeBlock, CodeSpan: InlineCode}} />
+  </div>
 </BlogPost>

@@ -1,0 +1,26 @@
+---
+import { string } from "astro:schema";
+import type Article from "../interfaces/article";
+
+const props: Article = Astro.props as Article;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": props.title,
+  "description": props.description,
+  "image": [
+    import.meta.env.STRAPI_URL + props.cover.url,
+  ],
+  "datePublished": props.publishedAt,
+  "dateModified": props.updatedAt,
+  // "keywords": props.tags,
+  "author": {
+    "@type": "Person",
+    "name": "Sewdohe",
+    "url": "https://divnectar.com/about"
+  },
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

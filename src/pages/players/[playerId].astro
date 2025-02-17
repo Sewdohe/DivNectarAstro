@@ -4,6 +4,7 @@ import { getPlayerData, getCoinsLeaderBoard } from "../../db/queries";
 import Layout from "../../layouts/Layout.astro";
 import Card from "../../components/Card.astro";
 import { GET as getUser } from "../../pages/api/oauth/get-user";
+import ProfileJSONLD from "../../components/ProfileJSONLD.astro";
 
 import moment from "moment";
 
@@ -48,6 +49,7 @@ export const prerender = false;
     alt: `${player.username}'s avatar`,
   }}
 >
+  <ProfileJSONLD {...player} />
   <div class="flex w-full flex-col justify-center align-middle items-center">
     <img
       class="object-contain rounded-lg h-48 md:w-48 md:rounded-none md:rounded-s-lg"

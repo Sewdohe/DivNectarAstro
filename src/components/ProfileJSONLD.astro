@@ -1,0 +1,19 @@
+---
+import { string } from "astro:schema";
+import type { SqlPlayerData } from "../db/interfaces";
+
+const props: SqlPlayerData = Astro.props as SqlPlayerData;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "mainEntity": {
+    "@type": "Person",
+    "name": props.username,
+    "identifier": props.uuid,
+    "image": `https://minotar.net/cube/${props.uuid}/100.png`
+  }
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

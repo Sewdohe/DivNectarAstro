@@ -1,6 +1,7 @@
 ---
 import Layout from "./Layout.astro";
 const { article } = Astro.props;
+import BlogPostingJSONLD from "../components/BlogPostingJSONLD.astro";
 
 console.log("title:", article.title);
 const image = {
@@ -11,6 +12,7 @@ console.log('blogpost OG image:', image.url)
 ---
 
 <Layout title={article.title} description={article.description} image={image}>
+    <BlogPostingJSONLD slot="head" {...article} />
     <div id="page-content" class="mx-4 md:mx-6 prose prose-catpuccin text-ctp-text">
         <slot />
     </div>

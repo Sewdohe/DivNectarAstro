@@ -122,6 +122,8 @@ if (!image) { // if no image use the check OG image API
         ],
       }}
     />
+    <!-- This slot of for any JSONLD components to mount inside -->
+    <slot name="head" />
   </head>
   <body
     class="bg-ctp-base container m-0 p-0 md:w-screen text-ctp-text w-full"

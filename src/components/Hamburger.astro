@@ -58,7 +58,7 @@ const { navLinks }: { navLinks: NavLink[] } = Astro.props as {
                   id={`submenu-${link.name}`}
                   class="p-2 bg-ctp-mantle h-full w-32 top-2 max-w-md my-auto mx-2 rounded-lg shadow-lg z-40 hidden"
                 >
-                  <nav class="flex w-full flex-col space-y-2">
+                  <nav class="flex w-full align-middle items-center flex-col space-y-2">
                     {link.children.map((child) => (
                       <a
                         class={`text-ctp-text font-extrabold no-underline px-2 lg:prose-lg hover:text-ctp-teal cursor-default`}

@@ -25,7 +25,7 @@ console.log(articles);
   {
     articles &&
       articles.map((article) => (
-        <div class="max-w-sm rounded-lg md:w-auto shadow-md dark:bg-ctp-crust dark:border-l-ctp-sapphire">
+        <div class="max-w-sm rounded-lg md:w-auto shadow-md bg-ctp-crust border-l-ctp-sapphire">
           <a href={`/blog/${article.slug}`}>
             <img
               class="rounded-lg p-4 border-ctp-sapphire"
@@ -35,11 +35,11 @@ console.log(articles);
           </a>
           <div class="p-5">
             <a href={`/blog/${article.slug}`}>
-              <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+              <h5 class="mb-2 text-2xl font-bold tracking-tight text-ctp-text">
                 {article.title}
               </h5>
             </a>
-            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+            <p class="mb-3 font-normal text-ctp-text">
               {article.description}
             </p>
             <a href={`/blog/${article.slug}`}

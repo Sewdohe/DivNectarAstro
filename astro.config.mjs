@@ -14,7 +14,9 @@ import node from '@astrojs/node';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://divnectar.com',
-  integrations: [react(), tailwind(), partytown(), sitemap(), icon(), sitemap()],
+  integrations: [react({
+    experimentalReactChildren: true
+  }), tailwind(), partytown(), sitemap(), icon(), sitemap()],
   vite: {
     ssr: {
       noExternal: ['@builder.io']

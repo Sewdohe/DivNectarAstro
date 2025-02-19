@@ -29,12 +29,30 @@ try {
 ---
 
 <BlogPost article={article}>
-  <div class="bg-ctp-crust justify-center items-center align-middle mx-auto not-prose left-0 absolute top-12 w-screen flex">
-    <img class="rounded-lg h-14 shadow-md" src={import.meta.env.STRAPI_URL + article.cover.url} />
-    <h1 class="text-4xl text-ctp-peach font-extrabold my-8 ml-4">{article.title}</h1>
+  <div
+    class="bg-ctp-crust justify-center items-center align-middle mx-auto not-prose left-0 absolute top-12 w-screen flex"
+  >
+    <img
+      class="rounded-lg h-14 shadow-md"
+      src={import.meta.env.STRAPI_URL + article.cover.url}
+    />
+    <h1 class="text-4xl text-ctp-peach font-extrabold my-8 ml-4">
+      {article.title}
+    </h1>
   </div>
   <div class="h-11"></div>
   <div class="mt-8">
-    <Markdown sanitize={{ allowComponents: true }} content={article.content} components={{ p: Paragraph, img: Img, Heading: Heading, a: Link, CodeBlock: CodeBlock, CodeSpan: InlineCode}} />
+    <Markdown
+      sanitize={{ allowComponents: true }}
+      content={article.content}
+      components={{
+        p: Paragraph,
+        img: Img,
+        Heading,
+        a: Link,
+        CodeBlock: CodeBlock,
+        CodeSpan: InlineCode,
+      }}
+    />
   </div>
 </BlogPost>

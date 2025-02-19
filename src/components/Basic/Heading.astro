@@ -2,6 +2,7 @@
 const { as: Component, href } = Astro.props;
 
 var styles = "";
+console.log(Component);
 
 switch(Component) {
   case'h1':
@@ -23,7 +24,6 @@ switch(Component) {
     styles = "ml-6 text-base font-bold text-ctp-yellow";
     break;
 }
-console.log(Component);
 console.log(styles);
 ---
 

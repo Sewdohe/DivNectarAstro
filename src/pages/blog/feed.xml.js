@@ -1,6 +1,6 @@
 import rss from '@astrojs/rss';
 
-import fetchApi from "../lib/strapi";
+import fetchApi from "../../lib/strapi";
 import MarkdownIt from 'markdown-it';
 
 const parser = new MarkdownIt();

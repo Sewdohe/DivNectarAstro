@@ -15,7 +15,7 @@ const rssItems = articles.map((article) => {
     title: article.title,
     description: article.description,
     link: `https://sewdohe.com/blog/${article.slug}`,
-    pubDate: new Date(article.published_at).toUTCString(),
+    pubDate: article.published_at,
     content: parser.render(article.content),
   };
 });

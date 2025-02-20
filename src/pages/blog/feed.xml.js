@@ -1,6 +1,9 @@
 import rss from '@astrojs/rss';
 
 import fetchApi from "../lib/strapi";
+import MarkdownIt from 'markdown-it';
+
+const parser = new MarkdownIt();
 
 const articles = await fetchApi({
   endpoint: "articles?populate=cover", // the content type to fetch
@@ -13,7 +16,7 @@ const rssItems = articles.map((article) => {
     description: article.description,
     link: `https://sewdohe.com/blog/${article.slug}`,
     pubDate: new Date(article.published_at).toUTCString(),
-    content: article.content,
+    content: parser.render(post.body),
   };
 });
 

@@ -31,43 +31,44 @@ async function generateOgImage(path: string) {
 }
 
 async function handleOGImage() {
-	try {
-      const response = await fetch(
-        `${import.meta.env.BACKEND_URL}/check-og-image?path=${encodeURIComponent(currentRoute)}`
-      );
-      if (response.ok) {
-        const data = await response.json();
-        if (data.exists) {
-					// console.log('Image exists already!', data)
-          image.url = data.url;
-          image.alt = `Screenshot of https://divnectar.com${currentRoute}`;
-        } else {
-					// console.log('Image doesnt exist, defaulting...')
-					// console.log('we will generate on the next run')
-					generateOgImage(currentRoute);
-          image = {
-						url: 'https://divnectar.com/site-logo.webp',
-						alt: 'DivNectar Logo'
-					}
-        }
+  try {
+    const response = await fetch(
+      `${import.meta.env.BACKEND_URL}/check-og-image?path=${encodeURIComponent(currentRoute)}`
+    );
+    if (response.ok) {
+      const data = await response.json();
+      if (data.exists) {
+        // console.log('Image exists already!', data)
+        image.url = data.url;
+        image.alt = `Screenshot of https://divnectar.com${currentRoute}`;
       } else {
-				console.log('error checking OG image. Something wrong with API.')
-				image = {
-						url: 'https://divnectar.com/site-logo.webp',
-						alt: 'DivNectar Logo'
-					}
-        // await generateOgImage(currentRoute);
+        // console.log('Image doesnt exist, defaulting...')
+        // console.log('we will generate on the next run')
+        generateOgImage(currentRoute);
+        image = {
+          url: "https://divnectar.com/site-logo.webp",
+          alt: "DivNectar Logo",
+        };
       }
-    } catch (error) {
-      console.error("Error checking OG image:", error);
+    } else {
+      console.log("error checking OG image. Something wrong with API.");
+      image = {
+        url: "https://divnectar.com/site-logo.webp",
+        alt: "DivNectar Logo",
+      };
+      // await generateOgImage(currentRoute);
     }
+  } catch (error) {
+    console.error("Error checking OG image:", error);
+  }
 }
 
-if (!image) { // if no image use the check OG image API
-	image = {
-		url: 'https://divnectar.com/site-logo.webp',
-		alt: 'DivNectar Logo'
-	}
+if (!image) {
+  // if no image use the check OG image API
+  image = {
+    url: "https://divnectar.com/site-logo.webp",
+    alt: "DivNectar Logo",
+  };
   await handleOGImage();
 }
 
@@ -81,9 +82,18 @@ if (!image) { // if no image use the check OG image API
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="DivNectar - FOSS software and Minecraft"
+      href={`https://divnectar.com/blog/feed.xml`}
+    />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
     <Tooltips interactive={true} delay={[15, 14000]} />
     <meta name="generator" content={Astro.generator} />
     <ClientRouter />
@@ -125,18 +135,16 @@ if (!image) { // if no image use the check OG image API
     <!-- This slot of for any JSONLD components to mount inside -->
     <slot name="head" />
   </head>
-  <body
-    class="bg-ctp-base container m-0 p-0 md:w-screen text-ctp-text w-full"
-  >
+  <body class="bg-ctp-base container m-0 p-0 md:w-screen text-ctp-text w-full">
     <Navigation transition:persist />
-    <div id="content" class=`px-3 flex ${direction && 'flex-col'} ${center && 'justify-center'} w-full md:w-screen lg:px-10`>
+    <div
+      id="content"
+      class=`px-3 flex ${direction && 'flex-col'} ${center && 'justify-center'} w-full md:w-screen lg:px-10`
+    >
       <slot />
     </div>
-  </body>
-  <div>
-  </div>
+  </body><div></div>
 </html>
-
 
 <style>
   html,
@@ -146,12 +154,12 @@ if (!image) { // if no image use the check OG image API
     width: 100%;
     height: 100%;
   }
-  .tippy-box[data-theme='default'] {
-  background-color: #181825;
-  color: #bac2de;
-  border: 1px solid black;
-  border-radius: 8px;
-  padding: 0.5rem;
-  word-wrap: break-word;
-}
+  .tippy-box[data-theme="default"] {
+    background-color: #181825;
+    color: #bac2de;
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 0.5rem;
+    word-wrap: break-word;
+  }
 </style>

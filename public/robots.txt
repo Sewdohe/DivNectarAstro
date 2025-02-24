@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://divnectar.com/sitemap-index.xml
+Sitemap: https://cms.divnectar.com/api/strapi-5-sitemap-plugin/sitemap.xml

@@ -3,7 +3,6 @@ import Layout from "../layouts/Layout.astro";
 import Button from "../components/Button.astro";
 import { Icon } from "astro-icon/components";
 
-
 const title = "DivNectar";
 const description = "Your second (sky) home";
 const image = {
@@ -13,7 +12,7 @@ const image = {
 ---
 
 <Layout title={title} direction="col" description={description} image={image}>
-  <section class="">
+  <section class="divider_wavy_bubbles">
     <div class="py-8 px-4 mx-auto text-center lg:py-16 lg:px-12">
       <a
         href="/skynectar/players"
@@ -110,7 +109,7 @@ const image = {
       </div>
     </div>
   </section>
-  <section class="">
+  <section class="page-divider-wavy bg-ctp-crust">
     <div
       class="px-4 mx-auto text-center md:max-w-screen-md lg:max-w-screen-lg lg:px-36"
     >
@@ -261,6 +260,24 @@ const image = {
           </p>
         </div>
       </div>
+    </div>
+  </section>
+  <section
+    class="flex align-middle items-center divider-wavy-bottom divider-wavy-top min-h-96 bg-[url(https://cms.divnectar.com/uploads/sewdohe_island_5c569a9140.png)] bg-cover bg-center bg-no-repeat"
+  >
+    <div class="flex flex-col items-center justify-center w-full h-full">
+      <h1
+        class="text-5xl pt-32 w-full text-center font-extrabold text-ctp-text opacity-75"
+      >
+        Start Playing Today!
+      </h1>
+      <a href="https://info.divnectar.com/books/skynectar/page/how-to-connect">
+        <div
+          class="my-4 p-2 rounded-md bg-ctp-teal font-extrabold text-ctp-crust hover:scale-110 transition-all duration-150 cursor-pointer"
+        >
+          Connect Now
+        </div>
+      </a>
     </div>
   </section>
 </Layout>

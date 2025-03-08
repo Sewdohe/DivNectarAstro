@@ -12,7 +12,7 @@ import fetchApi from "../lib/strapi";
 import type Article from "../interfaces/article";
 
 const articles = await fetchApi<Article[]>({
-  endpoint: "articles?populate=cover", // the content type to fetch
+  endpoint: "articles?populate[0]=cover&populate[1]=category", // the content type to fetch
   wrappedByKey: "data", // the key to unwrap the response
 });
 
@@ -33,6 +33,11 @@ console.log(articles);
               alt=""
             />
           </a>
+          <div class="flex flex-row justify-around p-2 px-4">
+            <a href={`/tags/${article.category.slug}`}>
+            <div class="bg-ctp-peach p-1 text-ctp-mantle rounded-3xl">{article.category.name}</div>
+            </a>
+          </div>
           <div class="p-5">
             <a href={`/blog/${article.slug}`}>
               <h5 class="mb-2 text-2xl font-bold tracking-tight text-ctp-text">

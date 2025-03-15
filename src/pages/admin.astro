@@ -4,6 +4,7 @@ import Layout from "../layouts/Layout.astro";
 import axios from "axios";
 import { GET as getUser } from "../pages/api/oauth/get-user";
 import { initFlowbite } from "flowbite";
+import { LionTabs } from "@lion/ui/tabs.js";
 
 const userId = Astro.cookies.get("userId")?.value ?? "0";
 let user = null;
@@ -43,6 +44,8 @@ if (Astro.request.method === "POST") {
     }
   }
 }
+
+var activeTab = 1;
 ---
 
 <Layout title="Skyblock Server Panel" description="Manage the Skyblock server">
@@ -68,7 +71,7 @@ if (Astro.request.method === "POST") {
         Admin Dash
       </h3>
       <ul class="space-y-2 font-medium">
-        <li slot="tab 1">
+        <li id="tab1" class="cursor-pointer" slot="tab 1">
           <a
             class="flex items-center p-2 rounded-lg text-white hover:bg-ctp-mantle group"
           >
@@ -79,7 +82,7 @@ if (Astro.request.method === "POST") {
             <span class="ms-3">Commands</span>
           </a>
         </li>
-        <li slot="tab 2">
+        <li id="tab2" class="cursor-pointer" slot="tab 2">
           <a
             class="flex items-center p-2 rounded-lg text-white hover:bg-ctp-mantle group"
           >
@@ -90,7 +93,7 @@ if (Astro.request.method === "POST") {
             <span class="ms-3">Players</span>
           </a>
         </li>
-        <li slot="tab 3">
+        <li id="tab3" class="cursor-pointer" slot="tab 3">
           <a
             class="flex items-center p-2 rounded-lg text-white hover:bg-ctp-mantle group"
           >
@@ -109,65 +112,72 @@ if (Astro.request.method === "POST") {
     <div
       class="p-4 border-2 w-full flex flex-col items-center justify-center border-dashed rounded-lg border-gray-700"
     >
-      {
-        user && user.username == "sewdohe" ? (
-          <div>
-            <h2 class="text-center mb-2 font-extrabold text-2xl md:text-4xl text-ctp-red">
-              Execute Commands
-            </h2>
-            <div id="command-output" class="w-full transition-all duration-150">
-              {command_success ? (
-                <p class="mb-3 text-ctp-green font-extrabold text-3xl">{`Command \`${command}\` executed successfully`}</p>
-              ) : (
-                // <p class="mb-3 text-ctp-red font-extrabold text-3xl">{`Command ${command} failed to execute`}</p>
-                <span />
-              )}
-              {command == null ? (
-                <p class="mb-3 text-ctp-yellow font-extrabold text-3xl">
-                  Awaiting command...
-                </p>
-              ) : null}
-            </div>
-            <form method="post" id="command-controls w-full my-2">
-              <div id="command" class="">
-                <label
-                  for="command"
-                  class="text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4s origin-[0] start-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto"
-                >
-                  command to execute
-                </label>
-                <input
-                  aria-label=""
-                  type="text"
-                  class="bg-ctp-mantle w-full border border-ctp-yellow text-ctp-text focus:outline-none focus:border-2 rounded-md px-1 py-2"
-                  name="command"
-                />
-              </div>
-              <button
-                id="send-command"
-                type="submit"
-                class="bg-ctp-yellow my-3 inline-flex align-middle justify-center text-ctp-mantle p-2 rounded-lg"
+      <div class="hidden" id="tabView1">
+        {
+          user && user.username == "sewdohe" ? (
+            <div>
+              <h2 class="text-center mb-2 font-extrabold text-2xl md:text-4xl text-ctp-red">
+                Execute Commands
+              </h2>
+              <div
+                id="command-output"
+                class="w-full transition-all duration-150"
               >
-                <Icon
-                  class="text-ctp-mantle self-center mr-2"
-                  name="mdi:send"
-                />
-                <span>Send</span>
-              </button>
-            </form>
-          </div>
-        ) : (
-          <div>
-            <h2>You're not allowed here.</h2>
-          </div>
-        )
-      }
+                {command_success ? (
+                  <p class="mb-3 text-ctp-green font-extrabold text-3xl">{`Command \`${command}\` executed successfully`}</p>
+                ) : (
+                  // <p class="mb-3 text-ctp-red font-extrabold text-3xl">{`Command ${command} failed to execute`}</p>
+                  <span />
+                )}
+                {command == null ? (
+                  <p class="mb-3 text-ctp-yellow font-extrabold text-3xl">
+                    Awaiting command...
+                  </p>
+                ) : null}
+              </div>
+              <form method="post" id="command-controls w-full my-2">
+                <div id="command" class="">
+                  <label
+                    for="command"
+                    class="text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4s origin-[0] start-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto"
+                  >
+                    command to execute
+                  </label>
+                  <input
+                    aria-label=""
+                    type="text"
+                    class="bg-ctp-mantle w-full border border-ctp-yellow text-ctp-text focus:outline-none focus:border-2 rounded-md px-1 py-2"
+                    name="command"
+                  />
+                </div>
+                <button
+                  id="send-command"
+                  type="submit"
+                  class="bg-ctp-yellow my-3 inline-flex align-middle justify-center text-ctp-mantle p-2 rounded-lg"
+                >
+                  <Icon
+                    class="text-ctp-mantle self-center mr-2"
+                    name="mdi:send"
+                  />
+                  <span>Send</span>
+                </button>
+              </form>
+            </div>
+          ) : (
+            <div>
+              <h2>You're not allowed here.</h2>
+            </div>
+          )
+        }
+      </div>
+      <div class="hidden" id="tabView2">
+        <h2>Tab 2</h2>
+      </div>
     </div>
   </div>
 </Layout>
 
-<script>
-  import { initFlowbite } from "flowbite";
+<script define:vars={{activeTab: activeTab}}>
   // make the previous command message fade after 5s
   function initPage() {
     const commandOutput = document.getElementById("command-output");
@@ -180,6 +190,39 @@ if (Astro.request.method === "POST") {
 
   document.addEventListener("astro:page-load", () => {
     initPage();
-    initFlowbite();
+    // initFlowbite();
   });
+
+  function setActiveTab(tabIndex) {
+    sactiveTab = tabIndex;
+  }
+
+  var tab1 = document.querySelector("#tab1");
+  var tab2 = document.querySelector("#tab2");
+  var tab3 = document.querySelector("#tab3");
+
+  var tabView1 = document.querySelector("#tabView1");
+  var tabView2 = document.querySelector("#tabView2");
+
+  if(tab1 && tabView1) {
+    tab1.addEventListener("click", () => {
+      setActiveTab(1);
+      console.log("tab1 clicked");
+    });
+    tabView1.classList.remove = "hidden";
+  }
+  if(tab2 && tabView2 ) {
+    tab2.addEventListener("click", () => {
+      setActiveTab(2);
+      console.log("tab2 clicked");
+    });
+    tabView1.classList.add = "hidden";
+    tabView2.classList.remove = "hidden";
+  }
+  if(tab3) {
+    tab3.addEventListener("click", () => {
+      setActiveTab(3);
+      console.log("tab3 clicked");
+    });
+  }
 </script>

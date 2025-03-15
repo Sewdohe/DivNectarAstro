@@ -1,0 +1,62 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+
+const title = "CraftNectar";
+const description = "Your standard kitchen sink modpack";
+const image = {
+  url: "https://cms.divnectar.com/uploads/cn_logo_24823a2bf0.png",
+  alt: "CraftNectar Logo",
+};
+---
+
+<Layout title={title} direction="col" description={description} image={image}>
+  <section class="divider_wavy_bubbles pb-10 md:py-8">
+    <div class="py-8 px-4 mx-auto text-center lg:py-16 lg:px-12">
+      <a
+        href="https://cms.divnectar.com/uploads/Craft_Nectar_Modded_6382e0216b.zip"
+        class="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-ctp-subtext1 bg-ctp-crust rounded-full hover:bg-ctp-mantle"
+        role="alert"
+      >
+        <!-- <span
+          class="text-xs bg-ctp-mauve rounded-full text-white px-4 py-1.5 mr-3"
+          >New!</span
+        > -->
+        <span class="mx-3 text-2xl font-extrabold">Modpack Download</span> <img src="https://prismlauncher.org/img/logo-text-darkmode.svg" class="inline h-8" />
+        <svg
+          class="ml-2 w-5 h-5"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+          ><path
+            fill-rule="evenodd"
+            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+            clip-rule="evenodd"></path></svg
+        >
+      </a>
+      <div class="flex w-full justify-center">
+        <Icon
+          name="line-md:cloud-alt-twotone"
+          class="w-8 h-8 text-ctp-text font-4xl ml-3 self-end"
+        />
+        <h1
+          class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-ctp-sky md:text-5xl lg:text-6xl"
+        >
+          CraftNectar
+        </h1>
+        <Icon
+          name="line-md:cloud-alt-twotone"
+          class="w-8 h-8 text-ctp-text font-3xl ml-3"
+        />
+      </div>
+      <p
+        class="mb-8 text-lg font-normal lg:text-xl sm:px-16 xl:px-48 text-ctp-text"
+      >
+        Page is under construction. If testing use link above to download modpack.
+      </p>
+    </div>
+  </section>
+  <section class="h-96 bg-ctp-crust">
+
+  </section>
+</Layout>

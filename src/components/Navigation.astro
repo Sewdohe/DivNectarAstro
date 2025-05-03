@@ -18,26 +18,26 @@ const links = [
     url: "/discord",
     path: "discord",
   },
-  {
-    name: "SkyNectar",
-    url: "",
-    path: "",
-    children: [
-      { name: "About", url: "/skynectar" },
-      { name: "Leaderboards", url: "/skynectar/leaderboard" },
-      { name: "Players", url: "/skynectar/players" },
-      { name: "Chat", url: "/skynectar/server-events" },
-      { name: "Server Wiki", url: "https://skyblock-wiki.divnectar.com" },
-    ],
-  },
-  {
-    name: "CraftNectar",
-    url: "",
-    path: "",
-    children: [
-      { name: "About", url: "/modded" },
-    ],
-  },
+  // {
+  //   name: "SkyNectar",
+  //   url: "",
+  //   path: "",
+  //   children: [
+  //     { name: "About", url: "/skynectar" },
+  //     { name: "Leaderboards", url: "/skynectar/leaderboard" },
+  //     { name: "Players", url: "/skynectar/players" },
+  //     { name: "Chat", url: "/skynectar/server-events" },
+  //     { name: "Server Wiki", url: "https://skyblock-wiki.divnectar.com" },
+  //   ],
+  // },
+  // {
+  //   name: "CraftNectar",
+  //   url: "",
+  //   path: "",
+  //   children: [
+  //     { name: "About", url: "/modded" },
+  //   ],
+  // },
   {
     name: "About",
     url: "/about",
@@ -69,18 +69,18 @@ console.log(pathname);
           >
             {link.name}
           </a>
-          {link.children && (
-            <div class="absolute left-0 mt-2 w-48 bg-ctp-crust rounded-lg shadow-lg transform -translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 group-hover:block">
-              {link.children.map((child) => (
-                <a
-                  class="block px-4 py-2 text-ctp-text hover:bg-ctp-mantle rounded-lg"
-                  href={child.url}
-                >
-                  {child.name}
-                </a>
-              ))}
-            </div>
-          )}
+          <!--{link.children && (-->
+          <!--  <div class="absolute left-0 mt-2 w-48 bg-ctp-crust rounded-lg shadow-lg transform -translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 group-hover:block">-->
+          <!--    {link.children.map((child) => (-->
+          <!--      <a-->
+          <!--        class="block px-4 py-2 text-ctp-text hover:bg-ctp-mantle rounded-lg"-->
+          <!--        href={child.url}-->
+          <!--      >-->
+          <!--        {child.name}-->
+          <!--      </a>-->
+          <!--    ))}-->
+          <!--  </div>-->
+          <!--)}-->
         </div>
       ))
     }

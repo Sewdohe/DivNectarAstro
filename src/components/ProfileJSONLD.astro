@@ -1,8 +1,8 @@
 ---
 import { string } from "astro:schema";
-import type { SqlPlayerData } from "../db/interfaces";
+import type { PlayerData } from "../db/interfaces";
 
-const props: SqlPlayerData = Astro.props as SqlPlayerData;
+const props: PlayerData = Astro.props as PlayerData;
 
 const schema = {
   "@context": "https://schema.org",

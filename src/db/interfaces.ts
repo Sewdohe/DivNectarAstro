@@ -4,6 +4,7 @@ export interface PlayerData extends RowDataPacket {
   uuid: string;
   name: string;
   lastPlayed: number;
+  powerLevel: number;
 }
 
 export interface CoinLeaderboardData {

@@ -85,6 +85,19 @@ export const prerender = false;
         id="player-stats-container"
         class="grid justify-self-center px-8 md:px-4 w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
       >
+        <span>Power Level: {player.powerLevel}</span>
+        <span>Archery Level: {player.archeryLevel}</span>
+        <span>Alchemy Level: {player.alchemyLevel}</span>
+        <span>Digging Level: {player.diggingLevel}</span>
+        <span>Enchanting Level: {player.enchantingLevel}</span>
+        <span>Farming Level: {player.farmingLevel}</span>
+        <span>Fishing Level: {player.fishingLevel}</span>
+        <span>Heavy Armor Level: {player.heavyArmorLevel}</span>
+        <span>Heavy Weapons Level: {player.heavyWeaponsLevel}</span>
+        <span>Light Armor Level: {player.lightArmorLevel}</span>
+        <span>Mining Level: {player.miningLevel}</span>
+        <span>Smithing Level: {player.smithingLevel}</span>
+        <span>Woodcutting Level: {player.woodcuttingLevel}</span>
       </div>
     </div>
     <button id="toggle-map" class="bg-ctp-peach mb-4 text-black font-extrabold p-2 rounded-md"
@@ -110,10 +123,3 @@ export const prerender = false;
 		}
 	});
 </script>
-
-<style>
-  td {
-    align-self: flex-end;
-    justify-self: flex-end;
-  }
-</style>

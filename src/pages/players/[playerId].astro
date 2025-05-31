@@ -1,6 +1,6 @@
 ---
 import type { PlayerData } from "../../db/interfaces";
-import { getPlayerData, getCoinsLeaderBoard } from "../../db/queries";
+import { getPlayerData } from "../../db/queries";
 import Layout from "../../layouts/Layout.astro";
 import Card from "../../components/Card.astro";
 import { GET as getUser } from "../../pages/api/oauth/get-user";
@@ -11,11 +11,6 @@ import moment from "moment";
 const { playerId } = Astro.params;
 const players = await getPlayerData();
 const player: PlayerData = players.find((p) => p.uuid === playerId)!;
-
-// const coinsLeaderboard = await getCoinsLeaderBoard();
-// const coinsRank = coinsLeaderboard.findIndex((p) => p.uuid === playerId) + 1;
-
-// console.log(coinsLeaderboard);
 
 interface Player {
   uuid: string;

@@ -1,4 +1,9 @@
-import type { CoinLeaderboardData, CoinRow, PlayerData, LeaderboardData } from "./interfaces";
+import type {
+  CoinLeaderboardData,
+  CoinRow,
+  PlayerData,
+  LeaderboardData,
+} from "./interfaces";
 import connection from "./connection";
 
 interface ServerTAPPlayerResponse {
@@ -44,22 +49,25 @@ export async function getPlayerData(): Promise<PlayerData[]> {
 
   const apiMutatedPlayerData = await Promise.all(
     sqlPlayerData.map(async (player) => {
-      let serverTapPlayerData = await fetch(`${import.meta.env.BACKEND_URL}/skyblock/players/all`);
-      let playerAPIData = await serverTapPlayerData.json() as ServerTAPPlayerResponse[];
+      let serverTapPlayerData = await fetch(
+        `${import.meta.env.BACKEND_URL}/skyblock/players/all`
+      );
+      let playerAPIData =
+        (await serverTapPlayerData.json()) as ServerTAPPlayerResponse[];
       let lastPlayedValue: number = 0;
 
-      playerAPIData.forEach(p => {
+      playerAPIData.forEach((p) => {
         if (p.uuid == player.uuid) {
-          lastPlayedValue = p.lastPlayed
+          lastPlayedValue = p.lastPlayed;
         }
-      })
+      });
 
       return {
-          ...player,
-          lastPlayed: lastPlayedValue,
-        };
+        ...player,
+        lastPlayed: lastPlayedValue,
+      };
     })
-  )
+  );
 
   // console.log(apiMutatedPlayers)
   return apiMutatedPlayerData;

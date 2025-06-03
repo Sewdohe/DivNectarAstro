@@ -29,7 +29,8 @@ export async function getPlayerData(): Promise<PlayerData[]> {
            light_weapons_level.level as lightWeaponsLevel,
            mining_level.level        as miningLevel,
            smithing_level.level      as smithingLevel,
-           woodcutting_level.level   as woodcuttingLevel
+           woodcutting_level.level   as woodcuttingLeveluuid,
+           lands.name as landName
            FROM lands_players
            JOIN profiles_power as power_level ON lands_players.uuid = power_level.owner
            JOIN profiles_alchemy as alchemy_level ON lands_players.uuid = alchemy_level.owner
@@ -44,7 +45,8 @@ export async function getPlayerData(): Promise<PlayerData[]> {
            JOIN profiles_light_weapons as light_weapons_level ON lands_players.uuid = light_weapons_level.owner
            JOIN profiles_mining as mining_level ON lands_players.uuid = mining_level.owner
            JOIN profiles_smithing as smithing_level ON lands_players.uuid = smithing_level.owner
-           JOIN profiles_woodcutting as woodcutting_level ON lands_players.uuid = woodcutting_level.owner;
+           JOIN profiles_woodcutting as woodcutting_level ON lands_players.uuid = woodcutting_level.owner
+           JOIN lands_lands as lands ON lands_players.edit_land = lands.ulid;
   `);
 
   const apiMutatedPlayerData = await Promise.all(

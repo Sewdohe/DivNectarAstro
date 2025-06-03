@@ -1,0 +1,8 @@
+---
+var { icon, skill, skillName } = Astro.props;
+---
+
+<div class="flex flex-row align-middle justify-center items-center bg-ctp-crust border-ctp-mauve p-4 rounded-xl">
+    <div class={`icon-32 ${icon} mr-2`} />
+		<span class="">{skillName} Level {skill}</span>
+</div>

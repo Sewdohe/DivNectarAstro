@@ -5,6 +5,14 @@ export interface PlayerData extends RowDataPacket {
   name: string;
   lastPlayed: number;
   powerLevel: number;
+  lands? :[{
+    world: string,
+    x: number,
+    y: number,
+    z: number,
+    pitch: number,
+    yaw: number,
+  }]
 }
 
 export interface CoinLeaderboardData {

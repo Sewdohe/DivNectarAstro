@@ -7,6 +7,7 @@ import { GET as getUser } from "../../pages/api/oauth/get-user";
 import ProfileJSONLD from "../../components/ProfileJSONLD.astro";
 
 import moment from "moment";
+import PlayerSkillChip from "../../components/PlayerSkillChip.astro";
 
 const { playerId } = Astro.params;
 const players = await getPlayerData();
@@ -76,29 +77,34 @@ export const prerender = false;
       >
         Stats
       </h3>
+      <div class="w-full text-4xl flex justify-center mb-4">
+        <span class="font-extrabold text-ctp-sapphire">Power Level:</span><span class="ml-3 font-bold">{player.powerLevel}</span>
+      </div>
       <div
         id="player-stats-container"
         class="grid justify-self-center px-8 md:px-4 w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
       >
-        <span>Power Level: {player.powerLevel}</span>
-        <span><div class="icon-32 bow" />Archery Level: {player.archeryLevel}</span>
-        <span><div class="icon-32 water-bottle" />Alchemy Level: {player.alchemyLevel}</span>
-        <span><div class="icon-32 diamond-shovel" />Digging Level: {player.diggingLevel}</span>
-        <span><div class="icon-32 enchanting-table" />Enchanting Level: {player.enchantingLevel}</span>
-        <span><div class="icon-32 diamond-hoe" />Farming Level: {player.farmingLevel}</span>
-        <span><div class="icon-32 fishing-rod" />Fishing Level: {player.fishingLevel}</span>
-        <span><div class="icon-32 iron-chestplate" />Heavy Armor Level: {player.heavyArmorLevel}</span>
-        <span><div class="icon-32 diamond-axe" />Heavy Weapons Level: {player.heavyWeaponsLevel}</span>
-        <span><div class="icon-32 leather-tunic" />Light Armor Level: {player.lightArmorLevel}</span>
-        <span><div class="icon-32 diamond-sword" />Light Weapons Level: {player.lightWeaponsLevel}</span>
-        <span><div class="icon-32 diamond-pickaxe" />Mining Level: {player.miningLevel}</span>
-        <span><div class="icon-32 anvil" />Smithing Level: {player.smithingLevel}</span>
-        <span><div class="icon-32 oak-log" />Woodcutting Level: {player.woodcuttingLevel}</span>
+        <PlayerSkillChip icon="crossbow" skill={player.archeryLevel} skillName="Archery" />
+        <PlayerSkillChip icon="water-bottle" skill={player.alchemyLevel} skillName="Alchemy" />
+        <PlayerSkillChip icon="diamond-shovel" skill={player.diggingLevel} skillName="Digging" />
+        <PlayerSkillChip icon="enchanting-table" skill={player.enchantingLevel} skillName="Enchanting" />
+        <PlayerSkillChip icon="diamond-hoe" skill={player.farmingLevel} skillName="Farming" />
+        <PlayerSkillChip icon="fishing-rod" skill={player.fishingLevel} skillName="Fishing" />
+        <PlayerSkillChip icon="iron-chestplate" skill={player.heavyArmorLevel} skillName="Heavy Armor" />
+        <PlayerSkillChip icon="diamond-axe" skill={player.heavyWeaponsLevel} skillName="Heavy Weapons" />
+        <PlayerSkillChip icon="leather-tunic" skill={player.lightArmorLevel} skillName="Light Armor" />
+        <PlayerSkillChip icon="diamond-sword" skill={player.lightWeaponsLevel} skillName="Light Weapons" />
+        <PlayerSkillChip icon="diamond-pickaxe" skill={player.miningLevel} skillName="Mining" />
+        <PlayerSkillChip icon="anvil" skill={player.smithingLevel} skillName="Smithing" />
+        <PlayerSkillChip icon="oak-log" skill={player.woodcuttingLevel} skillName="Woodcutting" />
+
       </div>
     </div>
-    <button id="toggle-map" class="bg-ctp-peach mb-4 text-black font-extrabold p-2 rounded-md"
-      >Toggle Map</button
+    <h3
+      class="text-ctp-yellow mb-4 text-center text-4xl md:text-6xl font-extrabold"
     >
+      Lands
+    </h3>
     <div id="map-container" class="w-full h-[100vh] rounded-md"></div>
   </div>
 </Layout>

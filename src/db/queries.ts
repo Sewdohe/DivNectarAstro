@@ -12,11 +12,6 @@ interface ServerTAPPlayerResponse {
   lastPlayed: number;
 }
 
-export interface PlayerOwnedLand {
-  landUlid: string;
-  landName: string;
-}
-
 export async function getPlayerData(): Promise<PlayerData[]> {
   const [sqlPlayerData]: [PlayerData[], any] = await connection.query(`
     SELECT lands_players.uuid,

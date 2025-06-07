@@ -52,7 +52,7 @@ async function displayPlayerLands(uuid: string) {
 }
 
 player.lands = await getLandsOwnedByPlayer(player.uuid);
-console.log(player)
+// console.log(player)
 
 export const prerender = false;
 ---
@@ -125,28 +125,42 @@ export const prerender = false;
     >
       Lands
     </h3>
-    {player.lands!.map(land => (
-      <div>
-        <span class="font-xl text-bold">{land.landName}</span>
-      </div>
-    ))}
+    <div id="lands-container" class="flex flex-row">
+      {player.lands!.map(land => (
+        <div class="p-4 m-1 bg-ctp-crust flex align-center rounded-lg land-card select-none cursor-pointer"
+            data-world={land.world} data-x={land.x} data-y={land.y} data-z={land.z}>
+          <span class="text-xl font-bold">{land.landName}</span>
+        </div>
+      ))}
+    </div>
     <div id="map-container" class="w-full h-[100vh] rounded-md"></div>
   </div>
+  <div id="map-container"></div>
 </Layout>
 
 <script define:vars={{ player }}>
-	const toggleMapButton = document.getElementById("toggle-map");
   const mapContainer = document.getElementById("map-container");
 
-	toggleMapButton?.addEventListener("click", () => {
-		if (mapContainer?.innerHTML === "") {
-			const iframe = document.createElement("iframe");
-			iframe.id = "player-map";
-			iframe.className = "w-full h-[100vh] rounded-md";
-			iframe.src = `https://map.divnectar.com/#world_private_islands:${player.bluemap_x}:${player.bluemap_y}:${player.bluemap_z}:25:0:0:0:0:flat`;
-			mapContainer.appendChild(iframe);
-		} else {
-			mapContainer.innerHTML = "";
-		}
-	});
+  const landCards = document.getElementsByClassName("land-card");
+  console.log(landCards);
+
+  for (let landCard of landCards) {
+    landCard?.addEventListener("click", () => {
+      console.log('added eventlister')
+      let world = landCard.dataset.world;
+      let x = landCard.dataset.x;
+      let y = landCard.dataset.y;
+      let z = landCard.dataset.z;
+
+      if (mapContainer?.innerHTML === "") {
+        const iframe = document.createElement("iframe");
+        iframe.id = "player-map";
+        iframe.className = "w-full h-[100vh] rounded-md";
+        iframe.src = `https://map.divnectar.com/#${world}:${x}:${y}:${z}:25:0:0:0:0:flat`;
+        mapContainer.appendChild(iframe);
+      } else {
+        mapContainer.innerHTML = "";
+      }
+    });
+  }
 </script>

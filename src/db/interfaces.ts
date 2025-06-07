@@ -7,15 +7,18 @@ export interface PlayerData extends RowDataPacket {
   powerLevel: number;
   coins: number;
   money: number;
-  lands? :[{
-    landName: string,
-    world: string,
-    x: number,
-    y: number,
-    z: number,
-    pitch: number,
-    yaw: number,
-  }]
+  lands?: PlayerOwnedLand[];
+}
+
+export interface PlayerOwnedLand {
+  ulid: string;
+  landName: string;
+  world: string;
+  x: number;
+  y: number;
+  z: number;
+  pitch: number;
+  yaw: number;
 }
 
 export interface CoinLeaderboardData {

@@ -12,6 +12,11 @@ interface ServerTAPPlayerResponse {
   lastPlayed: number;
 }
 
+export interface PlayerOwnedLand {
+  landUlid: string;
+  landName: string;
+}
+
 export async function getPlayerData(): Promise<PlayerData[]> {
   const [sqlPlayerData]: [PlayerData[], any] = await connection.query(`
     SELECT lands_players.uuid,
@@ -29,9 +34,10 @@ export async function getPlayerData(): Promise<PlayerData[]> {
            light_weapons_level.level as lightWeaponsLevel,
            mining_level.level        as miningLevel,
            smithing_level.level      as smithingLevel,
-           woodcutting_level.level   as woodcuttingLeveluuid,
-           lands.name as landName
-           FROM lands_players
+           woodcutting_level.level   as woodcuttingLevel, -- Removed 'uuid' at the end of this line
+           eco.coins as coins,
+           eco.money as money
+    FROM lands_players
            JOIN profiles_power as power_level ON lands_players.uuid = power_level.owner
            JOIN profiles_alchemy as alchemy_level ON lands_players.uuid = alchemy_level.owner
            JOIN profiles_archery as archery_level ON lands_players.uuid = archery_level.owner
@@ -46,8 +52,10 @@ export async function getPlayerData(): Promise<PlayerData[]> {
            JOIN profiles_mining as mining_level ON lands_players.uuid = mining_level.owner
            JOIN profiles_smithing as smithing_level ON lands_players.uuid = smithing_level.owner
            JOIN profiles_woodcutting as woodcutting_level ON lands_players.uuid = woodcutting_level.owner
-           JOIN lands_lands as lands ON lands_players.edit_land = lands.ulid;
+           LEFT JOIN lands_lands as lands ON JSON_CONTAINS_PATH(lands.members, 'one', CONCAT('$.', lands_players.uuid))
+           JOIN coinsengine_users as eco ON lands_players.uuid = eco.uuid;
   `);
+
 
   const apiMutatedPlayerData = await Promise.all(
     sqlPlayerData.map(async (player) => {
@@ -100,5 +108,46 @@ async function getPlaceholderData(placeholder: string, uuid: string) {
     return responseData;
   } catch (e: any) {
     console.log(`Error getting placeholder data: ${e}`);
+  }
+}
+
+
+/**
+ * Retrieves all land names and ULIDs for lands where the given player UUID is a member.
+ *
+ * @param playerUuid The UUID of the player to query for.
+ * @returns A Promise that resolves to an array of PlayerOwnedLand objects.
+ */
+export async function getLandsOwnedByPlayer(playerUuid: string): Promise<PlayerOwnedLand[]> {
+  const query = `
+    SELECT
+      lands.ulid AS landUlid,
+      lands.name AS landName,
+      -- Extracting fields from the 'spawn' JSON column
+      JSON_VALUE(lands.spawn, '$.server') AS server,
+      JSON_VALUE(lands.spawn, '$.world') AS world,
+      JSON_VALUE(lands.spawn, '$.x') AS x,
+      JSON_VALUE(lands.spawn, '$.y') AS y,
+      JSON_VALUE(lands.spawn, '$.z') AS z,
+      JSON_VALUE(lands.spawn, '$.yaw') AS yaw,
+      JSON_VALUE(lands.spawn, '$.pitch') AS pitch
+    FROM
+      lands_lands AS lands
+    WHERE
+      JSON_CONTAINS_PATH(lands.members, 'one', CONCAT('$.', ?));
+  `;
+
+  try {
+    // 1. Correctly destructure the result into 'rows' and 'fields'.
+    //    'rows' will contain the actual data (RowDataPacket[] for SELECT statements).
+    //    'fields' contains metadata about the columns (FieldPacket[]).
+    const [rows, fields] = await connection.query(query, [playerUuid]);
+
+    // 2. Use a type assertion to tell TypeScript that 'rows' is indeed an array of PlayerOwnedLand.
+    //    This is safe to do for SELECT queries where you expect rows of data.
+    return rows as PlayerOwnedLand[];
+  } catch (error) {
+    console.error(`Error fetching lands for player ${playerUuid}:`, error);
+    throw error; // Re-throw the error for the calling function to handle
   }
 }

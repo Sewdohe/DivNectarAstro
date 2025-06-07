@@ -5,7 +5,10 @@ export interface PlayerData extends RowDataPacket {
   name: string;
   lastPlayed: number;
   powerLevel: number;
+  coins: number;
+  money: number;
   lands? :[{
+    landName: string,
     world: string,
     x: number,
     y: number,

@@ -1,6 +1,6 @@
 ---
 import type { PlayerData } from "../../db/interfaces";
-import { getPlayerData } from "../../db/queries";
+import { getPlayerData, getLandsOwnedByPlayer } from "../../db/queries";
 import Layout from "../../layouts/Layout.astro";
 import Card from "../../components/Card.astro";
 import { GET as getUser } from "../../pages/api/oauth/get-user";
@@ -33,7 +33,27 @@ if (userId !== "0") {
   //@ts-ignore
   user = await response.json();
 }
+
+async function displayPlayerLands(uuid: string) {
+  try {
+    const ownedLands = await getLandsOwnedByPlayer(uuid);
+
+    if (ownedLands.length > 0) {
+      console.log(`Lands owned by ${uuid}:`);
+      ownedLands.forEach(land => {
+        console.log(`- ${land.landName} (ULID: ${land.landUlid})`);
+      });
+    } else {
+      console.log(`No lands found for player ${uuid}.`);
+    }
+  } catch (error) {
+    console.error('Failed to retrieve player lands:', error);
+  }
+}
+
+player.lands = await getLandsOwnedByPlayer(player.uuid);
 console.log(player)
+
 export const prerender = false;
 ---
 
@@ -105,6 +125,11 @@ export const prerender = false;
     >
       Lands
     </h3>
+    {player.lands!.map(land => (
+      <div>
+        <span class="font-xl text-bold">{land.landName}</span>
+      </div>
+    ))}
     <div id="map-container" class="w-full h-[100vh] rounded-md"></div>
   </div>
 </Layout>

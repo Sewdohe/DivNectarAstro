@@ -2,7 +2,7 @@ import type {
   CoinLeaderboardData,
   CoinRow,
   PlayerData,
-  LeaderboardData,
+  LeaderboardData, PlayerOwnedLand,
 } from "./interfaces";
 import connection from "./connection";
 
@@ -14,7 +14,7 @@ interface ServerTAPPlayerResponse {
 
 export async function getPlayerData(): Promise<PlayerData[]> {
   const [sqlPlayerData]: [PlayerData[], any] = await connection.query(`
-    SELECT lands_players.uuid,
+    SELECT  DISTINCT lands_players.uuid,
            lands_players.name,
            power_level.level         as powerLevel,
            alchemy_level.level       as alchemyLevel,
@@ -47,7 +47,7 @@ export async function getPlayerData(): Promise<PlayerData[]> {
            JOIN profiles_mining as mining_level ON lands_players.uuid = mining_level.owner
            JOIN profiles_smithing as smithing_level ON lands_players.uuid = smithing_level.owner
            JOIN profiles_woodcutting as woodcutting_level ON lands_players.uuid = woodcutting_level.owner
-           LEFT JOIN lands_lands as lands ON JSON_CONTAINS_PATH(lands.members, 'one', CONCAT('$.', lands_players.uuid))
+           JOIN lands_lands as lands ON JSON_CONTAINS_PATH(lands.members, 'one', CONCAT('$.', lands_players.uuid))
            JOIN coinsengine_users as eco ON lands_players.uuid = eco.uuid;
   `);
 

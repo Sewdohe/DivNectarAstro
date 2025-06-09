@@ -1,5 +1,19 @@
 @import "../minecraft-items/minecraft-items-spritesheet.css";
 
+@font-face {
+  font-family: 'Minecraft';
+  src: url('/fonts/Minecraft.otf') format('otf');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.mcfont {
+  font-family: 'Minecraft';
+  font-smooth: never;
+  -webkit-font-smoothing : none;
+}
+
 .tippy-box[data-theme="default"] {
   background-color: #181825;
   color: #bac2de;

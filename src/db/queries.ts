@@ -14,8 +14,8 @@ interface ServerTAPPlayerResponse {
 
 export async function getPlayerData(): Promise<PlayerData[]> {
   const [sqlPlayerData]: [PlayerData[], any] = await connection.query(`
-    SELECT  DISTINCT lands_players.uuid,
-           lands_players.name,
+    SELECT  DISTINCT luckperms_players.uuid,
+           luckperms_players.username as name,
            power_level.level         as powerLevel,
            alchemy_level.level       as alchemyLevel,
            archery_level.level       as archeryLevel,
@@ -32,23 +32,23 @@ export async function getPlayerData(): Promise<PlayerData[]> {
            woodcutting_level.level   as woodcuttingLevel, -- Removed 'uuid' at the end of this line
            eco.coins as coins,
            eco.money as money
-    FROM lands_players
-           JOIN profiles_power as power_level ON lands_players.uuid = power_level.owner
-           JOIN profiles_alchemy as alchemy_level ON lands_players.uuid = alchemy_level.owner
-           JOIN profiles_archery as archery_level ON lands_players.uuid = archery_level.owner
-           JOIN profiles_digging as digging_level ON lands_players.uuid = digging_level.owner
-           JOIN profiles_enchanting as enchanting_level ON lands_players.uuid = enchanting_level.owner
-           JOIN profiles_farming as farming_level ON lands_players.uuid = farming_level.owner
-           JOIN profiles_fishing as fishing_level ON lands_players.uuid = fishing_level.owner
-           JOIN profiles_heavy_armor as heavy_armor_level ON lands_players.uuid = heavy_armor_level.owner
-           JOIN profiles_heavy_weapons as heavy_weapons_level ON lands_players.uuid = heavy_weapons_level.owner
-           JOIN profiles_light_armor as light_armor_level ON lands_players.uuid = light_armor_level.owner
-           JOIN profiles_light_weapons as light_weapons_level ON lands_players.uuid = light_weapons_level.owner
-           JOIN profiles_mining as mining_level ON lands_players.uuid = mining_level.owner
-           JOIN profiles_smithing as smithing_level ON lands_players.uuid = smithing_level.owner
-           JOIN profiles_woodcutting as woodcutting_level ON lands_players.uuid = woodcutting_level.owner
-           JOIN lands_lands as lands ON JSON_CONTAINS_PATH(lands.members, 'one', CONCAT('$.', lands_players.uuid))
-           JOIN coinsengine_users as eco ON lands_players.uuid = eco.uuid;
+    FROM luckperms_players
+           JOIN profiles_power as power_level ON luckperms_players.uuid = power_level.owner
+           JOIN profiles_alchemy as alchemy_level ON luckperms_players.uuid = alchemy_level.owner
+           JOIN profiles_archery as archery_level ON luckperms_players.uuid = archery_level.owner
+           JOIN profiles_digging as digging_level ON luckperms_players.uuid = digging_level.owner
+           JOIN profiles_enchanting as enchanting_level ON luckperms_players.uuid = enchanting_level.owner
+           JOIN profiles_farming as farming_level ON luckperms_players.uuid = farming_level.owner
+           JOIN profiles_fishing as fishing_level ON luckperms_players.uuid = fishing_level.owner
+           JOIN profiles_heavy_armor as heavy_armor_level ON luckperms_players.uuid = heavy_armor_level.owner
+           JOIN profiles_heavy_weapons as heavy_weapons_level ON luckperms_players.uuid = heavy_weapons_level.owner
+           JOIN profiles_light_armor as light_armor_level ON luckperms_players.uuid = light_armor_level.owner
+           JOIN profiles_light_weapons as light_weapons_level ON luckperms_players.uuid = light_weapons_level.owner
+           JOIN profiles_mining as mining_level ON luckperms_players.uuid = mining_level.owner
+           JOIN profiles_smithing as smithing_level ON luckperms_players.uuid = smithing_level.owner
+           JOIN profiles_woodcutting as woodcutting_level ON luckperms_players.uuid = woodcutting_level.owner
+           LEFT JOIN lands_lands as lands ON JSON_CONTAINS_PATH(lands.members, 'one', CONCAT('$.', luckperms_players.uuid))
+           LEFT JOIN coinsengine_users as eco ON luckperms_players.uuid = eco.uuid;
   `);
 
 

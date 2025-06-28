@@ -40,9 +40,6 @@ async function displayPlayerLands(uuid: string) {
 
     if (ownedLands.length > 0) {
       console.log(`Lands owned by ${uuid}:`);
-      ownedLands.forEach(land => {
-        console.log(`- ${land.landName} (ULID: ${land.landUlid})`);
-      });
     } else {
       console.log(`No lands found for player ${uuid}.`);
     }
@@ -59,7 +56,7 @@ export const prerender = false;
 
 <Layout
   title={`${player.name}'s Skyblock Profile'`}
-  description={`view ${player.name}'s skyblock stats.`}
+  description={`view ${player.name}'s online stats.`}
   image={{
     url: `https://mc-heads.net/body/${player.uuid}`,
     alt: `${player.name}'s avatar`,

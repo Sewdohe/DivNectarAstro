@@ -11,14 +11,14 @@ const backend_url = import.meta.env.BACKEND_URL;
 const players = await getPlayerData();
 const updatedPlayers = await Promise.all(players.map(async (player) => {
   const data = {
-    uuid: player.uuid,
+    player_uuid: player.player_uuid,
     message: "player_online",
   };
   try {
     const response = await axios.post(`${backend_url}/skyblock/player/online`, data);
     player.onlineStatus = response.data;
   } catch (error) {
-    console.error(`Error fetching online status for player ${player.uuid}:`, error);
+    console.error(`Error fetching online status for player ${player.player_uuid}:`, error);
     player.onlineStatus = 'no'; // Default to offline if there's an error
   }
   return player;
@@ -31,21 +31,20 @@ const updatedPlayers = await Promise.all(players.map(async (player) => {
   >
     {
       updatedPlayers.map((player) => {
-        console.log(player)
         return (
           <div id="player-card">
             <a
-              href={`/players/${player.uuid}`}
+              href={`/players/${player.player_uuid}`}
               class="flex flex-col rounded-lg shadow md:flex-row md:max-w-xl dark:border-gray-700 dark:bg-ctp-crust dark:hover:bg-ctp-mantle"
             >
               <img
                 class="object-contain my-2 aspect-auto w-full rounded-t-lg h-48 md:w-48 md:rounded-none md:rounded-s-lg"
-                src={`https://mc-heads.net/body/${player.uuid}`}
+                src={`https://mc-heads.net/body/${player.player_uuid}`}
                 alt=""
               />
               <div class="w-full flex flex-row justify-between p-4 leading-normal">
                 <h5 class="mb-2 text-3xl text-ctp-sapphire font-bold tracking-tight ">
-                  {player.name}
+                  {player.username}
                 </h5>
                 <span
                   class={`w-4 h-4 ml-4 mb-2 text-ctp-text rounded-full ${

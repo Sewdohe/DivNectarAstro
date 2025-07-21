@@ -1,22 +1,16 @@
 ---
 import type { PlayerData } from "../../db/interfaces";
-import { getPlayerData, getLandsOwnedByPlayer } from "../../db/queries";
+import { getPlayerData } from "../../db/queries";
 import Layout from "../../layouts/Layout.astro";
 import Card from "../../components/Card.astro";
 import { GET as getUser } from "../../pages/api/oauth/get-user";
 import ProfileJSONLD from "../../components/ProfileJSONLD.astro";
 
 import moment from "moment";
-import PlayerSkillChip from "../../components/PlayerSkillChip.astro";
 
 const { playerId } = Astro.params;
 const players = await getPlayerData();
-const player: PlayerData = players.find((p) => p.uuid === playerId)!;
-
-interface Player {
-  uuid: string;
-  username: string;
-}
+const player: PlayerData = players.find((p) => p.player_uuid === playerId)!;
 
 function timePassedSince(epochTimestamp: string): string {
   // @ts-ignore
@@ -33,33 +27,17 @@ if (userId !== "0") {
   //@ts-ignore
   user = await response.json();
 }
-
-async function displayPlayerLands(uuid: string) {
-  try {
-    const ownedLands = await getLandsOwnedByPlayer(uuid);
-
-    if (ownedLands.length > 0) {
-      console.log(`Lands owned by ${uuid}:`);
-    } else {
-      console.log(`No lands found for player ${uuid}.`);
-    }
-  } catch (error) {
-    console.error('Failed to retrieve player lands:', error);
-  }
-}
-
-player.lands = await getLandsOwnedByPlayer(player.uuid);
-// console.log(player)
+console.log(player);
 
 export const prerender = false;
 ---
 
 <Layout
-  title={`${player.name}'s Skyblock Profile'`}
-  description={`view ${player.name}'s online stats.`}
+  title={`${player.username}'s Skyblock Profile'`}
+  description={`view ${player.username}'s online stats.`}
   image={{
     url: `https://mc-heads.net/body/${player.uuid}`,
-    alt: `${player.name}'s avatar`,
+    alt: `${player.username}'s avatar`,
   }}
 >
   <ProfileJSONLD {...player} />
@@ -75,7 +53,7 @@ export const prerender = false;
       <h2
         class="mb-0 text-2xl md:text-4xl self-center font-extrabold text-gray-900 dark:text-white"
       >
-        {player.name}
+        {player.username}
       </h2>
       <span class="mt-0 text-ctp-subtext0 text-sm self-center mb-6"
         >Last seen {timePassedSince(player.lastPlayed.toString())}</span
@@ -89,53 +67,13 @@ export const prerender = false;
           </div>
         ) : null
       }
-      <h3
-        class="text-ctp-green mb-4 text-center text-4xl md:text-6xl font-extrabold"
-      >
-        Stats
-      </h3>
-      <div class="w-full text-4xl flex justify-center mb-4">
-        <span class="font-extrabold text-ctp-sapphire">Power Level:</span><span class="ml-3 font-bold">{player.powerLevel}</span>
-      </div>
-      <div
-        id="player-stats-container"
-        class="grid justify-self-center px-8 md:px-4 w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-      >
-        <PlayerSkillChip icon="crossbow" skill={player.archeryLevel} skillName="Archery" />
-        <PlayerSkillChip icon="water-bottle" skill={player.alchemyLevel} skillName="Alchemy" />
-        <PlayerSkillChip icon="diamond-shovel" skill={player.diggingLevel} skillName="Digging" />
-        <PlayerSkillChip icon="enchanting-table" skill={player.enchantingLevel} skillName="Enchanting" />
-        <PlayerSkillChip icon="diamond-hoe" skill={player.farmingLevel} skillName="Farming" />
-        <PlayerSkillChip icon="fishing-rod" skill={player.fishingLevel} skillName="Fishing" />
-        <PlayerSkillChip icon="iron-chestplate" skill={player.heavyArmorLevel} skillName="Heavy Armor" />
-        <PlayerSkillChip icon="diamond-axe" skill={player.heavyWeaponsLevel} skillName="Heavy Weapons" />
-        <PlayerSkillChip icon="leather-tunic" skill={player.lightArmorLevel} skillName="Light Armor" />
-        <PlayerSkillChip icon="diamond-sword" skill={player.lightWeaponsLevel} skillName="Light Weapons" />
-        <PlayerSkillChip icon="diamond-pickaxe" skill={player.miningLevel} skillName="Mining" />
-        <PlayerSkillChip icon="anvil" skill={player.smithingLevel} skillName="Smithing" />
-        <PlayerSkillChip icon="oak-log" skill={player.woodcuttingLevel} skillName="Woodcutting" />
-
-      </div>
-    </div>
-    <h3
-      class="text-ctp-yellow mb-4 text-center text-4xl md:text-6xl font-extrabold"
-    >
-      Lands
-    </h3>
-    <div id="lands-container" class="flex flex-row">
-      {player.lands!.map(land => (
-        <div class="p-4 m-1 bg-ctp-crust flex align-center rounded-lg land-card select-none cursor-pointer"
-            data-world={land.world} data-x={land.x} data-y={land.y} data-z={land.z}>
-          <span class="text-xl font-bold">{land.landName}</span>
-        </div>
-      ))}
     </div>
     <div id="map-container" class="w-full h-[100vh] rounded-md"></div>
   </div>
   <div id="map-container"></div>
 </Layout>
 
-<script define:vars={{ player }}>
+<!-- <script define:vars={{ player }}>
   const mapContainer = document.getElementById("map-container");
 
   const landCards = document.getElementsByClassName("land-card");
@@ -160,4 +98,4 @@ export const prerender = false;
       }
     });
   }
-</script>
+</script> -->

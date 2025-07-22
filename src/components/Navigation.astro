@@ -59,7 +59,7 @@ const pathname = new URL(Astro.request.url).pathname;
       links.map((link) => (
       <div class="relative group">
           <a
-            class={`${pathname === link.url ? "active" : ""} text-ctp-text no-underline px-2 lg:prose-lg hover:scale-105 hover:text-ctp-teal duration-150s cursor-pointer ${link.name == "Minecraft" ? "mcfont text-ctp-green pt-3" : ""} transition-all`}
+            class={`${pathname === link.url ? "active" : ""} text-ctp-text no-underline px-2 lg:prose-lg hover:scale-105 hover:text-ctp-teal duration-150s cursor-pointer transition-all`}
             href={link.url}
           >
             {link.name}

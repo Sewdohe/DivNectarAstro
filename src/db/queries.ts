@@ -15,6 +15,7 @@ export async function getPlayerData(): Promise<PlayerData[]> {
       player_uuid,
       username,
       LastLoginTime,
+      TotalPlayTime,
       balance,
       flightCharge
     FROM

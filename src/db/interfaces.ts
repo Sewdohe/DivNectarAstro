@@ -7,5 +7,4 @@ export interface PlayerData extends RowDataPacket {
   lastLoginTime: number;
   balance: number;
   flightCharge: number;
-  money: number;
 }

@@ -11,7 +11,7 @@ const backend_url = import.meta.env.BACKEND_URL;
 const players = await getPlayerData();
 const updatedPlayers = await Promise.all(players.map(async (player) => {
   const data = {
-    player_uuid: player.player_uuid,
+    uuid: player.player_uuid,
     message: "player_online",
   };
   try {

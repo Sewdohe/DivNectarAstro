@@ -44,9 +44,12 @@ const updatedPlayers = await Promise.all(players.map(async (player) => {
                 alt=""
               />
               <div class="w-full flex flex-row justify-between p-4 leading-normal">
-                <h5 class="mb-2 text-3xl text-ctp-sapphire font-bold tracking-tight ">
-                  {player.username}
-                </h5>
+                <div class="flex-col">
+                  <h5 class="mb-2 text-3xl text-ctp-sapphire font-bold tracking-tight ">
+                    {player.username}
+                  </h5>
+                  <span class="text-ctp-subtext0">played for {moment.duration(player.TotalPlayTime).humanize()}</span>
+                </div>
                 <span
                   class={`w-4 h-4 ml-4 mb-2 text-ctp-text rounded-full ${
                     player.onlineStatus == "yes" ? "bg-ctp-green" : "bg-ctp-red"

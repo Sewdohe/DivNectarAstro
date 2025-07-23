@@ -48,9 +48,9 @@ const updatedPlayers = await Promise.all(players.map(async (player) => {
                   <h5 class="mb-2 text-3xl text-ctp-sapphire font-bold tracking-tight ">
                     {player.username}
                   </h5>
-                  <span class="text-ctp-maroon font-semibold">{Math.floor(moment.duration(player.TotalPlayTime).asHours())} hours playtime</span>
+                  <span class="text-ctp-maroon font-semibold">{Math.round(moment.duration(player.TotalPlayTime).asHours())} hours playtime</span>
                   <div class="flex-col">
-                    <span class="text-ctp-green font-bold mr-2">Balance :</span><span class="font-mono">${player.virtual_holdings}</span>
+                    <span class="text-ctp-green font-bold mr-2">Balance :</span><span class="font-mono">${Math.round(player.virtual_holdings)}</span>
                   </div>
                 </div>
                 <span

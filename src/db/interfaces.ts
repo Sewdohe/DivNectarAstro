@@ -8,4 +8,6 @@ export interface PlayerData extends RowDataPacket {
   TotalPlayTime: number;
   balance: number;
   flightCharge: number;
+  virtual_holdings: number;
+  inventory_holdings: number;
 }

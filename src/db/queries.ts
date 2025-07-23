@@ -12,14 +12,19 @@ interface ServerTAPPlayerResponse {
 export async function getPlayerData(): Promise<PlayerData[]> {
   const [sqlPlayerData]: [PlayerData[], any] = await connection.query(`
     SELECT
-      player_uuid,
-      username,
-      LastLoginTime,
-      TotalPlayTime,
-      balance,
-      flightCharge
+      u.player_uuid,
+      u.username,
+      u.LastLoginTime,
+      u.TotalPlayTime,
+      u.flightCharge,
+      vh.holdings AS virtual_holdings,
+      ph.holdings AS physical_holdings
     FROM
-      CMI_users;
+      CMI_users as u
+    LEFT JOIN
+      economy_holdings AS vh ON u.player_uuid = vh.uid AND vh.holdings_type = 'tne:VIRTUAL_HOLDINGS'
+    LEFT JOIN
+      economy_holdings AS ph ON u.player_uuid = ph.uid AND ph.holdings_type = 'tne:INVENTORY_HOLDINGS';
   `);
 
 

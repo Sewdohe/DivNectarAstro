@@ -33,7 +33,7 @@ const updatedPlayers = await Promise.all(players.map(async (player) => {
     {
       updatedPlayers.map((player) => {
         return (
-          <div id="player-card">
+          <div id="player-card" class="flex-col">
             <a
               href={`/players/${player.player_uuid}`}
               class="flex flex-col rounded-lg shadow md:flex-row md:max-w-xl dark:border-gray-700 dark:bg-ctp-crust dark:hover:bg-ctp-mantle"
@@ -48,7 +48,10 @@ const updatedPlayers = await Promise.all(players.map(async (player) => {
                   <h5 class="mb-2 text-3xl text-ctp-sapphire font-bold tracking-tight ">
                     {player.username}
                   </h5>
-                  <span class="text-ctp-subtext0">played for {moment.duration(player.TotalPlayTime).humanize()}</span>
+                  <span class="text-ctp-maroon font-semibold">{Math.floor(moment.duration(player.TotalPlayTime).asHours())} hours playtime</span>
+                  <div class="flex-col">
+                    <span class="text-ctp-green font-bold mr-2">Balance :</span><span class="font-mono">${player.virtual_holdings}</span>
+                  </div>
                 </div>
                 <span
                   class={`w-4 h-4 ml-4 mb-2 text-ctp-text rounded-full ${

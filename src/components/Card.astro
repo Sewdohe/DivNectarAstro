@@ -2,7 +2,7 @@
 const { direction, title } = Astro.props;
 ---
 
-<div class=` p-4 rounded-lg shadow md:flex-row md:max-w-xl border-gray-700 bg-ctp-crust hover:bg-ctp-mantle`>
+<div class=`mx-4 p-4 rounded-lg shadow md:flex-row md:max-w-xl border-gray-700 bg-ctp-crust hover:bg-ctp-mantle`>
   {title ? <h2 class="text-2xl mb-4 font-bold text-ctp-pink">{title}</h2> : null}
   <div class={`flex flex-row ${direction == "col" && 'flex-col'} items-center`}>
     <slot />

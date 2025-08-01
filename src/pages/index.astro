@@ -3,20 +3,23 @@ import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 
 import homeviewImage from "../assets/screenshots/home-overview.png";
+import Card from "../components/Card.astro";
 
 const title = "DivNectar";
 const description = "DivNectar - FOSS software and the Minecrafts.";
 ---
 
 <Layout title={title} direction="col" description={description}>
-  <div class="flex flex-row items-center justify-center w-full">
-    <p class="text-xl w-full max-w-[80%] md:max-w-[60%] text-ctp-text nes-container">
-      I go by Sewdohe online. I've been a piddler/creator/software engineer for over 10 years. Unformally. I'm self taught, never been
-      to college. Over the years I've made Neovim plugins, configs, various websites, business level software, Minecraft mods, various scripts,
-      and so much more that I just can't remember. I really do just enjoy making things on the computer, through and through. I love software, and
-      I'm a huge advocate for open-source software. I can't get enough of the stuff. I'm an avid and 100% Linux user for about 8-10 years. Wanna create
-      something with me? Come find me on my Discord community!
-    </p>
+  <div class="w-full mx-4 flex flex-row justify-center">
+    <Card>
+      <p class="text-xl w-full text-ctp-text nes-container">
+        I go by Sewdohe online. I've been a piddler/creator/software engineer for over 10 years. Unformally. I'm self taught, never been
+        to college. Over the years I've made Neovim plugins, configs, various websites, business level software, Minecraft mods, various scripts,
+        and so much more that I just can't remember. I really do just enjoy making things on the computer, through and through. I love software, and
+        I'm a huge advocate for open-source software. I can't get enough of the stuff. I'm an avid and 100% Linux user for about 8-10 years. Wanna create
+        something with me? Come find me on my Discord community!
+      </p>
+    </Card>
   </div>
   <div class="">
     <div class="mx-auto rounded max-w-7xl py-24 sm:px-6 sm:py-32 lg:px-8">

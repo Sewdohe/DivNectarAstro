@@ -12,7 +12,7 @@ const image = {
 ---
 
 <Layout title={title} direction="col" description={description} image={image}>
-  <div class="text-white">
+  <div class="text-ctp-text">
     <section class="">
       <div class="py-8 px-4 mx-auto text-center lg:py-16 lg:px-12">
         <a
@@ -21,7 +21,7 @@ const image = {
           role="alert"
         >
           <span
-            class="text-xs bg-ctp-mauve rounded-full text-white px-4 py-1.5 mr-3"
+            class="text-xs bg-ctp-mauve rounded-full text-ctp-crust px-4 py-1.5 mr-3"
             >New!</span
           >
           <span class="text-sm font-medium">Check the player glossary</span>
@@ -42,7 +42,7 @@ const image = {
           role="alert"
         >
           <span
-            class="text-xs bg-ctp-mauve rounded-full text-white px-4 py-1.5 mr-3"
+            class="text-xs bg-ctp-mauve rounded-full text-ctp-crust px-4 py-1.5 mr-3"
             >New!</span
           >
           <span class="text-sm font-medium"
@@ -86,7 +86,7 @@ const image = {
         >
           <a
             href="https://info.divnectar.com/books/sewcraft"
-            class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg hover:scale-110 hover:bg-ctp-mantle transition-all duration-100"
+            class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-ctp-text rounded-lg hover:scale-110 hover:bg-ctp-mantle transition-all duration-100"
             data-umami-event="outbound-link-click"
             data-umami-event-url="https://info.divnectar.com/books/sewcraft"
           >
@@ -118,7 +118,7 @@ const image = {
       <div
         class="px-4 mx-auto text-center md:max-w-screen-md lg:max-w-screen-lg lg:px-36"
       >
-        <span class="font-semibold text-4xl text-gray-400 uppercase"
+        <span class="font-semibold text-4xl text-ctp-subtext0 uppercase"
           >FEATURES</span
         >
       </div>
@@ -127,8 +127,8 @@ const image = {
           class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0"
         >
           <div>
-            <h3 class="mb-2 text-xl font-bold">Diagetic</h3>
-            <p class="text-gray-500 dark:text-gray-400">
+            <h3 class="mb-2 text-xl font-bold text-ctp-text">Diagetic</h3>
+            <p class="text-ctp-subtext0">
               SewCraft is meant to be immersive and challenging. I want players
               to have to think to survive. There is no `/home` command on the
               server. You must use <a
@@ -141,8 +141,8 @@ const image = {
             </p>
           </div>
           <div>
-            <h3 class="mb-2 text-xl font-bold">Integrated</h3>
-            <p class="text-gray-500 dark:text-gray-400">
+            <h3 class="mb-2 text-xl font-bold text-ctp-text">Integrated</h3>
+            <p class="text-ctp-subtext0">
               I've gone through great lengths (as always) to make the in-game
               and discord chat as beautiful as possible. Your Discord rank
               automatically syncs to the server after you run `/discord link`
@@ -153,8 +153,8 @@ const image = {
             </p>
           </div>
           <div>
-            <h3 class="mb-2 text-xl font-bold">Really Fun</h3>
-            <p class="text-gray-500 dark:text-gray-400">
+            <h3 class="mb-2 text-xl font-bold text-ctp-text">Really Fun</h3>
+            <p class="text-ctp-subtext0">
               I’ve added a cavalcade of fun and interesting mods to this
               modpack, and I’ve actually made a try at cohesion this time around
               instead of just throwing the kitchen sink at it, and I really
@@ -164,8 +164,8 @@ const image = {
             </p>
           </div>
           <div>
-            <h3 class="mb-2 text-xl font-bold">Unique Land Claim</h3>
-            <p class="text-gray-500 dark:text-gray-400">
+            <h3 class="mb-2 text-xl font-bold text-ctp-text">Unique Land Claim</h3>
+            <p class="text-ctp-subtext0">
               The server features
               <a href="https://modrinth.com/mod/open-parties-and-claims">OPAC</a
               > for the land claiming mod. There’s a catch, however; OPAC will only
@@ -178,8 +178,8 @@ const image = {
             </p>
           </div>
           <div>
-            <h3 class="mb-2 text-xl font-bold">Economy</h3>
-            <p class="text-gray-500 dark:text-gray-400">
+            <h3 class="mb-2 text-xl font-bold text-ctp-text">Economy</h3>
+            <p class="text-ctp-subtext0">
               Our economy is in the form of *gears* from the <a
                 href="https://modrinth.com/mod/numismatics"
                 >Create: Numismatics</a
@@ -192,8 +192,8 @@ const image = {
             </p>
           </div>
           <div>
-            <h3 class="mb-2 text-xl font-bold">Performance</h3>
-            <p class="text-gray-500 dark:text-gray-400">
+            <h3 class="mb-2 text-xl font-bold text-ctp-text">Performance</h3>
+            <p class="text-ctp-subtext0">
               The server is running on a dedicated machine with 64gb RAM, a
               Ryzen 5 5600G with 12 cores, and an SSD. We run on bare metal, no
               virtual server here! Also running the latest Forge optimization
@@ -233,7 +233,7 @@ const image = {
         <div
           class="flex-col bg-black bg-opacity-35 p-8 rounded-xl flex justify-center align-middle"
         >
-          <h1 class="text-5xl w-full text-center font-extrabold text-white">
+          <h1 class="text-5xl w-full text-center font-extrabold text-ctp-text">
             CraftNectar Map
           </h1>
           <div class="flex justify-center">
@@ -254,6 +254,11 @@ const image = {
 
 <style>
   a {
-    color: mediumpurple;
+    color: var(--ctp-mauve);
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: var(--ctp-pink);
   }
 </style>

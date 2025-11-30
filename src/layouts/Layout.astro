@@ -6,6 +6,7 @@ var { title, description, image, center, direction } = Astro.props;
 import { Tooltips } from "astro-tooltips";
 
 // use our global styles
+import "../styles/catppuccin-theme.css";
 import "../styles/global.css";
 import "../styles/mocha.css";
 //
@@ -76,8 +77,47 @@ if (!image) {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
+    <script is:inline>
+      // Function to apply theme
+      function applyTheme() {
+        const theme = (() => {
+          if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme');
+          }
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+          }
+          return 'light';
+        })();
+
+        if (theme === 'light') {
+          document.documentElement.classList.remove('dark');
+        } else {
+          document.documentElement.classList.add('dark');
+        }
+
+        window.localStorage.setItem('theme', theme);
+      }
+
+      // Apply theme immediately on page load
+      applyTheme();
+
+      // Reapply theme after Astro page transitions
+      document.addEventListener('astro:after-swap', applyTheme);
+
+      // Listen for system theme changes
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        const newTheme = e.matches ? 'dark' : 'light';
+        if (newTheme === 'light') {
+          document.documentElement.classList.remove('dark');
+        } else {
+          document.documentElement.classList.add('dark');
+        }
+        window.localStorage.setItem('theme', newTheme);
+      });
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.png" />

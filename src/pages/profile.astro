@@ -19,6 +19,19 @@ if (userId !== "0") {
 }
 const backend_url = import.meta.env.BACKEND_URL;
 console.log(backend_url);
+
+// Generate proper Discord avatar URL with fallback
+function getDiscordAvatarUrl(userId: string, avatarHash: string | null) {
+  if (avatarHash) {
+    // If avatar exists, use CDN with proper format and size
+    const format = avatarHash.startsWith('a_') ? 'gif' : 'png';
+    return `https://cdn.discordapp.com/avatars/${userId}/${avatarHash}.${format}?size=256`;
+  } else {
+    // Fallback to default Discord avatar
+    const defaultAvatarNumber = (BigInt(userId) >> 22n) % 6n;
+    return `https://cdn.discordapp.com/embed/avatars/${defaultAvatarNumber}.png`;
+  }
+}
 ---
 
 <Layout
@@ -34,8 +47,8 @@ console.log(backend_url);
           </h1>
           <div class="">
             <img
-              src={`https://cdn.discordapp.com/avatars/${user?.id}/${user?.avatar}.png`}
-              class="h-14"
+              src={getDiscordAvatarUrl(user?.id, user?.avatar)}
+              class="h-14 rounded-full ring-2 ring-ctp-surface2"
               alt="avatar"
             />
           </div>

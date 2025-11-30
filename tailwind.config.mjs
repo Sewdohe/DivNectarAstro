@@ -2,31 +2,63 @@
 export default {
 	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
 	important: true,
+	darkMode: 'class',
 	theme: {
 		extend: {
+			colors: {
+				'ctp-rosewater': 'var(--ctp-rosewater)',
+				'ctp-flamingo': 'var(--ctp-flamingo)',
+				'ctp-pink': 'var(--ctp-pink)',
+				'ctp-mauve': 'var(--ctp-mauve)',
+				'ctp-red': 'var(--ctp-red)',
+				'ctp-maroon': 'var(--ctp-maroon)',
+				'ctp-peach': 'var(--ctp-peach)',
+				'ctp-yellow': 'var(--ctp-yellow)',
+				'ctp-green': 'var(--ctp-green)',
+				'ctp-teal': 'var(--ctp-teal)',
+				'ctp-sky': 'var(--ctp-sky)',
+				'ctp-sapphire': 'var(--ctp-sapphire)',
+				'ctp-blue': 'var(--ctp-blue)',
+				'ctp-lavender': 'var(--ctp-lavender)',
+				'ctp-text': 'var(--ctp-text)',
+				'ctp-subtext1': 'var(--ctp-subtext1)',
+				'ctp-subtext0': 'var(--ctp-subtext0)',
+				'ctp-overlay2': 'var(--ctp-overlay2)',
+				'ctp-overlay1': 'var(--ctp-overlay1)',
+				'ctp-overlay0': 'var(--ctp-overlay0)',
+				'ctp-surface2': 'var(--ctp-surface2)',
+				'ctp-surface1': 'var(--ctp-surface1)',
+				'ctp-surface0': 'var(--ctp-surface0)',
+				'ctp-base': 'var(--ctp-base)',
+				'ctp-mantle': 'var(--ctp-mantle)',
+				'ctp-crust': 'var(--ctp-crust)',
+			},
 			typography: ({ theme }) => ({
 				catpuccin: {
 				  css: {
-					'--tw-prose-h1': theme('colors.pink[300]'),
-					'--tw-prose-headings': theme('colors.pink[300]'),
-					'--tw-prose-links': theme('colors.cyan[300]'),
-					'--tw-prose-bold': theme('colors.blue[400]'),
-					'--tw-prose-bullets': theme('colors.green[300]'),
-					'--tw-prose-hr': theme('colors.pink[300]'),
-					'--tw-prose-code': theme('colors.red[300]'),
+					// Base text color - adjusts automatically with light/dark mode
+					'--tw-prose-body': 'var(--ctp-text)',
+					'--tw-prose-headings': 'var(--ctp-pink)',
+					'--tw-prose-lead': 'var(--ctp-subtext0)',
+					'--tw-prose-links': 'var(--ctp-sky)',
+					'--tw-prose-bold': 'var(--ctp-mauve)',
+					'--tw-prose-counters': 'var(--ctp-subtext1)',
+					'--tw-prose-bullets': 'var(--ctp-green)',
+					'--tw-prose-hr': 'var(--ctp-surface2)',
+					'--tw-prose-quotes': 'var(--ctp-text)',
+					'--tw-prose-quote-borders': 'var(--ctp-pink)',
+					'--tw-prose-captions': 'var(--ctp-subtext0)',
+					'--tw-prose-code': 'var(--ctp-red)',
+					'--tw-prose-pre-code': 'var(--ctp-text)',
+					'--tw-prose-pre-bg': 'var(--ctp-mantle)',
+					'--tw-prose-th-borders': 'var(--ctp-surface2)',
+					'--tw-prose-td-borders': 'var(--ctp-surface1)',
 				  },
 				},
 			  }),
 		},
 	},
 	plugins: [
-		require("@catppuccin/tailwindcss")({
-			// prefix to use, e.g. `text-pink` becomes `text-ctp-pink`.
-			// default is `false`, which means no prefix
-			prefix: "ctp",
-			// which flavour of colours to use by default, in the `:root`
-			defaultFlavour: "mocha",
-		  }),
 		require('@tailwindcss/typography'),
 	  ],
 }

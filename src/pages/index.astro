@@ -10,15 +10,90 @@ const description = "DivNectar - FOSS software and the Minecrafts.";
 ---
 
 <Layout title={title} direction="col" description={description}>
-  <div class="flex flex-row justify-center">
-    <Card>
-      <p class="text-xl text-ctp-text">
-        I go by Sewdohe online. I've been a piddler/creator/software engineer for over 10 years. Unformally. I'm self taught, never been
-        to college. Over the years I've made Neovim plugins, configs, various websites, business level software, Minecraft mods, various scripts,
-        and so much more that I just can't remember. I really do just enjoy making things on the computer, through and through. I love software, and
-        I'm a huge advocate for open-source software. I can't get enough of the stuff. I'm an avid and 100% Linux user for about 8-10 years. Wanna create
-        something with me? Come find me on my Discord community!
+  <!-- Hero Section -->
+  <div class="flex flex-col items-center gap-6 mb-8">
+    <div class="text-center max-w-3xl px-4">
+      <h1 class="text-4xl md:text-5xl font-bold text-ctp-pink mb-4">Hey, I'm Sewdohe</h1>
+      <p class="text-xl md:text-2xl text-ctp-subtext0">
+        Self-taught software engineer, FOSS advocate, and creator of digital things
       </p>
+    </div>
+  </div>
+
+  <!-- About Section -->
+  <div class="flex flex-row justify-center mb-6">
+    <Card title="About Me">
+      <div class="text-lg text-ctp-text space-y-4">
+        <p>
+          I've been creating, tinkering, and building software for over 10 years—all self-taught,
+          no formal education. What started as curiosity has grown into a deep passion for making
+          things work on computers.
+        </p>
+        <p>
+          Over the years, I've built everything from Neovim plugins and custom configs to full-stack
+          websites, business-level applications, Minecraft mods, automation scripts, and countless
+          other projects that scratch various itches. Some I remember vividly, others are lost to time,
+          but all of them taught me something valuable.
+        </p>
+        <p>
+          What drives me? Simple: I genuinely love software. The craft, the community, the endless
+          possibilities. Creating things on a computer just feels right.
+        </p>
+      </div>
+    </Card>
+  </div>
+
+  <!-- Open Source Section -->
+  <div class="flex flex-row justify-center mb-6">
+    <Card title="Open Source & Linux">
+      <div class="text-lg text-ctp-text space-y-4">
+        <p>
+          I'm a passionate advocate for free and open-source software (FOSS). There's something
+          special about software that anyone can inspect, modify, and improve. It's not just about
+          the license—it's about the philosophy of collaborative creation and shared knowledge.
+        </p>
+        <p>
+          I've been a 100% Linux user for 8-10 years now, and I can't imagine going back. The freedom,
+          the customization, the control—it all aligns with how I think software should work. Whether
+          it's tweaking my window manager, writing shell scripts, or contributing to open-source projects,
+          Linux is home for me.
+        </p>
+      </div>
+    </Card>
+  </div>
+
+  <!-- Gaming & Community Section -->
+  <div class="flex flex-row justify-center mb-6">
+    <Card title="Gaming & Community">
+      <div class="text-lg text-ctp-text space-y-4">
+        <p>
+          Beyond professional work, I run CraftNectar—a Minecraft server network that brings together
+          players for modded survival, skyblock, and minigames. It's more than just a server; it's a
+          community where people can hang out, build together, and have fun.
+        </p>
+        <p>
+          Over the years I've created various Minecraft mods and plugins, blending my love of software
+          with gaming. There's something uniquely satisfying about seeing people enjoy something you've
+          built, especially when it brings a community together.
+        </p>
+      </div>
+    </Card>
+  </div>
+
+  <!-- Call to Action -->
+  <div class="flex flex-row justify-center mb-8">
+    <Card title="Let's Create Together">
+      <div class="text-lg text-ctp-text space-y-4">
+        <p>
+          Whether you're interested in collaborating on open-source projects, discussing Linux setups,
+          playing on the Minecraft server, or just chatting about software—I'd love to connect.
+        </p>
+        <p class="text-center">
+          <a href="https://discord.gg/your-invite" class="inline-block px-6 py-3 mt-2 text-lg font-semibold rounded-lg bg-ctp-pink text-ctp-base hover:bg-ctp-mauve transition-colors">
+            Join the Discord Community
+          </a>
+        </p>
+      </div>
     </Card>
   </div>
   <div class="">

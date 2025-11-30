@@ -49,6 +49,14 @@ const links = [
 ];
 
 const pathname = new URL(Astro.request.url).pathname;
+
+// Function to check if a link is active
+function isLinkActive(linkUrl: string, currentPath: string): boolean {
+  if (linkUrl === '/') {
+    return currentPath === '/';
+  }
+  return currentPath.startsWith(linkUrl);
+}
 ---
 
 <!-- This div is the medium-and up normal navbar.
@@ -65,11 +73,12 @@ it's hidden on small devices and replaced with a bottom-style navbar on mobile. 
   >
     {
       links.map((link) => (
-        <div class="relative group">
+        <div class="relative group px-4">
           <a
             class={`
-              ${pathname === link.url ? "active" : ""} text-ctp-text no-underline px-2
-              lg:prose-lg hover:scale-105 hover:text-ctp-teal duration-150s cursor-pointer transition-all
+              ${isLinkActive(link.url, pathname) ? "active" : ""}
+              text-ctp-text no-underline relative
+              lg:text-lg hover:text-ctp-teal transition-all duration-300 cursor-pointer
             `}
             href={link.url}
           >
@@ -90,14 +99,15 @@ it's hidden on small devices and replaced with a bottom-style navbar on mobile. 
   {
     links.map((link) => (
       <a
-        class={` flex
-              hover:scale-105 hover:text-ctp-teal justify-evenly self-center items-center
-              w-full duration-150s cursor-pointer transition-all
-            `}
+        class={`flex justify-evenly self-center items-center w-full cursor-pointer transition-all duration-300
+                ${isLinkActive(link.url, pathname) ? 'mobile-active' : 'hover:scale-105'}
+        `}
         href={link.url}
       >
         <Icon
-          class="text-4xl hover:text-ctp-sky"
+          class={`text-4xl transition-all duration-300
+                  ${isLinkActive(link.url, pathname) ? 'text-ctp-pink scale-110' : 'text-ctp-text hover:text-ctp-sky'}
+          `}
           name={link.icon}
         />
       </a>
@@ -111,15 +121,60 @@ to keep the content from going below it on page load. -->
 <!-- <div class="h-16"></div> -->
 
 <style>
+  /* Desktop active link with animated underline */
   .active {
-    color: #74c7ec !important;
+    color: var(--ctp-sky);
   }
-  .active::before {
-    color: #cba6f7;
-    content: "[";
-  }
+
   .active::after {
-    color: #cba6f7;
-    content: "]";
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--ctp-pink), var(--ctp-mauve));
+    border-radius: 2px;
+    animation: slideIn 0.3s ease-out;
+  }
+
+  @keyframes slideIn {
+    from {
+      width: 0%;
+      opacity: 0;
+    }
+    to {
+      width: 100%;
+      opacity: 1;
+    }
+  }
+
+  /* Mobile active indicator */
+  .mobile-active {
+    position: relative;
+  }
+
+  .mobile-active::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: var(--ctp-pink);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+    50% {
+      opacity: 0.7;
+      transform: translateX(-50%) scale(1.2);
+    }
   }
 </style>

@@ -8,13 +8,10 @@ const image = {
   alt: "DivNectar Logo",
 };
 
-import fetchApi from "../lib/strapi";
+import { getAllPosts } from "../lib/wordpress";
 import type Article from "../interfaces/article";
 
-const articles = await fetchApi<Article[]>({
-  endpoint: "articles?populate[0]=cover&populate[1]=category", // the content type to fetch
-  wrappedByKey: "data", // the key to unwrap the response
-});
+const articles = await getAllPosts();
 
 console.log("articles:");
 console.log(articles);
@@ -29,8 +26,8 @@ console.log(articles);
           <a href={`/blog/${article.slug}`}>
             <img
               class="rounded-lg p-4 border-ctp-sapphire"
-              src={`${import.meta.env.STRAPI_URL}${article.cover.url}`}
-              alt=""
+              src={article.cover.url}
+              alt={article.cover.alternativeText || article.title}
             />
           </a>
           <div class="flex flex-row justify-around p-2 px-4">

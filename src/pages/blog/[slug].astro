@@ -1,5 +1,5 @@
 ---
-import fetchApi from "../../lib/strapi";
+import { getPostBySlug } from "../../lib/wordpress";
 import type Article from "../../interfaces/article";
 import BlogPost from "../../layouts/BlogPost.astro";
 import { Markdown } from "astro-remote";
@@ -18,18 +18,9 @@ import MarkdownIcon from "../../components/MarkdownIcon.astro";
 
 const { slug } = Astro.params;
 
-let article: Article;
+const article = await getPostBySlug(slug || "");
 
-try {
-  article = await fetchApi<Article>({
-    endpoint: "articles?populate=cover",
-    wrappedByKey: "data",
-    wrappedByList: true,
-    query: {
-      "filters[slug][$eq]": slug || "",
-    },
-  });
-} catch (error) {
+if (!article) {
   return Astro.redirect("/404");
 }
 ---
@@ -38,10 +29,13 @@ try {
   <div
     class="bg-ctp-crust text-ctp-text justify-center items-center align-middle mx-auto left-0 absolute sm:top-0 md:top-12 w-screen flex"
   >
-    <img
-      class="rounded-lg h-14 shadow-md"
-      src={import.meta.env.STRAPI_URL + article.cover.url}
-    />
+    {article.cover.url && (
+      <img
+        class="rounded-lg h-14 shadow-md"
+        src={article.cover.url}
+        alt={article.cover.alternativeText || article.title}
+      />
+    )}
     <h1 class="text-3xl text-ctp-peach font-extrabold my-8 ml-4">
       {article.title}
     </h1>

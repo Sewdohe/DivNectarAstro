@@ -1,5 +1,8 @@
 User-agent: *
 Allow: /
 
+# Main sitemap
 Sitemap: https://divnectar.com/sitemap-index.xml
-Sitemap: https://cms.divnectar.com/api/strapi-5-sitemap-plugin/sitemap.xml
+
+# Crawl delay to be respectful
+Crawl-delay: 1

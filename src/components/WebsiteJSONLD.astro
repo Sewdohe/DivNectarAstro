@@ -1,0 +1,74 @@
+---
+// WebSite and Organization structured data for better SEO
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://divnectar.com/#website",
+      "url": "https://divnectar.com",
+      "name": "DivNectar",
+      "description": "FOSS software development, Minecraft community, and tech blog by Sewdohe",
+      "publisher": {
+        "@id": "https://divnectar.com/#organization"
+      },
+      "potentialAction": [{
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://divnectar.com/blog?search={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }],
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://divnectar.com/#organization",
+      "name": "DivNectar",
+      "url": "https://divnectar.com",
+      "logo": {
+        "@type": "ImageObject",
+        "@id": "https://divnectar.com/#logo",
+        "inLanguage": "en-US",
+        "url": "https://divnectar.com/site-logo.webp",
+        "contentUrl": "https://divnectar.com/site-logo.webp",
+        "caption": "DivNectar"
+      },
+      "image": {
+        "@id": "https://divnectar.com/#logo"
+      },
+      "sameAs": [
+        "https://github.com/sewdohe",
+        "https://twitter.com/Sewdohe"
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://divnectar.com/#person",
+      "name": "Sewdohe",
+      "url": "https://divnectar.com/about",
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://divnectar.com/site-logo.webp"
+      },
+      "sameAs": [
+        "https://github.com/sewdohe",
+        "https://twitter.com/Sewdohe"
+      ],
+      "jobTitle": "Software Engineer",
+      "description": "Self-taught software engineer, FOSS advocate, and creator of digital things",
+      "knowsAbout": [
+        "Software Development",
+        "Open Source",
+        "Linux",
+        "Web Development",
+        "Minecraft",
+        "Game Development"
+      ]
+    }
+  ]
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

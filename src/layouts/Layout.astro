@@ -5,6 +5,7 @@ var { title, description, image, center, direction, topPadding } = Astro.props;
 
 import { Tooltips } from "astro-tooltips";
 import LinkTracker from "../components/LinkTracker.astro";
+import WebsiteJSONLD from "../components/WebsiteJSONLD.astro";
 
 // use our global styles
 import "../styles/catppuccin-theme.css";
@@ -190,37 +191,53 @@ if (!image) {
       type="text/partytown"
       data-website-id="18091b9b-ce52-4b2b-8372-32b854387db7"
       src="https://analytics.divnectar.com/script.js"></script>
-    <title>DivNectar</title>
+    <title>{title}</title>
     <SEO
       title={title}
       description={description}
+      canonical={`https://divnectar.com${currentRoute}`}
       openGraph={{
         basic: {
           title: title,
-          type: "image",
+          type: "website",
           image: image.url,
+          url: `https://divnectar.com${currentRoute}`,
+        },
+        optional: {
+          siteName: "DivNectar",
+          locale: "en_US",
+        },
+        image: {
+          url: image.url,
+          alt: image.alt || title,
         },
       }}
       twitter={{
         creator: "@Sewdohe",
+        site: "@Sewdohe",
+        card: "summary_large_image",
       }}
       extend={{
         // extending the default link tags
-        link: [{ rel: "icon", href: "/favicon.ico" }],
+        link: [
+          { rel: "icon", href: "/favicon.ico" },
+          { rel: "canonical", href: `https://divnectar.com${currentRoute}` }
+        ],
         // extending the default meta tags
         meta: [
-          {
-            name: "twitter:image",
-            content: image.url,
-          },
-          {
-            name: "twitter:title",
-            content: description,
-          },
+          { name: "author", content: "Sewdohe" },
+          { name: "keywords", content: "Minecraft, FOSS, open source, software development, Linux, gaming, web development" },
+          { name: "twitter:image", content: image.url },
+          { name: "twitter:title", content: title },
           { name: "twitter:description", content: description },
+          { name: "twitter:image:alt", content: image.alt || title },
+          { property: "og:locale", content: "en_US" },
+          { property: "og:site_name", content: "DivNectar" },
         ],
       }}
     />
+    <!-- Structured Data -->
+    <WebsiteJSONLD />
     <!-- This slot of for any JSONLD components to mount inside -->
     <slot name="head" />
   </head>

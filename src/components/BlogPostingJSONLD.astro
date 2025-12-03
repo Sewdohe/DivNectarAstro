@@ -1,5 +1,4 @@
 ---
-import { string } from "astro:schema";
 import type Article from "../interfaces/article";
 
 const props: Article = Astro.props as Article;
@@ -9,17 +8,33 @@ const schema = {
   "@type": "BlogPosting",
   "headline": props.title,
   "description": props.description,
-  "image": [
-    import.meta.env.STRAPI_URL + props.cover.url,
-  ],
+  "image": props.cover.url ? [props.cover.url] : [],
   "datePublished": props.publishedAt,
   "dateModified": props.updatedAt,
-  // "keywords": props.tags,
   "author": {
     "@type": "Person",
     "name": "Sewdohe",
-    "url": "https://divnectar.com/about"
+    "url": "https://divnectar.com/about",
+    "sameAs": [
+      "https://github.com/sewdohe",
+      "https://twitter.com/Sewdohe"
+    ]
   },
+  "publisher": {
+    "@type": "Organization",
+    "name": "DivNectar",
+    "url": "https://divnectar.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://divnectar.com/site-logo.webp"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": `https://divnectar.com/blog/${props.slug}`
+  },
+  "articleSection": props.category?.name || "Technology",
+  "inLanguage": "en-US"
 };
 ---
 

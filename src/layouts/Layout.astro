@@ -4,6 +4,7 @@ import { SEO } from "astro-seo";
 var { title, description, image, center, direction, topPadding } = Astro.props;
 
 import { Tooltips } from "astro-tooltips";
+import LinkTracker from "../components/LinkTracker.astro";
 
 // use our global styles
 import "../styles/catppuccin-theme.css";
@@ -117,7 +118,7 @@ if (!image) {
   <head>
     <script is:inline>
       // Function to apply theme
-      function applyTheme() {
+      function applyTheme(trackChange = false) {
         const theme = (() => {
           if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
             return localStorage.getItem('theme');
@@ -135,6 +136,11 @@ if (!image) {
         }
 
         window.localStorage.setItem('theme', theme);
+
+        // Track theme change if explicitly requested
+        if (trackChange && window.umami) {
+          window.umami.track('theme-change', { theme: theme });
+        }
       }
 
       // Apply theme immediately on page load
@@ -143,7 +149,7 @@ if (!image) {
       // Reapply theme after Astro page transitions
       document.addEventListener('astro:after-swap', applyTheme);
 
-      // Listen for system theme changes
+      // Listen for system theme changes and track them
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
         const newTheme = e.matches ? 'dark' : 'light';
         if (newTheme === 'light') {
@@ -152,6 +158,11 @@ if (!image) {
           document.documentElement.classList.add('dark');
         }
         window.localStorage.setItem('theme', newTheme);
+
+        // Track system theme change
+        if (window.umami) {
+          window.umami.track('theme-change', { theme: newTheme, source: 'system' });
+        }
       });
     </script>
     <meta charset="UTF-8" />
@@ -214,6 +225,7 @@ if (!image) {
     <slot name="head" />
   </head>
   <body class=`bg-ctp-base container m-0 p-0 md:w-screen text-ctp-text w-full`>
+    <LinkTracker />
     <Navigation transition:persist />
     <div
       id="content"

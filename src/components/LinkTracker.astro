@@ -1,0 +1,48 @@
+---
+// Automatically track external link clicks and social media interactions
+---
+
+<script>
+  import { trackExternalLink, trackSocial } from '../lib/analytics.ts';
+
+  // Wait for DOM to be ready
+  function initLinkTracking() {
+    // Track all external links
+    document.querySelectorAll('a[href^="http"]').forEach(link => {
+      // Skip if it's a link to our own site
+      if (link.href.includes('divnectar.com')) return;
+
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href') || '';
+        const linkText = link.textContent?.trim() || 'Unknown';
+
+        // Check if it's a social media link
+        const socialPlatforms = ['github', 'twitter', 'discord', 'linkedin', 'youtube', 'mastodon', 'bluesky'];
+        const platform = socialPlatforms.find(p => href.toLowerCase().includes(p));
+
+        if (platform) {
+          trackSocial(platform, 'click');
+        } else {
+          trackExternalLink(linkText, href);
+        }
+      });
+    });
+
+    // Track Discord widget/button clicks specifically
+    document.querySelectorAll('a[href*="discord"]').forEach(link => {
+      link.addEventListener('click', () => {
+        trackSocial('discord', 'join-button');
+      });
+    });
+  }
+
+  // Run on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLinkTracking);
+  } else {
+    initLinkTracking();
+  }
+
+  // Re-run after Astro page transitions
+  document.addEventListener('astro:after-swap', initLinkTracking);
+</script>

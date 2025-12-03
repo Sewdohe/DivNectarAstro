@@ -1,0 +1,69 @@
+---
+// Track blog post reading behavior
+const { postTitle, category } = Astro.props;
+---
+
+<script define:vars={{ postTitle, category }}>
+  import { trackBlogRead, trackBlogScrollDepth, trackBlogReadTime } from '../lib/analytics.ts';
+
+  // Track initial page load
+  trackBlogRead(postTitle, category);
+
+  // Track time spent on page
+  let startTime = Date.now();
+  let timeTracked = false;
+
+  // Track when user leaves or switches tabs
+  function trackTimeSpent() {
+    if (!timeTracked) {
+      const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+      if (timeSpent > 10) { // Only track if more than 10 seconds
+        trackBlogReadTime(postTitle, timeSpent);
+        timeTracked = true;
+      }
+    }
+  }
+
+  window.addEventListener('beforeunload', trackTimeSpent);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      trackTimeSpent();
+    }
+  });
+
+  // Track scroll depth
+  let maxScrollDepth = 0;
+  const scrollThresholds = [25, 50, 75, 100];
+  const trackedThresholds = new Set();
+
+  function calculateScrollDepth() {
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollTop = window.scrollY;
+    const scrollPercent = ((scrollTop + windowHeight) / documentHeight) * 100;
+
+    if (scrollPercent > maxScrollDepth) {
+      maxScrollDepth = scrollPercent;
+
+      // Track milestone thresholds
+      scrollThresholds.forEach(threshold => {
+        if (scrollPercent >= threshold && !trackedThresholds.has(threshold)) {
+          trackedThresholds.add(threshold);
+          trackBlogScrollDepth(postTitle, threshold);
+        }
+      });
+    }
+  }
+
+  // Throttle scroll events
+  let scrollTimeout;
+  window.addEventListener('scroll', () => {
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout);
+    }
+    scrollTimeout = setTimeout(calculateScrollDepth, 100);
+  });
+
+  // Initial calculation
+  calculateScrollDepth();
+</script>

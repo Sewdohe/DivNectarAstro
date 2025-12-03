@@ -2,6 +2,7 @@
 import { getPostBySlug } from "../../lib/wordpress";
 import type Article from "../../interfaces/article";
 import BlogPost from "../../layouts/BlogPost.astro";
+import BlogTracker from "../../components/BlogTracker.astro";
 import { Markdown } from "astro-remote";
 import H1 from "../../components/Basic/Headings/H1.astro";
 import H2 from "../../components/Basic/Headings/H2.astro";
@@ -26,6 +27,7 @@ if (!article) {
 ---
 
 <BlogPost article={article}>
+  <BlogTracker postTitle={article.title} category={article.category.name} />
   <div
     class="bg-ctp-crust text-ctp-text justify-center items-center align-middle mx-auto left-0 absolute sm:top-0 md:top-12 w-screen flex"
   >

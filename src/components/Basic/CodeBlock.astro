@@ -1,6 +1,6 @@
 ---
-const { lang, code, ...props } = Astro.props;
-import { Prism } from '@astrojs/prism';
+import { Code } from 'astro-expressive-code/components';
+const { lang = 'plaintext', code, ...props } = Astro.props;
 ---
 
-<Prism class="border border-solid border-ctp-pink shadow-lg p-6" lang={lang} code={code} { ...props } />
+<Code code={code} lang={lang} {...props} />

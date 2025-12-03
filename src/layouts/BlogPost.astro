@@ -5,7 +5,7 @@ import BlogPostingJSONLD from "../components/BlogPostingJSONLD.astro";
 
 console.log("title:", article.title);
 const image = {
-    url: import.meta.env.STRAPI_URL + article.cover.url,
+    url: article.cover.url,
     alt: article.cover.alternativeText,
 };
 console.log('blogpost OG image:', image.url)

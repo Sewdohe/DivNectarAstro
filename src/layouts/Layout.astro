@@ -18,49 +18,85 @@ const currentRoute = Astro.url.pathname;
 
 async function generateOgImage(path: string) {
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 40000); // 40 second timeout
+
     const response = await fetch(
-      `${import.meta.env.BACKEND_URL}/og-image?url=https://divnectar.com${path}`
+      `${import.meta.env.BACKEND_URL}/og-image?url=https://divnectar.com${path}`,
+      { signal: controller.signal }
     );
+
+    clearTimeout(timeoutId);
+
     if (!response.ok) {
-      throw new Error("Failed to generate OG image");
+      const errorText = await response.text();
+      throw new Error(`Failed to generate OG image: ${response.status} - ${errorText}`);
     }
+
     const screenshotUrl = await response.text();
-    // console.log("Generated OG image:", screenshotUrl);
+    console.log("Successfully generated OG image:", screenshotUrl);
+    return screenshotUrl;
   } catch (error) {
-    console.error("Error generating OG image:", error);
+    if (error instanceof Error) {
+      if (error.name === 'AbortError') {
+        console.error("OG image generation timed out");
+      } else {
+        console.error("Error generating OG image:", error.message);
+      }
+    }
+    return null;
   }
 }
 
 async function handleOGImage() {
   try {
+    if (!import.meta.env.BACKEND_URL) {
+      console.warn("BACKEND_URL not configured, using default logo");
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout for check
+
     const response = await fetch(
-      `${import.meta.env.BACKEND_URL}/check-og-image?path=${encodeURIComponent(currentRoute)}`
+      `${import.meta.env.BACKEND_URL}/check-og-image?path=${encodeURIComponent(currentRoute)}`,
+      { signal: controller.signal }
     );
+
+    clearTimeout(timeoutId);
+
     if (response.ok) {
       const data = await response.json();
-      if (data.exists) {
-        // console.log('Image exists already!', data)
+      if (data.exists && data.url) {
         image.url = data.url;
         image.alt = `Screenshot of https://divnectar.com${currentRoute}`;
       } else {
-        // console.log('Image doesnt exist, defaulting...')
-        // console.log('we will generate on the next run')
-        generateOgImage(currentRoute);
+        // Image doesn't exist or is stale - trigger generation for next visit
+        console.log(`OG image ${data.reason === 'stale' ? 'is stale' : 'does not exist'}, triggering generation...`);
+        generateOgImage(currentRoute); // Fire and forget
         image = {
           url: "https://divnectar.com/site-logo.webp",
           alt: "DivNectar Logo",
         };
       }
     } else {
-      console.log("error checking OG image. Something wrong with API.");
+      console.error(`Error checking OG image: ${response.status} ${response.statusText}`);
       image = {
         url: "https://divnectar.com/site-logo.webp",
         alt: "DivNectar Logo",
       };
-      // await generateOgImage(currentRoute);
     }
   } catch (error) {
-    console.error("Error checking OG image:", error);
+    if (error instanceof Error && error.name === 'AbortError') {
+      console.error("OG image check timed out");
+    } else {
+      console.error("Error checking OG image:", error);
+    }
+    // Fallback to default logo on any error
+    image = {
+      url: "https://divnectar.com/site-logo.webp",
+      alt: "DivNectar Logo",
+    };
   }
 }
 

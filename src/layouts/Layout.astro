@@ -177,13 +177,13 @@ if (!image) {
     <!-- This slot of for any JSONLD components to mount inside -->
     <slot name="head" />
   </head>
-  <body class=`bg-ctp-base container ${topPadding ? "pt-24" : ""} m-0 p-0 md:w-screen text-ctp-text w-full`>
+  <body class=`bg-ctp-base container m-0 p-0 md:w-screen text-ctp-text w-full`>
     <Navigation transition:persist />
-    <!-- <div class="navbar-spacer h-4 md:h-20 md:flex" /> -->
     <div
       id="content"
       class=`flex ${direction && 'flex-col'} ${center && 'justify-center'} w-full md:w-screen`
     >
+    <div class="navbar-spacer h-4 md:h-20 md:flex" />
       <slot />
     </div>
   </body><div></div>

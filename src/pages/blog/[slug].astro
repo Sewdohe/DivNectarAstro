@@ -29,7 +29,7 @@ if (!article) {
 <BlogPost article={article}>
   <BlogTracker postTitle={article.title} category={article.category.name} />
   <div
-    class="bg-ctp-crust text-ctp-text justify-center items-center align-middle mx-auto left-0 absolute sm:top-0 md:top-12 w-screen flex"
+    class="bg-ctp-crust text-ctp-text justify-center items-center align-middle left-0 absolute sm:top-0 md:top-12 w-screen flex px-4"
   >
     {article.cover.url && (
       <img
@@ -38,12 +38,12 @@ if (!article) {
         alt={article.cover.alternativeText || article.title}
       />
     )}
-    <h1 class="text-3xl text-ctp-peach font-extrabold my-8 ml-4">
+    <h1 class="text-center md:text-left text-3xl text-ctp-peach font-extrabold my-8 ml-4">
       {article.title}
     </h1>
   </div>
   <div class="h-11"></div>
-  <div class="mt-8">
+  <div class="pt-20 md:pt-8">
     <Markdown
       sanitize={{ allowComponents: true }}
       content={article.content}

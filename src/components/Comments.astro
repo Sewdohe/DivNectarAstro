@@ -1,0 +1,61 @@
+---
+// Giscus comments component
+// You'll need to:
+// 1. Enable GitHub Discussions on your repo
+// 2. Install the Giscus app: https://github.com/apps/giscus
+// 3. Update the repo name below if needed
+
+const { title } = Astro.props;
+---
+
+<div class="giscus-container mt-12 pt-8 border-t border-ctp-surface2">
+  <h2 class="text-2xl font-bold text-ctp-text mb-6">Comments</h2>
+  <script
+    src="https://giscus.app/client.js"
+    data-repo="sewdohe/DivnectarAstro"
+    data-repo-id="R_kgDONtqE1Q"
+    data-category="Blog Comments"
+    data-category-id="DIC_kwDONtqE1c4CzXn_"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="preferred_color_scheme"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async
+  ></script>
+</div>
+
+<script>
+  // Update Giscus theme when system theme changes
+  function updateGiscusTheme() {
+    const theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    const giscusTheme = theme === 'dark' ? 'catppuccin_mocha' : 'catppuccin_latte';
+
+    const iframe = document.querySelector('iframe.giscus-frame');
+    if (iframe) {
+      iframe.contentWindow?.postMessage(
+        { giscus: { setConfig: { theme: giscusTheme } } },
+        'https://giscus.app'
+      );
+    }
+  }
+
+  // Listen for theme changes
+  document.addEventListener('astro:after-swap', updateGiscusTheme);
+
+  // Listen for manual theme toggle
+  window.addEventListener('themeChanged', updateGiscusTheme);
+
+  // Initial check after Giscus loads
+  setTimeout(updateGiscusTheme, 1000);
+</script>
+
+<style>
+  .giscus-container {
+    max-width: 100%;
+  }
+</style>

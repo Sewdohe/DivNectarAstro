@@ -2,6 +2,7 @@
 import path from "path";
 import Hamburger from "./Hamburger.astro";
 import User from "../components/NavUser.astro";
+import ThemeToggle from "../components/ThemeToggle.astro";
 import { Icon } from "astro-icon/components";
 const links = [
   {
@@ -88,8 +89,11 @@ it's hidden on small devices and replaced with a bottom-style navbar on mobile. 
       ))
     }
   </div>
-  <Hamburger navLinks={links} />
-  <User class="justify-self-end z-20 items-end" />
+  <div class="flex items-center gap-2 px-4">
+    <ThemeToggle />
+    <Hamburger navLinks={links} />
+    <User class="justify-self-end z-20 items-end" />
+  </div>
 </div>
 <!-- This is the mobile bottom navigation bar. -->
 <div
@@ -113,6 +117,9 @@ it's hidden on small devices and replaced with a bottom-style navbar on mobile. 
       </a>
     ))
   }
+  <div class="flex justify-center items-center w-full">
+    <ThemeToggle />
+  </div>
 </div>
 
 <!-- this div just matches the height of the navbar

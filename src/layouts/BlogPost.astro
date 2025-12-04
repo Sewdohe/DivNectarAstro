@@ -2,6 +2,8 @@
 import Layout from "./Layout.astro";
 const { article } = Astro.props;
 import BlogPostingJSONLD from "../components/BlogPostingJSONLD.astro";
+import Comments from "../components/Comments.astro";
+import TableOfContents from "../components/TableOfContents.astro";
 
 console.log("title:", article.title);
 const image = {
@@ -13,7 +15,18 @@ console.log('blogpost OG image:', image.url)
 
 <Layout title={article.title} description={article.description} image={image}>
     <BlogPostingJSONLD slot="head" {...article} />
-    <div id="page-content" class="mx-auto max-w-4xl px-4 pt-0 md:pt-8 md:px-6 prose prose-lg prose-catpuccin overflow-x-hidden">
-        <slot />
+    <div class="mx-auto max-w-7xl px-4 pt-0 md:pt-8 md:px-6">
+        <div class="flex flex-col md:flex-row gap-8">
+            <!-- Main content -->
+            <article id="page-content" class="flex-1 min-w-0 prose prose-lg prose-catpuccin overflow-x-hidden">
+                <slot />
+                <Comments title={article.title} />
+            </article>
+
+            <!-- Table of Contents - sidebar on desktop, top on mobile -->
+            <aside class="md:w-64 flex-shrink-0 order-first md:order-last">
+                <TableOfContents />
+            </aside>
+        </div>
     </div>
 </Layout>

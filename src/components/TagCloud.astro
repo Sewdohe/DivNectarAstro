@@ -1,0 +1,56 @@
+---
+import { getAllCategories } from "../lib/wordpress";
+
+const categories = await getAllCategories();
+
+// Sort by count descending
+const sortedCategories = categories.sort((a, b) => b.count - a.count);
+
+// Calculate font sizes based on post count
+const maxCount = Math.max(...categories.map(c => c.count));
+const minCount = Math.min(...categories.map(c => c.count));
+
+const getFontSize = (count: number) => {
+  if (maxCount === minCount) return "text-base";
+
+  const ratio = (count - minCount) / (maxCount - minCount);
+
+  if (ratio > 0.7) return "text-2xl";
+  if (ratio > 0.4) return "text-xl";
+  if (ratio > 0.2) return "text-lg";
+  return "text-base";
+};
+
+const getColor = (index: number) => {
+  const colors = [
+    "text-ctp-pink hover:bg-ctp-pink",
+    "text-ctp-mauve hover:bg-ctp-mauve",
+    "text-ctp-sky hover:bg-ctp-sky",
+    "text-ctp-sapphire hover:bg-ctp-sapphire",
+    "text-ctp-teal hover:bg-ctp-teal",
+    "text-ctp-green hover:bg-ctp-green",
+    "text-ctp-peach hover:bg-ctp-peach",
+    "text-ctp-lavender hover:bg-ctp-lavender",
+  ];
+  return colors[index % colors.length];
+};
+---
+
+<div class="max-w-5xl mx-auto mb-12 px-4">
+  <div class="bg-ctp-crust rounded-lg p-6 shadow-md">
+    <h2 class="text-2xl font-bold text-ctp-text mb-4 text-center">Browse by Category</h2>
+    <div class="flex flex-wrap gap-3 justify-center items-center">
+      {sortedCategories.map((category, index) => (
+        <a
+          href={`/tags/${category.slug}`}
+          class={`${getFontSize(category.count)} ${getColor(index)} font-semibold px-4 py-2 rounded-lg hover:text-ctp-base transition-all duration-200 hover:scale-110 hover:shadow-lg`}
+          data-umami-event="tag-cloud-click"
+          data-umami-event-tag={category.slug}
+        >
+          {category.name}
+          <span class="text-xs text-ctp-subtext1 ml-1">({category.count})</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</div>

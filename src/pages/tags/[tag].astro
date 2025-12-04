@@ -1,67 +1,85 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { getPostsByCategory, getAllCategories } from "../../lib/wordpress";
 
-import fetchApi from "../../lib/strapi";
-import type Article from "../../interfaces/article";
+export async function getStaticPaths() {
+  const categories = await getAllCategories();
+
+  return categories.map((category) => ({
+    params: { tag: category.slug },
+    props: { categoryName: category.name },
+  }));
+}
 
 const { tag } = Astro.params;
+const { categoryName } = Astro.props;
 
-const articles = await fetchApi<Article[]>({
-  endpoint: "articles?populate[0]=cover&populate[1]=category", // the content type to fetch
-  wrappedByKey: "data", // the key to unwrap the response
-});
+const articles = await getPostsByCategory(tag || "");
 
-const uniqueTags = [
-  ...new Set(articles.map((article: Article) => article.category.slug).flat()),
-];
-
-const filteredPosts = articles.filter((post: Article) =>
-    post.category.slug.includes(tag!)
-  );
+const title = `${categoryName} - DivNectar Blog`;
+const description = `Blog posts about ${categoryName}`;
+const image = {
+  url: "https://divnectar.com/site-logo.webp",
+  alt: "DivNectar Logo",
+};
 ---
 
-<Layout direction="col" title="DivNectar Tags" description="DivNectar's blog tags">
-  <h1
-    class="mb-4 text-ceter text-4xl font-extrabold tracking-tight leading-none text-ctp-peach md:text-5xl lg:text-6xl"
-  >
-    Posts tagged with {tag}
-  </h1>
-  <div class="flex flex-row justify-around p-2">
-    {
-      filteredPosts &&
-        filteredPosts.map((article) => (
-          <div class="max-w-sm rounded-lg md:w-auto shadow-md bg-ctp-crust border-l-ctp-sapphire">
-            <a href={`/blog/${article.slug}`}>
-              <img
-                class="rounded-lg p-4 border-ctp-sapphire"
-                src={`${import.meta.env.STRAPI_URL}${article.cover.url}`}
-                alt=""
-              />
-            </a>
-            <div class="flex flex-row justify-around p-2">
-              <a href={`/tags/${article.category.slug}`}>
-              <div class="bg-ctp-peach p-1 text-ctp-mantle rounded-3xl">{article.category.name}</div>
-              </a>
+<Layout title={title} description={description} image={image}>
+  <div class="w-full pt-24">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="mb-8 text-center">
+        <h1 class="text-4xl font-bold text-ctp-pink mb-2">
+          {categoryName}
+        </h1>
+        <p class="text-ctp-subtext0">
+          <a href="/blog" class="hover:text-ctp-sky transition-colors">← Back to all posts</a>
+        </p>
+      </div>
+
+      {articles.length === 0 ? (
+        <div class="text-center text-ctp-subtext0 py-12">
+          <p class="text-xl">No posts found in this category.</p>
+        </div>
+      ) : (
+        <div class="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
+          {articles.map((article) => (
+            <div class="break-inside-avoid mb-6">
+              <div class="rounded-lg shadow-md bg-ctp-crust border-l-ctp-sapphire">
+                <a href={`/blog/${article.slug}`} class="block">
+                  <div class="relative h-48 bg-ctp-mantle rounded-t-lg flex items-center justify-center">
+                    <img
+                      class="w-full h-full object-contain p-2"
+                      src={article.cover.url}
+                      alt={article.cover.alternativeText || article.title}
+                    />
+                  </div>
+                </a>
+                <div class="flex flex-row justify-around p-2 px-4">
+                  <a href={`/tags/${article.category.slug}`}>
+                    <div class="bg-ctp-peach p-1 text-ctp-mantle rounded-3xl">{article.category.name}</div>
+                  </a>
+                </div>
+                <div class="p-5">
+                  <a href={`/blog/${article.slug}`}>
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-ctp-text">
+                      {article.title}
+                    </h5>
+                  </a>
+                  <p class="mb-3 font-normal text-ctp-text">
+                    {article.description}
+                  </p>
+                  <a
+                    href={`/blog/${article.slug}`}
+                    class="inline-flex items-center hover:scale-105 hover:bg-ctp-sky hover:text-ctp-mantle transition-all duration-100 px-3 py-2 text-sm font-medium shadow-md rounded-md text-center focus:ring-4 focus:outline-none text-ctp-text bg-ctp-mantle focus:ring-blue-300"
+                  >
+                    Read more
+                  </a>
+                </div>
+              </div>
             </div>
-            <div class="p-5">
-              <a href={`/blog/${article.slug}`}>
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-ctp-text">
-                  {article.title}
-                </h5>
-              </a>
-              <p class="mb-3 font-normal text-ctp-text">
-                {article.description}
-              </p>
-              <a href={`/blog/${article.slug}`}
-                class="inline-flex items-center hover:scale-105 hover:bg-ctp-sky
-                hover:text-ctp-mantle transition-all duration-100 px-3 py-2
-                text-sm font-medium shadow-md rounded-md text-center focus:ring-4
-                focus:outline-none text-ctp-text bg-ctp-mantle
-                focus:ring-blue-300" > Read more
-              </a>
-            </div>
-          </div>
-        ))
-    }
+          ))}
+        </div>
+      )}
+    </div>
   </div>
 </Layout>

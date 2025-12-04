@@ -13,7 +13,7 @@ console.log('blogpost OG image:', image.url)
 
 <Layout title={article.title} description={article.description} image={image}>
     <BlogPostingJSONLD slot="head" {...article} />
-    <div id="page-content" class="mx-auto max-w-4xl px-4 pt-0 md:pt-8 md:px-6 prose prose-lg prose-catpuccin">
+    <div id="page-content" class="mx-auto max-w-4xl px-4 pt-0 md:pt-8 md:px-6 prose prose-lg prose-catpuccin overflow-x-hidden">
         <slot />
     </div>
 </Layout>

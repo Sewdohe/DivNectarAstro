@@ -14,6 +14,7 @@ import Paragraph from "../../components/Basic/Paragraph.astro";
 import Img from "../../components/Basic/Img.astro";
 import Link from "../../components/Basic/Link.astro";
 import CodeBlock from "../../components/Basic/CodeBlock.astro";
+import MarkdownCodeBlock from "../../components/Basic/MarkdownCodeBlock.astro";
 import InlineCode from "../../components/Basic/InlineCode.astro";
 import MarkdownIcon from "../../components/MarkdownIcon.astro";
 
@@ -58,8 +59,9 @@ if (!article) {
         h6: H6,
         a: Link,
         icon: MarkdownIcon,
-        CodeBlock: CodeBlock,
-        CodeSpan: InlineCode,
+        code: InlineCode,
+        pre: MarkdownCodeBlock,
+        CodeBlock: MarkdownCodeBlock,
       }}
     />
   </div>

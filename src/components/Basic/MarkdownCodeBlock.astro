@@ -1,0 +1,48 @@
+---
+import { Code } from 'astro-expressive-code/components';
+
+// This component handles code blocks (from <pre> tags)
+// The <pre> tag wraps a <code> tag with a className like "language-javascript"
+
+// Extract the code element from the pre tag
+let lang = 'plaintext';
+let code = '';
+
+// Try to get the code from slot
+if (Astro.slots.has('default')) {
+  const slotContent = await Astro.slots.render('default');
+
+  // Extract language from the code tag's class
+  const langMatch = slotContent.match(/class="[^"]*language-(\w+)[^"]*"/);
+  if (langMatch) {
+    lang = langMatch[1];
+  }
+
+  // Extract the actual code content (text between <code> tags)
+  const codeMatch = slotContent.match(/<code[^>]*>([\s\S]*?)<\/code>/);
+  if (codeMatch) {
+    code = codeMatch[1]
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&amp;/g, '&')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .trim();
+  }
+}
+
+// Fallback to props if available
+if (!code && Astro.props.code) {
+  code = Astro.props.code;
+}
+
+if (!code && typeof Astro.props.children === 'string') {
+  code = Astro.props.children;
+}
+---
+
+{code ? (
+  <Code code={code} lang={lang} />
+) : (
+  <pre><slot /></pre>
+)}

@@ -1,5 +1,20 @@
 ---
-const { code, ...props } = Astro.props;
+const { code, className, class: classAttr, lang, language, ...props } = Astro.props;
+
+// Extract language from class attribute if present
+let langClass = lang || language;
+if (!langClass && classAttr) {
+  const match = classAttr.match(/language-(\w+)/);
+  if (match) {
+    langClass = match[1];
+  }
+}
+
+const fullClassName = langClass ? `language-${langClass}` : (classAttr || className);
 
 ---
+{code ? (
   <code class="bg-ctp-mantle text-nowrap p-3 rounded-md shadow-md" set:text={code} />
+) : (
+  <code class:list={["bg-ctp-mantle text-nowrap p-3 rounded-md shadow-md", fullClassName]}><slot /></code>
+)}

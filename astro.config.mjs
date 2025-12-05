@@ -16,17 +16,7 @@ import node from '@astrojs/node';
 export default defineConfig({
   site: 'https://divnectar.com',
   integrations: [
-    expressiveCode({
-      themes: ['catppuccin-mocha', 'catppuccin-latte'],
-      defaultProps: {
-        wrap: true,
-        preserveIndent: true,
-      },
-      styleOverrides: {
-        borderRadius: '0.5rem',
-        borderWidth: '2px',
-      },
-    }),
+    expressiveCode(),
     react({
       experimentalReactChildren: true
     }),

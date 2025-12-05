@@ -3,24 +3,58 @@
 // Automatically generates TOC from h2 and h3 headings
 ---
 
+<!-- Desktop: Sidebar TOC -->
 <aside id="toc-container" class="toc-wrapper">
   <div class="toc-header">
     <h2 class="text-lg font-bold text-ctp-text">Table of Contents</h2>
-    <button id="toc-toggle" class="md:hidden text-ctp-text" aria-label="Toggle table of contents">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-      </svg>
-    </button>
   </div>
   <nav id="toc-nav" class="toc-nav">
     <!-- TOC will be generated here by JavaScript -->
   </nav>
 </aside>
 
+<!-- Mobile: FAB Button -->
+<button
+  id="toc-fab"
+  class="toc-fab"
+  aria-label="Open table of contents"
+  data-umami-event="toc-fab-open"
+>
+  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+  </svg>
+</button>
+
+<!-- Mobile: TOC Modal Overlay -->
+<div id="toc-modal" class="toc-modal">
+  <div class="toc-modal-backdrop"></div>
+  <div class="toc-modal-content">
+    <div class="toc-modal-header">
+      <h2 class="text-xl font-bold text-ctp-text">Table of Contents</h2>
+      <button
+        id="toc-close"
+        class="toc-close-btn"
+        aria-label="Close table of contents"
+        data-umami-event="toc-modal-close"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <nav id="toc-nav-mobile" class="toc-nav-mobile">
+      <!-- TOC will be duplicated here for mobile -->
+    </nav>
+  </div>
+</div>
+
 <script>
   function initTOC() {
     const tocNav = document.getElementById('toc-nav');
-    const tocToggle = document.getElementById('toc-toggle');
+    const tocNavMobile = document.getElementById('toc-nav-mobile');
+    const tocFab = document.getElementById('toc-fab');
+    const tocModal = document.getElementById('toc-modal');
+    const tocClose = document.getElementById('toc-close');
     const pageContent = document.getElementById('page-content');
 
     if (!tocNav || !pageContent) return;
@@ -31,6 +65,7 @@
     if (headings.length === 0) {
       // Hide TOC if no headings
       document.getElementById('toc-container')?.classList.add('hidden');
+      tocFab?.classList.add('hidden');
       return;
     }
 
@@ -59,19 +94,26 @@
     });
     tocHTML += '</ul>';
 
+    // Set HTML for both desktop and mobile
     tocNav.innerHTML = tocHTML;
+    if (tocNavMobile) {
+      tocNavMobile.innerHTML = tocHTML;
+    }
 
-    // Smooth scroll to heading on click
-    const tocLinks = tocNav.querySelectorAll('.toc-link');
-    tocLinks.forEach(link => {
+    // Smooth scroll to heading on click (both desktop and mobile)
+    const allTocLinks = document.querySelectorAll('.toc-link');
+    allTocLinks.forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
         const targetId = link.getAttribute('data-target');
         const target = document.getElementById(targetId || '');
         if (target) {
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          // Update URL without triggering scroll
           history.pushState(null, '', `#${targetId}`);
+
+          // Close modal on mobile after clicking
+          tocModal?.classList.remove('toc-modal-open');
+          document.body.style.overflow = '';
         }
       });
     });
@@ -85,26 +127,37 @@
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         const id = entry.target.id;
-        const tocLink = tocNav.querySelector(`a[data-target="${id}"]`);
+        const tocLinks = document.querySelectorAll(`a[data-target="${id}"]`);
 
         if (entry.isIntersecting) {
           // Remove active class from all links
-          tocNav.querySelectorAll('.toc-link').forEach(l => {
+          document.querySelectorAll('.toc-link').forEach(l => {
             l.classList.remove('toc-active');
           });
-          // Add active class to current link
-          tocLink?.classList.add('toc-active');
+          // Add active class to current link (both desktop and mobile)
+          tocLinks.forEach(link => link?.classList.add('toc-active'));
         }
       });
     }, observerOptions);
 
     headings.forEach(heading => observer.observe(heading));
 
-    // Mobile toggle
-    tocToggle?.addEventListener('click', () => {
-      tocNav.classList.toggle('toc-open');
-      const isOpen = tocNav.classList.contains('toc-open');
-      tocToggle.setAttribute('aria-expanded', isOpen.toString());
+    // Mobile FAB click - open modal
+    tocFab?.addEventListener('click', () => {
+      tocModal?.classList.add('toc-modal-open');
+      document.body.style.overflow = 'hidden';
+    });
+
+    // Close button click
+    tocClose?.addEventListener('click', () => {
+      tocModal?.classList.remove('toc-modal-open');
+      document.body.style.overflow = '';
+    });
+
+    // Click backdrop to close
+    tocModal?.querySelector('.toc-modal-backdrop')?.addEventListener('click', () => {
+      tocModal?.classList.remove('toc-modal-open');
+      document.body.style.overflow = '';
     });
   }
 
@@ -116,6 +169,7 @@
 </script>
 
 <style>
+  /* Desktop TOC Sidebar */
   .toc-wrapper {
     position: sticky;
     top: 5rem;
@@ -126,6 +180,12 @@
     border-radius: 0.5rem;
     padding: 1rem;
     margin-bottom: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .toc-wrapper {
+      display: none;
+    }
   }
 
   .toc-header {
@@ -142,17 +202,127 @@
     overflow-y: auto;
   }
 
-  /* Hide TOC on mobile by default */
-  @media (max-width: 768px) {
-    .toc-nav {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease;
-    }
+  /* Mobile FAB Button */
+  .toc-fab {
+    display: none;
+    position: fixed;
+    bottom: 5rem;
+    right: 1rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--ctp-pink);
+    color: var(--ctp-base);
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    z-index: 40;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
 
-    .toc-nav.toc-open {
-      max-height: 50vh;
+  .toc-fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  }
+
+  .toc-fab:active {
+    transform: scale(0.95);
+  }
+
+  @media (max-width: 768px) {
+    .toc-fab {
+      display: flex;
     }
+  }
+
+  /* Mobile TOC Modal */
+  .toc-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  @media (max-width: 768px) {
+    .toc-modal {
+      display: block;
+    }
+  }
+
+  .toc-modal-open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .toc-modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+  }
+
+  .toc-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    background: var(--ctp-crust);
+    border: 2px solid var(--ctp-surface2);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .toc-modal-open .toc-modal-content {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .toc-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--ctp-surface2);
+  }
+
+  .toc-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--ctp-text);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .toc-close-btn:hover {
+    background: var(--ctp-surface0);
+    color: var(--ctp-pink);
+  }
+
+  .toc-nav-mobile {
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 0.5rem;
   }
 
   /* Active link styling */
@@ -165,21 +335,25 @@
   }
 
   /* Scrollbar styling */
-  .toc-nav::-webkit-scrollbar {
+  .toc-nav::-webkit-scrollbar,
+  .toc-nav-mobile::-webkit-scrollbar {
     width: 4px;
   }
 
-  .toc-nav::-webkit-scrollbar-track {
+  .toc-nav::-webkit-scrollbar-track,
+  .toc-nav-mobile::-webkit-scrollbar-track {
     background: var(--ctp-surface0);
     border-radius: 4px;
   }
 
-  .toc-nav::-webkit-scrollbar-thumb {
+  .toc-nav::-webkit-scrollbar-thumb,
+  .toc-nav-mobile::-webkit-scrollbar-thumb {
     background: var(--ctp-surface2);
     border-radius: 4px;
   }
 
-  .toc-nav::-webkit-scrollbar-thumb:hover {
+  .toc-nav::-webkit-scrollbar-thumb:hover,
+  .toc-nav-mobile::-webkit-scrollbar-thumb:hover {
     background: var(--ctp-overlay0);
   }
 </style>

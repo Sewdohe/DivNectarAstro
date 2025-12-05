@@ -178,6 +178,22 @@ export default {
 					  backgroundColor: 'var(--ctp-surface0)',
 					},
 
+					// Keyboard keys
+					kbd: {
+					  fontSize: '0.875em',
+					  fontWeight: '600',
+					  fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+					  color: 'var(--ctp-text)',
+					  backgroundColor: 'var(--ctp-surface0)',
+					  padding: '0.125em 0.375em',
+					  borderRadius: '0.375em',
+					  border: '1px solid var(--ctp-surface2)',
+					  boxShadow: '0 2px 0 var(--ctp-surface2), 0 3px 1px rgba(0, 0, 0, 0.15)',
+					  whiteSpace: 'nowrap',
+					  display: 'inline-block',
+					  lineHeight: '1.5',
+					},
+
 					// Code blocks
 					pre: {
 					  maxWidth: '100%',

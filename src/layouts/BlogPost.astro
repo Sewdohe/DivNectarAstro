@@ -16,7 +16,7 @@ console.log('blogpost OG image:', image.url)
 <Layout title={article.title} description={article.description} image={image}>
     <BlogPostingJSONLD slot="head" {...article} />
     <div class="mx-auto max-w-7xl px-4 pt-0 md:pt-8 md:px-6">
-        <div class="flex flex-col md:flex-row gap-8">
+        <div class="flex flex-col md:flex-row ">
             <!-- Main content -->
             <article id="page-content" class="flex-1 min-w-0 prose prose-lg prose-catpuccin overflow-x-hidden">
                 <slot />

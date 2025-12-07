@@ -278,9 +278,26 @@ function formatBalance(balance: number): string {
     }
   }
 
-  searchInput.addEventListener('input', filterAndSortPlayers);
-  statusFilter.addEventListener('change', filterAndSortPlayers);
-  sortSelect.addEventListener('change', filterAndSortPlayers);
+  searchInput.addEventListener('input', () => {
+    if (searchInput.value.length > 0 && window.umami) {
+      window.umami.track('players-search-used');
+    }
+    filterAndSortPlayers();
+  });
+
+  statusFilter.addEventListener('change', () => {
+    if (window.umami) {
+      window.umami.track('players-filter-status', { status: statusFilter.value });
+    }
+    filterAndSortPlayers();
+  });
+
+  sortSelect.addEventListener('change', () => {
+    if (window.umami) {
+      window.umami.track('players-sort-changed', { sortBy: sortSelect.value });
+    }
+    filterAndSortPlayers();
+  });
 </script>
 
 <style>

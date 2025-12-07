@@ -58,7 +58,7 @@ const { height = 'h-96' } = Astro.props;
   let reconnectInterval: NodeJS.Timeout | null = null;
   const BACKEND_WS = import.meta.env.DEV
     ? 'ws://localhost:4477'
-    : 'wss://backend.divnectar.com:4477';
+    : 'wss://backend.divnectar.com';
 
   // DOM elements
   const messagesContainer = document.getElementById('chat-messages');
@@ -76,7 +76,7 @@ const { height = 'h-96' } = Astro.props;
     try {
       const BACKEND_URL = import.meta.env.DEV
         ? 'http://localhost:4477'
-        : 'https://backend.divnectar.com:4477';
+        : 'https://backend.divnectar.com';
 
       const response = await fetch(`${BACKEND_URL}/api/chat/auth-status`, {
         credentials: 'include' // Send cookies
@@ -203,7 +203,7 @@ const { height = 'h-96' } = Astro.props;
 
     const BACKEND_URL = import.meta.env.DEV
       ? 'http://localhost:4477'
-      : 'https://backend.divnectar.com:4477';
+      : 'https://backend.divnectar.com';
 
     fetch(`${BACKEND_URL}/api/chat/send`, {
       method: 'POST',

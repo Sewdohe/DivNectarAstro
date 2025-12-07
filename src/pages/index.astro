@@ -21,8 +21,9 @@ const description = "DivNectar - FOSS software and the Minecrafts.";
     </div>
   </div>
 
-  <!-- About Section -->
-  <div class="flex flex-row justify-center mb-6">
+  <!-- Cards Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 max-w-7xl mx-auto px-4">
+    <!-- About Section -->
     <Card title="About Me">
       <div class="text-lg text-ctp-text space-y-4">
         <p>
@@ -42,10 +43,8 @@ const description = "DivNectar - FOSS software and the Minecrafts.";
         </p>
       </div>
     </Card>
-  </div>
 
-  <!-- Open Source Section -->
-  <div class="flex flex-row justify-center mb-6">
+    <!-- Open Source Section -->
     <Card title="Open Source & Linux">
       <div class="text-lg text-ctp-text space-y-4">
         <p>
@@ -61,10 +60,8 @@ const description = "DivNectar - FOSS software and the Minecrafts.";
         </p>
       </div>
     </Card>
-  </div>
 
-  <!-- Gaming & Community Section -->
-  <div class="flex flex-row justify-center mb-6">
+    <!-- Gaming & Community Section -->
     <Card title="Gaming & Community">
       <div class="text-lg text-ctp-text space-y-4">
         <p>
@@ -79,10 +76,8 @@ const description = "DivNectar - FOSS software and the Minecrafts.";
         </p>
       </div>
     </Card>
-  </div>
 
-  <!-- Call to Action -->
-  <div class="flex flex-row justify-center mb-8">
+    <!-- Call to Action -->
     <Card title="Let's Create Together">
       <div class="text-lg text-ctp-text space-y-4">
         <p>
@@ -101,6 +96,68 @@ const description = "DivNectar - FOSS software and the Minecrafts.";
       </div>
     </Card>
   </div>
+
+  <!-- Blog CTA -->
+  <div class="bg-ctp-mantle py-16 my-16">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="relative isolate overflow-hidden bg-gradient-to-br from-ctp-pink via-ctp-mauve to-ctp-sapphire rounded-3xl shadow-2xl">
+      <!-- Dark overlay for better text contrast -->
+      <div class="absolute inset-0 bg-ctp-crust/30 rounded-3xl"></div>
+      <div class="relative px-6 py-16 sm:px-16 sm:py-24 lg:px-24">
+        <div class="mx-auto max-w-2xl text-center">
+          <h2 class="text-4xl font-bold tracking-tight text-ctp-crust sm:text-5xl drop-shadow-lg">
+            Check Out My Blog
+          </h2>
+          <p class="mt-6 text-lg leading-8 text-ctp-crust drop-shadow">
+            Thoughts on software development, Linux, open source, and whatever else catches my attention.
+            New posts regularly about tech, tools, and the things I'm building.
+          </p>
+          <div class="mt-10 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-x-6">
+            <a
+              href="/blog"
+              class="rounded-lg bg-ctp-crust px-6 py-3 text-lg font-semibold text-ctp-pink shadow-lg hover:bg-ctp-base hover:scale-105 transition-all duration-300 w-full md:w-auto text-center"
+              data-umami-event="cta-blog-home"
+            >
+              Read the Blog
+            </a>
+            <a
+              href="/blog"
+              class="text-lg font-semibold text-ctp-crust hover:text-ctp-base transition-colors drop-shadow"
+            >
+              Latest Posts <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- Decorative elements -->
+      <svg
+        class="absolute left-1/2 top-0 -z-10 h-[42rem] -translate-x-1/2 blur-3xl xl:-top-6"
+        viewBox="0 0 1155 678"
+        fill="none"
+      >
+        <path
+          fill="url(#blog-cta-gradient)"
+          fill-opacity=".3"
+          d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z"
+        />
+        <defs>
+          <linearGradient
+            id="blog-cta-gradient"
+            x1="1155.49"
+            x2="-78.208"
+            y1=".177"
+            y2="474.645"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stop-color="var(--ctp-sky)" />
+            <stop offset="1" stop-color="var(--ctp-teal)" />
+          </linearGradient>
+        </defs>
+      </svg>
+      </div>
+    </div>
+  </div>
+
   <div class="">
     <div class="mx-auto rounded max-w-7xl py-24 sm:px-6 sm:py-32 lg:px-8">
       <div class="relative isolate overflow-hidden bg-ctp-mantle px-6 pt-16 shadow-2xl sm:rounded-3xl sm:px-16 md:pt-24 lg:flex lg:gap-x-20 lg:px-24 lg:pt-0">

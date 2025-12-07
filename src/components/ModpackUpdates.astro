@@ -1,0 +1,173 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface GitHubCommit {
+  sha: string;
+  commit: {
+    message: string;
+    author: {
+      name: string;
+      date: string;
+    };
+  };
+  html_url: string;
+  author?: {
+    login: string;
+    avatar_url: string;
+  };
+}
+
+const REPO = "Sewdohe/CraftNectarNetwork";
+const GITHUB_API = `https://api.github.com/repos/${REPO}/commits`;
+
+let commits: GitHubCommit[] = [];
+let error = null;
+
+try {
+  const response = await fetch(GITHUB_API, {
+    headers: {
+      'Accept': 'application/vnd.github.v3+json',
+      'User-Agent': 'DivNectar-Website'
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`GitHub API returned ${response.status}`);
+  }
+
+  const data = await response.json();
+  commits = data.slice(0, 5); // Get latest 5 commits
+} catch (e) {
+  error = e instanceof Error ? e.message : 'Failed to fetch commits';
+  console.error('Error fetching GitHub commits:', error);
+}
+
+// Format date
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) {
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    if (diffHours === 0) {
+      const diffMins = Math.floor(diffMs / (1000 * 60));
+      return `${diffMins}m ago`;
+    }
+    return `${diffHours}h ago`;
+  } else if (diffDays === 1) {
+    return 'Yesterday';
+  } else if (diffDays < 7) {
+    return `${diffDays}d ago`;
+  }
+
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+  });
+}
+
+// Truncate commit message to first line
+function getCommitTitle(message: string): string {
+  return message.split('\n')[0];
+}
+---
+
+<div class="bg-ctp-surface0 rounded-lg shadow-lg border-2 border-ctp-surface2 p-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center gap-3">
+      <Icon name="line-md:github-loop" class="w-8 h-8 text-ctp-text" />
+      <div>
+        <h2 class="text-2xl font-bold text-ctp-text">Modpack Updates</h2>
+        <p class="text-sm text-ctp-subtext0">Latest changes from GitHub</p>
+      </div>
+    </div>
+    <a
+      href={`https://github.com/${REPO}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center gap-2 px-4 py-2 bg-ctp-surface1 hover:bg-ctp-surface2 text-ctp-text rounded-lg transition-colors text-sm"
+      data-umami-event="modpack-view-github"
+    >
+      <Icon name="line-md:external-link" class="w-4 h-4" />
+      <span>View Repository</span>
+    </a>
+  </div>
+
+  {error ? (
+    <div class="text-center py-8">
+      <p class="text-ctp-red">Failed to load commits: {error}</p>
+    </div>
+  ) : commits.length === 0 ? (
+    <div class="text-center py-8">
+      <p class="text-ctp-subtext0">No commits found</p>
+    </div>
+  ) : (
+    <div class="space-y-4">
+      {commits.map((commit, index) => (
+        <a
+          href={commit.html_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="block group"
+          data-umami-event="modpack-commit-click"
+        >
+          <div class="bg-ctp-base rounded-lg p-4 hover:bg-ctp-surface1 transition-all duration-200 border border-ctp-surface2 hover:border-ctp-mauve">
+            <div class="flex items-start gap-3">
+              <!-- Avatar -->
+              {commit.author?.avatar_url ? (
+                <img
+                  src={commit.author.avatar_url}
+                  alt={commit.author.login}
+                  class="w-10 h-10 rounded-full flex-shrink-0"
+                  loading="lazy"
+                />
+              ) : (
+                <div class="w-10 h-10 rounded-full bg-ctp-surface2 flex items-center justify-center flex-shrink-0">
+                  <Icon name="line-md:account" class="w-6 h-6 text-ctp-subtext0" />
+                </div>
+              )}
+
+              <!-- Commit Info -->
+              <div class="flex-1 min-w-0">
+                <p class="text-ctp-text font-medium group-hover:text-ctp-mauve transition-colors truncate">
+                  {getCommitTitle(commit.commit.message)}
+                </p>
+                <div class="flex items-center gap-3 mt-1 text-sm text-ctp-subtext0">
+                  <span>{commit.commit.author.name}</span>
+                  <span>•</span>
+                  <span>{formatDate(commit.commit.author.date)}</span>
+                  <span>•</span>
+                  <span class="font-mono text-xs">{commit.sha.substring(0, 7)}</span>
+                </div>
+              </div>
+
+              <!-- Arrow Icon -->
+              <Icon
+                name="line-md:chevron-right"
+                class="w-5 h-5 text-ctp-subtext0 group-hover:text-ctp-mauve group-hover:translate-x-1 transition-all flex-shrink-0"
+              />
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  )}
+
+  <!-- Footer -->
+  <div class="mt-6 pt-4 border-t border-ctp-surface2">
+    <a
+      href={`https://github.com/${REPO}/commits`}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="text-sm text-ctp-mauve hover:text-ctp-pink transition-colors inline-flex items-center gap-1"
+      data-umami-event="modpack-view-all-commits"
+    >
+      View all commits
+      <Icon name="line-md:arrow-right" class="w-4 h-4" />
+    </a>
+  </div>
+</div>

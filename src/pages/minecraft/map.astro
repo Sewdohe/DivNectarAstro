@@ -1,0 +1,130 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+
+const title = "Live Server Map - DivNectar";
+const description = "Explore the CraftNectar Minecraft server with our interactive 3D map";
+const image = {
+  url: "https://wp.divnectar.com/wp-content/uploads/2025/12/sewnet-logo-hive.webp",
+  alt: "CraftNectar Logo",
+};
+---
+
+<Layout title={title} description={description} image={image}>
+  <div class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- Header -->
+    <div class="mb-8 text-center">
+      <div class="flex items-center justify-center gap-3 mb-4">
+        <Icon name="line-md:map-marker-alt-twotone" class="w-12 h-12 text-ctp-mauve" />
+        <h1 class="text-4xl md:text-5xl font-bold text-ctp-text">
+          Live Server Map
+        </h1>
+      </div>
+      <p class="text-ctp-subtext0 text-lg max-w-2xl mx-auto">
+        Explore the server world in 3D! Navigate, zoom, and discover player builds in real-time.
+      </p>
+    </div>
+
+    <!-- Info Banner -->
+    <div class="bg-ctp-surface0 rounded-lg p-4 mb-6 border border-ctp-surface2">
+      <div class="flex flex-col md:flex-row items-start md:items-center gap-4">
+        <div class="flex items-center gap-2 flex-1">
+          <Icon name="line-md:lightbulb-twotone" class="w-5 h-5 text-ctp-yellow flex-shrink-0" />
+          <p class="text-sm text-ctp-subtext0">
+            <strong class="text-ctp-text">Tip:</strong> Use mouse or touch to navigate. Right-click to measure distances.
+          </p>
+        </div>
+        <a
+          href="https://map.divnectar.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-4 py-2 bg-ctp-mauve hover:bg-ctp-pink text-ctp-base rounded-lg font-bold transition-colors text-sm"
+        >
+          <Icon name="line-md:external-link" class="w-4 h-4" />
+          <span>Open in Full Window</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Map Container -->
+    <div class="bg-ctp-surface0 rounded-lg shadow-lg border-2 border-ctp-surface2 overflow-hidden">
+      <div class="relative w-full" style="padding-bottom: 75%; min-height: 500px;">
+        <iframe
+          src="https://map.divnectar.com"
+          title="CraftNectar Live Map"
+          class="absolute top-0 left-0 w-full h-full border-0"
+          allow="fullscreen"
+          loading="lazy"
+        ></iframe>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+      <div class="bg-ctp-surface0 rounded-lg p-4 border border-ctp-surface2">
+        <div class="flex items-center gap-2 mb-2">
+          <Icon name="line-md:compass-loop" class="w-5 h-5 text-ctp-green" />
+          <h3 class="font-bold text-ctp-text">Real-Time Updates</h3>
+        </div>
+        <p class="text-sm text-ctp-subtext0">
+          See the world as it changes with automatic map updates
+        </p>
+      </div>
+
+      <div class="bg-ctp-surface0 rounded-lg p-4 border border-ctp-surface2">
+        <div class="flex items-center gap-2 mb-2">
+          <Icon name="line-md:person-twotone" class="w-5 h-5 text-ctp-mauve" />
+          <h3 class="font-bold text-ctp-text">Player Locations</h3>
+        </div>
+        <p class="text-sm text-ctp-subtext0">
+          Track online players and see where everyone is exploring
+        </p>
+      </div>
+
+      <div class="bg-ctp-surface0 rounded-lg p-4 border border-ctp-surface2">
+        <div class="flex items-center gap-2 mb-2">
+          <Icon name="line-md:download-loop" class="w-5 h-5 text-ctp-sky" />
+          <h3 class="font-bold text-ctp-text">3D Perspective</h3>
+        </div>
+        <p class="text-sm text-ctp-subtext0">
+          View the world from any angle with smooth 3D rendering
+        </p>
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="mt-8 flex flex-wrap gap-4 justify-center">
+      <a
+        href="/minecraft"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-ctp-surface0 hover:bg-ctp-surface1 text-ctp-text rounded-lg border border-ctp-surface2 transition-colors"
+      >
+        <Icon name="line-md:arrow-left" class="w-5 h-5" />
+        <span>Back to Minecraft</span>
+      </a>
+      <a
+        href="/minecraft/players"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-ctp-surface0 hover:bg-ctp-surface1 text-ctp-text rounded-lg border border-ctp-surface2 transition-colors"
+      >
+        <Icon name="line-md:person-twotone" class="w-5 h-5" />
+        <span>View Players</span>
+      </a>
+      <a
+        href="/minecraft/chat"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-ctp-surface0 hover:bg-ctp-surface1 text-ctp-text rounded-lg border border-ctp-surface2 transition-colors"
+      >
+        <Icon name="line-md:discord-twotone" class="w-5 h-5" />
+        <span>Live Chat</span>
+      </a>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  /* Ensure iframe is responsive on mobile */
+  @media (max-width: 768px) {
+    .relative {
+      padding-bottom: 100% !important;
+      min-height: 400px;
+    }
+  }
+</style>

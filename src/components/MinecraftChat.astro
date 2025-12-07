@@ -92,8 +92,12 @@ const { height = 'h-96' } = Astro.props;
 
       if (data.authenticated && data.linked) {
         // User is logged in and linked - show chat form
-        if (loginPrompt) loginPrompt.classList.add('hidden');
-        if (chatForm) chatForm.classList.remove('hidden');
+        if (loginPrompt) {
+          loginPrompt.classList.add('hidden');
+        }
+        if (chatForm) {
+          chatForm.classList.remove('hidden');
+        }
 
         console.log(`Authenticated as ${data.playerName}`);
       } else if (data.authenticated && !data.linked) {
@@ -129,10 +133,12 @@ const { height = 'h-96' } = Astro.props;
 
     ws.onmessage = (event) => {
       try {
+        console.log('WebSocket message received:', event.data);
         const data = JSON.parse(event.data);
+        console.log('Parsed message data:', data);
         addMessage(data);
       } catch (error) {
-        console.error('Failed to parse message:', error);
+        console.error('Failed to parse message:', error, 'Raw data:', event.data);
       }
     };
 

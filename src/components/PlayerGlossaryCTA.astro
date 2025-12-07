@@ -1,0 +1,77 @@
+---
+import { Icon } from 'astro-icon/components';
+---
+
+<div class="relative overflow-hidden bg-gradient-to-r from-ctp-mauve/20 to-ctp-pink/20 rounded-lg p-8 border-2 border-ctp-mauve/30 hover:border-ctp-pink/50 transition-all duration-300 group">
+  <!-- Animated background -->
+  <div class="absolute inset-0 bg-gradient-to-r from-ctp-mauve/10 to-ctp-pink/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+  <!-- Decorative elements -->
+  <div class="absolute top-0 right-0 w-32 h-32 bg-ctp-pink/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-500"></div>
+  <div class="absolute bottom-0 left-0 w-32 h-32 bg-ctp-mauve/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-500"></div>
+
+  <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+    <!-- Left side - Content -->
+    <div class="flex-1 text-center md:text-left">
+      <div class="flex items-center justify-center md:justify-start gap-2 mb-2">
+        <Icon name="line-md:person-twotone" class="w-6 h-6 text-ctp-mauve" />
+        <span class="text-sm font-semibold text-ctp-mauve uppercase tracking-wide">
+          Player Directory
+        </span>
+      </div>
+
+      <h3 class="text-3xl font-bold text-ctp-text mb-2">
+        Explore Our Community
+      </h3>
+
+      <p class="text-ctp-subtext0 mb-4">
+        Browse player stats, playtime, balances, parkour scores, and more! See who's online and check out the leaderboards.
+      </p>
+
+      <div class="flex flex-wrap gap-3 justify-center md:justify-start">
+        <div class="flex items-center gap-2 text-sm text-ctp-subtext1">
+          <Icon name="line-md:check-all" class="w-4 h-4 text-ctp-green" />
+          <span>Live Status</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm text-ctp-subtext1">
+          <Icon name="line-md:check-all" class="w-4 h-4 text-ctp-green" />
+          <span>Search & Filter</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm text-ctp-subtext1">
+          <Icon name="line-md:check-all" class="w-4 h-4 text-ctp-green" />
+          <span>Discord Linked</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right side - CTA Button -->
+    <div class="flex-shrink-0">
+      <a
+        href="/minecraft/players"
+        class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-ctp-mauve to-ctp-pink rounded-lg
+               text-ctp-base font-bold text-lg shadow-lg
+               hover:scale-105 hover:shadow-xl
+               transform transition-all duration-300
+               group-hover:animate-pulse"
+      >
+        <span>View Players</span>
+        <Icon name="line-md:chevron-right-circle-twotone" class="w-6 h-6" />
+      </a>
+
+      <p class="text-xs text-ctp-subtext1 text-center mt-2">
+        Updated in real-time
+      </p>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+</style>

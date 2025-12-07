@@ -1,0 +1,264 @@
+---
+import { getServerStatus } from '../db/queries';
+import { Icon } from 'astro-icon/components';
+
+const initialStatus = await getServerStatus();
+
+// Helper functions
+function formatUptime(startTimestamp: number): string {
+  const days = Math.floor((Date.now() - startTimestamp) / (1000 * 60 * 60 * 24));
+  return `${days} days`;
+}
+
+function formatBytes(mb: number): string {
+  const gb = (mb / 1024).toFixed(1);
+  return `${gb} GB`;
+}
+
+function formatTPS(tps: number): { value: string; color: string } {
+  const value = tps.toFixed(1);
+  let color = 'ctp-green';
+  if (tps < 15) color = 'ctp-red';
+  else if (tps < 18) color = 'ctp-yellow';
+  return { value, color };
+}
+---
+
+<div class="bg-ctp-surface0 rounded-lg p-6 shadow-lg border-2 border-ctp-surface2 relative overflow-hidden">
+  <!-- Animated background -->
+  <div class="absolute inset-0 bg-gradient-to-br from-ctp-mauve/5 to-ctp-pink/5 animate-pulse-slow"></div>
+
+  <div class="relative z-10">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-3">
+        <div class="w-3 h-3 bg-ctp-green rounded-full animate-ping"></div>
+        <div class="w-3 h-3 bg-ctp-green rounded-full absolute"></div>
+        <h2 class="text-2xl font-bold text-ctp-text ml-4">Server Status</h2>
+      </div>
+      <span id="last-update" class="text-sm text-ctp-subtext0">
+        Live
+      </span>
+    </div>
+
+    {initialStatus ? (
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <!-- Online Players -->
+        <div class="bg-ctp-surface1 rounded-lg p-4 hover:scale-105 transition-transform duration-200">
+          <div class="flex items-center gap-2 mb-2">
+            <Icon name="line-md:person-twotone" class="w-5 h-5 text-ctp-mauve" />
+            <span class="text-sm text-ctp-subtext0">Players</span>
+          </div>
+          <p id="players-online" class="text-3xl font-bold text-ctp-text">
+            {initialStatus.players_online}
+          </p>
+          <p class="text-xs text-ctp-subtext1">
+            {initialStatus.total_players} total
+          </p>
+        </div>
+
+        <!-- TPS -->
+        <div class="bg-ctp-surface1 rounded-lg p-4 hover:scale-105 transition-transform duration-200">
+          <div class="flex items-center gap-2 mb-2">
+            <Icon name="line-md:gauge-loop" class="w-5 h-5 text-ctp-sky" />
+            <span class="text-sm text-ctp-subtext0">TPS</span>
+          </div>
+          <p id="tps" class={`text-3xl font-bold text-${formatTPS(initialStatus.tps).color}`}>
+            {formatTPS(initialStatus.tps).value}
+          </p>
+          <p class="text-xs text-ctp-subtext1">
+            20.0 optimal
+          </p>
+        </div>
+
+        <!-- Uptime -->
+        <div class="bg-ctp-surface1 rounded-lg p-4 hover:scale-105 transition-transform duration-200">
+          <div class="flex items-center gap-2 mb-2">
+            <Icon name="line-md:calendar" class="w-5 h-5 text-ctp-peach" />
+            <span class="text-sm text-ctp-subtext0">Uptime</span>
+          </div>
+          <p id="uptime" class="text-3xl font-bold text-ctp-text">
+            {formatUptime(initialStatus.server_start)}
+          </p>
+          <p class="text-xs text-ctp-subtext1">
+            Since launch
+          </p>
+        </div>
+
+        <!-- CPU Usage -->
+        <div class="bg-ctp-surface1 rounded-lg p-4 hover:scale-105 transition-transform duration-200">
+          <div class="flex items-center gap-2 mb-2">
+            <Icon name="line-md:speedometer-loop" class="w-5 h-5 text-ctp-teal" />
+            <span class="text-sm text-ctp-subtext0">CPU</span>
+          </div>
+          <p id="cpu-usage" class="text-3xl font-bold text-ctp-text">
+            {initialStatus.cpu_usage.toFixed(1)}%
+          </p>
+          <div class="w-full bg-ctp-surface2 rounded-full h-1.5 mt-2">
+            <div
+              id="cpu-bar"
+              class="bg-ctp-teal h-1.5 rounded-full transition-all duration-500"
+              style={`width: ${initialStatus.cpu_usage}%`}
+            ></div>
+          </div>
+        </div>
+
+        <!-- RAM Usage -->
+        <div class="bg-ctp-surface1 rounded-lg p-4 hover:scale-105 transition-transform duration-200">
+          <div class="flex items-center gap-2 mb-2">
+            <Icon name="line-md:upload-loop" class="w-5 h-5 text-ctp-pink" />
+            <span class="text-sm text-ctp-subtext0">RAM</span>
+          </div>
+          <p id="ram-usage" class="text-3xl font-bold text-ctp-text">
+            {formatBytes(initialStatus.ram_usage)}
+          </p>
+          <p class="text-xs text-ctp-subtext1">
+            In use
+          </p>
+        </div>
+
+        <!-- Entities -->
+        <div class="bg-ctp-surface1 rounded-lg p-4 hover:scale-105 transition-transform duration-200">
+          <div class="flex items-center gap-2 mb-2">
+            <Icon name="creeper" class="w-5 h-5 text-ctp-green" />
+            <span class="text-sm text-ctp-subtext0">Entities</span>
+          </div>
+          <p id="entities" class="text-3xl font-bold text-ctp-text">
+            {initialStatus.entities.toLocaleString()}
+          </p>
+          <p class="text-xs text-ctp-subtext1">
+            Active
+          </p>
+        </div>
+
+        <!-- Chunks Loaded -->
+        <div class="bg-ctp-surface1 rounded-lg p-4 hover:scale-105 transition-transform duration-200">
+          <div class="flex items-center gap-2 mb-2">
+            <Icon name="line-md:grid-3-twotone" class="w-5 h-5 text-ctp-yellow" />
+            <span class="text-sm text-ctp-subtext0">Chunks</span>
+          </div>
+          <p id="chunks" class="text-3xl font-bold text-ctp-text">
+            {initialStatus.chunks_loaded.toLocaleString()}
+          </p>
+          <p class="text-xs text-ctp-subtext1">
+            Loaded
+          </p>
+        </div>
+
+        <!-- Disk Space -->
+        <div class="bg-ctp-surface1 rounded-lg p-4 hover:scale-105 transition-transform duration-200">
+          <div class="flex items-center gap-2 mb-2">
+            <Icon name="line-md:cloud-alt-print-filled-loop" class="w-5 h-5 text-ctp-lavender" />
+            <span class="text-sm text-ctp-subtext0">Free Disk</span>
+          </div>
+          <p id="disk-space" class="text-3xl font-bold text-ctp-text">
+            {formatBytes(initialStatus.free_disk_space)}
+          </p>
+          <p class="text-xs text-ctp-subtext1">
+            Available
+          </p>
+        </div>
+      </div>
+    ) : (
+      <div class="text-center py-8">
+        <p class="text-ctp-subtext0">Unable to fetch server status</p>
+      </div>
+    )}
+  </div>
+</div>
+
+<script>
+  // Live update functionality
+  async function updateServerStatus() {
+    try {
+      const response = await fetch('/api/server-status');
+      if (!response.ok) return;
+
+      const status = await response.json();
+
+      // Update players
+      const playersEl = document.getElementById('players-online');
+      if (playersEl) playersEl.textContent = status.players_online.toString();
+
+      // Update TPS with color
+      const tpsEl = document.getElementById('tps');
+      if (tpsEl) {
+        const tps = parseFloat(status.tps);
+        tpsEl.textContent = tps.toFixed(1);
+
+        // Remove all color classes
+        tpsEl.classList.remove('text-ctp-green', 'text-ctp-yellow', 'text-ctp-red');
+
+        // Add appropriate color
+        if (tps < 15) tpsEl.classList.add('text-ctp-red');
+        else if (tps < 18) tpsEl.classList.add('text-ctp-yellow');
+        else tpsEl.classList.add('text-ctp-green');
+      }
+
+      // Update uptime
+      const uptimeEl = document.getElementById('uptime');
+      if (uptimeEl) {
+        const days = Math.floor((Date.now() - status.server_start) / (1000 * 60 * 60 * 24));
+        uptimeEl.textContent = `${days} days`;
+      }
+
+      // Update CPU
+      const cpuEl = document.getElementById('cpu-usage');
+      const cpuBar = document.getElementById('cpu-bar');
+      if (cpuEl) cpuEl.textContent = `${status.cpu_usage.toFixed(1)}%`;
+      if (cpuBar) cpuBar.style.width = `${status.cpu_usage}%`;
+
+      // Update RAM
+      const ramEl = document.getElementById('ram-usage');
+      if (ramEl) {
+        const gb = (status.ram_usage / 1024).toFixed(1);
+        ramEl.textContent = `${gb} GB`;
+      }
+
+      // Update entities
+      const entitiesEl = document.getElementById('entities');
+      if (entitiesEl) entitiesEl.textContent = status.entities.toLocaleString();
+
+      // Update chunks
+      const chunksEl = document.getElementById('chunks');
+      if (chunksEl) chunksEl.textContent = status.chunks_loaded.toLocaleString();
+
+      // Update disk space
+      const diskEl = document.getElementById('disk-space');
+      if (diskEl) {
+        const gb = (status.free_disk_space / 1024).toFixed(1);
+        diskEl.textContent = `${gb} GB`;
+      }
+
+      // Update last update time
+      const lastUpdateEl = document.getElementById('last-update');
+      if (lastUpdateEl) lastUpdateEl.textContent = 'Live';
+
+    } catch (error) {
+      console.error('Failed to update server status:', error);
+    }
+  }
+
+  // Update every 10 seconds
+  const updateInterval = setInterval(updateServerStatus, 10000);
+
+  // Clean up on page navigation
+  document.addEventListener('astro:before-preparation', () => {
+    clearInterval(updateInterval);
+  });
+</script>
+
+<style>
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+</style>

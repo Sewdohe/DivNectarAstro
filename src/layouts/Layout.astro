@@ -1,7 +1,7 @@
 ---
 import Navigation from "../components/Navigation.astro";
 import { SEO } from "astro-seo";
-var { title, description, image, center, direction, topPadding } = Astro.props;
+var { title, description, image, center, direction } = Astro.props;
 
 import { Tooltips } from "astro-tooltips";
 import LinkTracker from "../components/LinkTracker.astro";
@@ -246,7 +246,7 @@ if (!image) {
     <Navigation transition:persist />
     <div
       id="content"
-      class=`flex ${direction && 'flex-col'} ${center && 'justify-center'} w-full md:w-screen`
+      class=`flex ${direction && 'flex-col'} ${center && 'justify-center'} w-full md:w-screen px-0 pb-10 md:pt-12`
     >
     <div class="navbar-spacer h-4 md:h-20 md:flex" />
       <slot class="mt-0 md:mt-10" />

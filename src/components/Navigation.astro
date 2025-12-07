@@ -23,23 +23,15 @@ const links = [
     path: "discord",
     icon: "line-md:discord",
   },
-  // {
-  //   name: "SkyNectar",
-  //   url: "",
-  //   path: "",
-  //   children: [
-  //     { name: "About", url: "/minecraft" },
-  //     { name: "Leaderboards", url: "/minecraft/leaderboard" },
-  //     { name: "Players", url: "/minecraft/players" },
-  //     { name: "Chat", url: "/minecraft/server-events" },
-  //     { name: "Server Wiki", url: "https://skyblock-wiki.divnectar.com" },
-  //   ],
-  // },
   {
     name: "Minecraft",
     url: "/minecraft",
     path: "minecraft",
     icon: "creeper",
+    children: [
+      { name: "About", url: "/minecraft", icon: "line-md:home-alt-twotone" },
+      { name: "Players", url: "/minecraft/players", icon: "line-md:person-twotone" },
+    ],
   },
   {
     name: "About",
@@ -78,13 +70,35 @@ it's hidden on small devices and replaced with a bottom-style navbar on mobile. 
           <a
             class={`
               ${isLinkActive(link.url, pathname) ? "active" : ""}
-              text-ctp-text no-underline relative
+              text-ctp-text no-underline relative flex items-center gap-1
               lg:text-lg hover:text-ctp-teal transition-all duration-300 cursor-pointer
             `}
             href={link.url}
           >
             {link.name}
+            {link.children && (
+              <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            )}
           </a>
+
+          {link.children && (
+            <div class="dropdown-menu absolute top-full left-0 mt-2 min-w-[200px] bg-ctp-surface0 rounded-lg shadow-lg border border-ctp-surface2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 overflow-hidden">
+              {link.children.map((child) => (
+                <a
+                  href={child.url}
+                  class={`
+                    flex items-center gap-3 px-4 py-3 text-ctp-text hover:bg-ctp-surface1 hover:text-ctp-teal transition-all duration-200
+                    ${isLinkActive(child.url, pathname) ? 'bg-ctp-surface1 text-ctp-sky' : ''}
+                  `}
+                >
+                  <Icon name={child.icon} class="w-5 h-5" />
+                  <span>{child.name}</span>
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       ))
     }
@@ -95,26 +109,53 @@ it's hidden on small devices and replaced with a bottom-style navbar on mobile. 
     <User class="justify-self-end z-20 items-end" />
   </div>
 </div>
+<!-- Mobile submenu overlay -->
+<div id="mobile-submenu-overlay" class="md:hidden fixed inset-0 bg-ctp-crust/80 backdrop-blur-sm z-40 opacity-0 invisible transition-all duration-300"></div>
+
+<!-- Mobile submenu panel -->
+<div id="mobile-submenu" class="md:hidden fixed bottom-16 left-0 right-0 bg-ctp-surface0 border-t-2 border-t-ctp-teal shadow-lg z-40 transform translate-y-full transition-transform duration-300">
+  <div id="mobile-submenu-content" class="p-4 space-y-2">
+    <!-- Content will be populated by JavaScript -->
+  </div>
+</div>
+
 <!-- This is the mobile bottom navigation bar. -->
 <div
   class="flex flex-row z-50 w-screen md:hidden bg-ctp-surface0 border-t-2 border-t-ctp-teal
         fixed bottom-0 left-0 right-0 items-center h-16 rounded-md shadow-lg"
 >
   {
-    links.map((link) => (
-      <a
-        class={`flex justify-evenly self-center items-center w-full cursor-pointer transition-all duration-300
-                ${isLinkActive(link.url, pathname) ? 'mobile-active' : 'hover:scale-105'}
-        `}
-        href={link.url}
-      >
-        <Icon
-          class={`text-4xl transition-all duration-300
-                  ${isLinkActive(link.url, pathname) ? 'text-ctp-pink scale-110' : 'text-ctp-text hover:text-ctp-sky'}
+    links.map((link, index) => (
+      link.children ? (
+        <button
+          class={`mobile-nav-btn flex justify-evenly self-center items-center w-full cursor-pointer transition-all duration-300 relative
+                  ${isLinkActive(link.url, pathname) ? 'mobile-active' : 'hover:scale-105'}
           `}
-          name={link.icon}
-        />
-      </a>
+          data-link-index={index}
+          data-has-children="true"
+        >
+          <Icon
+            class={`text-4xl transition-all duration-300
+                    ${isLinkActive(link.url, pathname) ? 'text-ctp-pink scale-110' : 'text-ctp-text hover:text-ctp-sky'}
+            `}
+            name={link.icon}
+          />
+        </button>
+      ) : (
+        <a
+          class={`flex justify-evenly self-center items-center w-full cursor-pointer transition-all duration-300
+                  ${isLinkActive(link.url, pathname) ? 'mobile-active' : 'hover:scale-105'}
+          `}
+          href={link.url}
+        >
+          <Icon
+            class={`text-4xl transition-all duration-300
+                    ${isLinkActive(link.url, pathname) ? 'text-ctp-pink scale-110' : 'text-ctp-text hover:text-ctp-sky'}
+            `}
+            name={link.icon}
+          />
+        </a>
+      )
     ))
   }
   <button
@@ -133,7 +174,77 @@ it's hidden on small devices and replaced with a bottom-style navbar on mobile. 
   </button>
 </div>
 
-<script>
+<script define:vars={{ links }}>
+  // Mobile submenu functionality
+  function initMobileSubmenus() {
+    const submenu = document.getElementById('mobile-submenu');
+    const submenuOverlay = document.getElementById('mobile-submenu-overlay');
+    const submenuContent = document.getElementById('mobile-submenu-content');
+    const navButtons = document.querySelectorAll('.mobile-nav-btn[data-has-children="true"]');
+
+    let isSubmenuOpen = false;
+
+    function openSubmenu(linkIndex) {
+      const link = links[linkIndex];
+      if (!link.children) return;
+
+      // Icon SVG map
+      const iconSvgs = {
+        'line-md:home-alt-twotone': '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>',
+        'line-md:person-twotone': '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>',
+        'line-md:person-twotone': '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>'
+      };
+
+      // Populate submenu content
+      submenuContent.innerHTML = link.children.map(child => {
+        const iconSvg = iconSvgs[child.icon] || iconSvgs['line-md:person-twotone'];
+        return `
+          <a
+            href="${child.url}"
+            class="flex items-center gap-3 px-4 py-3 bg-ctp-surface1 rounded-lg text-ctp-text hover:bg-ctp-surface2 hover:text-ctp-teal transition-all duration-200 transform hover:scale-105"
+          >
+            ${iconSvg}
+            <span class="font-medium">${child.name}</span>
+          </a>
+        `;
+      }).join('');
+
+      // Show submenu with animation
+      submenuOverlay.classList.remove('invisible', 'opacity-0');
+      submenuOverlay.classList.add('visible', 'opacity-100');
+      submenu.classList.remove('translate-y-full');
+      submenu.classList.add('translate-y-0');
+      isSubmenuOpen = true;
+    }
+
+    function closeSubmenu() {
+      submenuOverlay.classList.add('invisible', 'opacity-0');
+      submenuOverlay.classList.remove('visible', 'opacity-100');
+      submenu.classList.add('translate-y-full');
+      submenu.classList.remove('translate-y-0');
+      isSubmenuOpen = false;
+    }
+
+    // Add click handlers to nav buttons
+    navButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        const linkIndex = parseInt(button.dataset.linkIndex);
+        if (isSubmenuOpen) {
+          closeSubmenu();
+        } else {
+          openSubmenu(linkIndex);
+        }
+      });
+    });
+
+    // Close submenu when clicking overlay
+    submenuOverlay.addEventListener('click', closeSubmenu);
+
+    // Close submenu on navigation
+    document.addEventListener('astro:after-swap', closeSubmenu);
+  }
+
   function initMobileThemeToggle() {
     const themeToggleBtn = document.getElementById('theme-toggle-mobile');
     const themeToggleDarkIcon = document.getElementById('theme-toggle-mobile-dark-icon');
@@ -187,9 +298,11 @@ it's hidden on small devices and replaced with a bottom-style navbar on mobile. 
 
   // Initialize on page load
   initMobileThemeToggle();
+  initMobileSubmenus();
 
   // Reinitialize after page transitions
   document.addEventListener('astro:after-swap', initMobileThemeToggle);
+  document.addEventListener('astro:after-swap', initMobileSubmenus);
 </script>
 
 <!-- this div just matches the height of the navbar

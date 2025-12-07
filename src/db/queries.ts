@@ -168,3 +168,40 @@ export async function getServerStatus(): Promise<ServerStatus | null> {
     return null;
   }
 }
+
+// Get server statistics for dashboard
+export async function getServerStats() {
+  try {
+    const [stats]: [any[], any] = await connection.query(`
+      SELECT
+        COUNT(DISTINCT c.player_uuid) as total_players,
+        SUM(c.TotalPlayTime) as total_playtime,
+        SUM(c.Balance) as total_balance,
+        AVG(c.Balance) as avg_balance,
+        MAX(c.Balance) as highest_balance,
+        (SELECT username FROM CMI_users WHERE Balance = MAX(c.Balance) LIMIT 1) as richest_player,
+        (SELECT username FROM CMI_users ORDER BY TotalPlayTime DESC LIMIT 1) as most_active_player,
+        MAX(c.TotalPlayTime) as highest_playtime,
+        AVG(c.TotalPlayTime) as avg_playtime,
+        SUM(CASE WHEN s.session_end IS NULL AND s.session_start IS NOT NULL THEN 1 ELSE 0 END) as online_players
+      FROM CMI_users c
+      LEFT JOIN plan_users pu ON c.player_uuid = pu.uuid
+      LEFT JOIN plan_sessions s ON pu.id = s.user_id
+      WHERE c.FakeAccount IS NULL OR c.FakeAccount = 0;
+    `);
+
+    // Get server uptime
+    const [uptimeData]: [any[], any] = await connection.query(`
+      SELECT MIN(session_start) as first_session
+      FROM plan_sessions;
+    `);
+
+    return {
+      ...stats[0],
+      server_start: uptimeData[0]?.first_session || null
+    };
+  } catch (error) {
+    console.error('Error fetching server stats:', error);
+    return null;
+  }
+}

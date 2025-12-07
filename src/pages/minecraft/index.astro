@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import Button from "../../components/Button.astro";
 import { Icon } from "astro-icon/components";
 import ServerStatus from "../../components/ServerStatus.astro";
+import ServerStatsDashboard from "../../components/ServerStatsDashboard.astro";
 import PlayerGlossaryCTA from "../../components/PlayerGlossaryCTA.astro";
 import ModpackUpdates from "../../components/ModpackUpdates.astro";
 import WaveDividerTop from "../../components/WaveDividerTop.astro";
@@ -102,6 +103,11 @@ const image = {
         <!-- Server Status -->
         <div class="mt-12 mb-8">
           <ServerStatus />
+        </div>
+
+        <!-- Server Stats Dashboard -->
+        <div class="mt-8 mb-8 max-w-7xl mx-auto">
+          <ServerStatsDashboard />
         </div>
 
         <!-- Player Glossary CTA -->

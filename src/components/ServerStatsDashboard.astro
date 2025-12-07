@@ -1,0 +1,155 @@
+---
+import { Icon } from "astro-icon/components";
+import { getServerStats } from "../db/queries";
+
+const stats = await getServerStats();
+
+// Helper function to format playtime
+function formatPlaytime(milliseconds: number): string {
+  const hours = Math.floor(milliseconds / 3600000);
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) {
+    return `${days.toLocaleString()}d ${hours % 24}h`;
+  }
+  return `${hours.toLocaleString()}h`;
+}
+
+// Helper function to format balance
+function formatBalance(balance: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(balance || 0);
+}
+
+// Helper function to format large numbers
+function formatNumber(num: number): string {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + 'M';
+  } else if (num >= 1000) {
+    return (num / 1000).toFixed(1) + 'K';
+  }
+  return num.toString();
+}
+
+// Calculate server uptime
+function getUptime(serverStart: number | null): string {
+  if (!serverStart) return 'Unknown';
+
+  const now = Date.now();
+  const diffMs = now - serverStart;
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (days > 365) {
+    const years = Math.floor(days / 365);
+    return `${years}y ${days % 365}d`;
+  }
+  return `${days} days`;
+}
+
+const statCards = stats ? [
+  {
+    title: "Total Players",
+    value: stats.total_players?.toLocaleString() || "0",
+    icon: "line-md:account-add",
+    color: "ctp-mauve",
+    description: "All time"
+  },
+  {
+    title: "Online Now",
+    value: stats.online_players?.toString() || "0",
+    icon: "line-md:sunny-filled-loop-to-moon-filled-loop-transition",
+    color: "ctp-green",
+    description: "Currently playing"
+  },
+  {
+    title: "Total Playtime",
+    value: formatPlaytime(stats.total_playtime || 0),
+    icon: "line-md:watch-loop",
+    color: "ctp-sky",
+    description: "Combined hours"
+  },
+  {
+    title: "Total Economy",
+    value: formatBalance(stats.total_balance || 0),
+    icon: "mdi:wallet-bifold-outline",
+    color: "ctp-yellow",
+    description: "In circulation"
+  },
+  {
+    title: "Richest Player",
+    value: stats.richest_player || "Unknown",
+    icon: "line-md:star-filled",
+    color: "ctp-peach",
+    description: formatBalance(stats.highest_balance || 0)
+  },
+  {
+    title: "Most Active",
+    value: stats.most_active_player || "Unknown",
+    icon: "line-md:speedometer-loop",
+    color: "ctp-pink",
+    description: formatPlaytime(stats.highest_playtime || 0)
+  },
+  {
+    title: "Avg Balance",
+    value: formatBalance(stats.avg_balance || 0),
+    icon: "mdi:trending-up",
+    color: "ctp-teal",
+    description: "Per player"
+  },
+  {
+    title: "Server Uptime",
+    value: getUptime(stats.server_start),
+    icon: "line-md:calendar",
+    color: "ctp-lavender",
+    description: "Days online"
+  }
+] : [];
+---
+
+<div class="bg-ctp-surface0 rounded-lg shadow-lg border-2 border-ctp-surface2 p-6">
+  <!-- Header -->
+  <div class="flex items-center gap-3 mb-6">
+    <Icon name="mdi:bar-chart" class="w-8 h-8 text-ctp-text" />
+    <div>
+      <h2 class="text-2xl font-bold text-ctp-text">Server Statistics</h2>
+      <p class="text-sm text-ctp-subtext0">Live server metrics and records</p>
+    </div>
+  </div>
+
+  {!stats ? (
+    <div class="text-center py-8">
+      <p class="text-ctp-red">Failed to load server statistics</p>
+    </div>
+  ) : (
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {statCards.map((stat) => (
+        <div class="bg-ctp-base rounded-lg p-5 border border-ctp-surface2 hover:border-ctp-mauve transition-all duration-300 hover:scale-105 group">
+          <div class="flex items-start justify-between mb-3">
+            <div class="flex-1">
+              <p class="text-sm text-ctp-subtext0 font-medium mb-1">{stat.title}</p>
+              <p class={`text-2xl font-bold text-${stat.color} group-hover:scale-110 transition-transform`}>
+                {stat.value}
+              </p>
+            </div>
+            <Icon
+              name={stat.icon}
+              class={`w-10 h-10 text-${stat.color} opacity-50 group-hover:opacity-100 transition-opacity`}
+            />
+          </div>
+          <p class="text-xs text-ctp-subtext1">{stat.description}</p>
+        </div>
+      ))}
+    </div>
+  )}
+
+  <!-- Footer note -->
+  <div class="mt-6 pt-4 border-t border-ctp-surface2">
+    <p class="text-xs text-ctp-subtext1 text-center">
+      Statistics updated in real-time • Data from server database
+    </p>
+  </div>
+</div>

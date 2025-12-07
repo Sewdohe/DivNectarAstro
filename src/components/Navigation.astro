@@ -160,13 +160,16 @@ it's hidden on small devices and replaced with a bottom-style navbar on mobile. 
       )
     ))
   }
-  <div class="flex justify-center items-center w-full">
+  <!-- Divider -->
+  <div class="h-10 w-px bg-ctp-surface2 mx-3"></div>
+
+  <div class="flex justify-center items-center flex-shrink-0">
     <User class="scale-110" />
   </div>
   <button
     id="theme-toggle-mobile"
     type="button"
-    class="flex justify-center items-center w-full hover:scale-105 transition-all duration-300 focus:outline-none"
+    class="flex justify-center items-center flex-shrink-0 w-16 hover:scale-105 transition-all duration-300 focus:outline-none"
     aria-label="Toggle theme"
     data-umami-event="theme-toggle-click-mobile"
   >

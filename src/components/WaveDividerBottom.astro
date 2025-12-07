@@ -1,0 +1,50 @@
+---
+interface Props {
+  color?: string;
+  height?: string;
+  variant?: 'smooth' | 'dynamic' | 'animated';
+}
+
+const {
+  color = 'ctp-base',
+  height = 'h-24 md:h-32',
+  variant = 'smooth'
+} = Astro.props;
+
+const colorVar = color.startsWith('--') ? color : `var(--${color})`;
+---
+
+<div class="relative overflow-hidden">
+  {variant === 'smooth' && (
+    <svg class={`w-full ${height}`} viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,0 L0,120 C300,60 600,60 900,100 C1050,120 1150,120 1200,120 L1200,0 Z" fill={colorVar} />
+    </svg>
+  )}
+
+  {variant === 'dynamic' && (
+    <svg class={`w-full ${height}`} viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,0 L0,120 C200,80 400,80 600,120 C800,80 1000,80 1200,120 L1200,0 Z" fill={colorVar} />
+    </svg>
+  )}
+
+  {variant === 'animated' && (
+    <svg class={`w-full ${height} wave-animation`} viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,0 L0,120 C150,90 350,120 600,90 C850,120 1050,90 1200,120 L1200,0 Z" fill={colorVar} />
+    </svg>
+  )}
+</div>
+
+<style>
+  .wave-animation {
+    animation: wave-flow 8s ease-in-out infinite;
+  }
+
+  @keyframes wave-flow {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(-20px);
+    }
+  }
+</style>

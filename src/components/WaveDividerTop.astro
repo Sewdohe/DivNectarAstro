@@ -1,0 +1,118 @@
+---
+interface Props {
+  color?: string;
+  height?: string;
+  variant?: 'smooth' | 'dynamic' | 'animated';
+  includeParticles?: boolean;
+}
+
+const {
+  color = 'ctp-base',
+  height = 'h-24 md:h-32',
+  variant = 'smooth',
+  includeParticles = false
+} = Astro.props;
+
+const colorVar = color.startsWith('--') ? color : `var(--${color})`;
+---
+
+<div class={`relative bg-${color}`}>
+  {variant === 'smooth' && (
+    <svg class={`w-full ${height}`} viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,120 L0,80 C150,40 350,40 600,80 C850,40 1050,40 1200,80 L1200,120 Z" fill={colorVar} />
+    </svg>
+  )}
+
+  {variant === 'dynamic' && (
+    <svg class={`w-full ${height}`} viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,120 L0,70 C200,30 400,30 600,70 C800,30 1000,30 1200,70 L1200,120 Z" fill={colorVar} />
+    </svg>
+  )}
+
+  {variant === 'animated' && (
+    <svg class={`w-full ${height} wave-animation`} viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,120 L0,60 C150,20 350,20 600,60 C850,20 1050,20 1200,60 L1200,120 Z" fill={colorVar} />
+    </svg>
+  )}
+
+  {includeParticles && (
+    <div class="floating-particles absolute inset-0">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+  )}
+</div>
+
+<style>
+  .wave-animation {
+    animation: wave-flow 8s ease-in-out infinite;
+  }
+
+  @keyframes wave-flow {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(-20px);
+    }
+  }
+
+  .floating-particles {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--ctp-mauve);
+    border-radius: 50%;
+    opacity: 0.4;
+    animation: float 6s infinite ease-in-out;
+  }
+
+  .particle:nth-child(1) {
+    left: 20%;
+    animation-delay: 0s;
+    animation-duration: 8s;
+  }
+
+  .particle:nth-child(2) {
+    left: 50%;
+    animation-delay: 2s;
+    animation-duration: 6s;
+    background: var(--ctp-pink);
+  }
+
+  .particle:nth-child(3) {
+    left: 80%;
+    animation-delay: 4s;
+    animation-duration: 7s;
+    background: var(--ctp-teal);
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0) translateX(0);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.4;
+    }
+    50% {
+      transform: translateY(-80px) translateX(20px);
+      opacity: 0.6;
+    }
+    90% {
+      opacity: 0.4;
+    }
+    100% {
+      transform: translateY(-160px) translateX(-10px);
+      opacity: 0;
+    }
+  }
+</style>

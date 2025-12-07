@@ -4,6 +4,8 @@ import Button from "../../components/Button.astro";
 import { Icon } from "astro-icon/components";
 import ServerStatus from "../../components/ServerStatus.astro";
 import PlayerGlossaryCTA from "../../components/PlayerGlossaryCTA.astro";
+import WaveDividerTop from "../../components/WaveDividerTop.astro";
+import WaveDividerBottom from "../../components/WaveDividerBottom.astro";
 
 const title = "DivNectar";
 const description = "Kickass Hybrid Minecraft Server";
@@ -15,8 +17,12 @@ const image = {
 
 <Layout title={title} direction="col" description={description} topPadding image={image}>
   <div class="text-ctp-text">
-    <section class="">
-      <div class="py-8 px-4 mx-auto text-center lg:py-16 lg:px-12">
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden">
+      <!-- Animated gradient background -->
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-ctp-mauve/5 to-transparent animate-gradient-shift"></div>
+
+      <div class="relative z-10 py-8 px-4 mx-auto text-center lg:py-16 lg:px-12 fade-in-section">
         <a
           href="https://wp.divnectar.com/wp-content/uploads/2025/12/CraftNectar-Network.zip"
           class="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-ctp-subtext1 bg-ctp-crust rounded-full hover:bg-ctp-mantle"
@@ -102,16 +108,26 @@ const image = {
           <PlayerGlossaryCTA />
         </div>
       </div>
+
+      <!-- Transition gradient -->
+      <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-ctp-base"></div>
     </section>
-    <section class="page-divider-wavy divide-ctp-crust">
-      <div
-        class="px-4 mx-auto text-center md:max-w-screen-md lg:max-w-screen-lg lg:px-36"
-      >
-        <span class="font-semibold text-4xl text-ctp-subtext0 uppercase"
-          >FEATURES</span
+
+
+    <!-- Features Section -->
+    <section class="relative page-divider-wavy divide-ctp-crust overflow-hidden">
+      <!-- Animated background -->
+      <div class="absolute inset-0 bg-gradient-to-br from-ctp-pink/5 via-transparent to-ctp-mauve/5 animate-gradient-slow"></div>
+
+      <div class="relative z-10 p-4 pt-8">
+        <div
+          class="px-4 mx-auto text-center md:max-w-screen-md lg:max-w-screen-lg lg:px-36 fade-in-section"
         >
-      </div>
-      <div class="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
+          <span class="font-semibold text-4xl text-ctp-subtext0 uppercase tracking-wider"
+            >FEATURES</span
+          >
+        </div>
+        <div class="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6 fade-in-section">
         <div
           class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0"
         >
@@ -179,6 +195,8 @@ const image = {
         </div>
       </div>
     </section>
+
+
     <!--bg-[url(https://cms.divnectar.com/uploads/sewdohe_island_5c569a9140.png)]-->
     <section class="flex align-middle bg-ctp-crust items-center py-8">
       <div class="flex flex-col items-center justify-center w-full h-full">
@@ -201,6 +219,8 @@ const image = {
         </a>
       </div>
     </section>
+
+
     <section
       class="flex bg-ctp-mantle py-6 md:py3 align-middle items-center page-divider-wavy min-h-[600px] bg-[url(https://cms.divnectar.com/uploads/bluemap_screenshot_40a3c871d0.png)] bg-cover bg-center bg-no-repeat hidden"
     >
@@ -223,9 +243,38 @@ const image = {
           </div>
         </div>
       </div>
+      </div>
     </section>
   </div>
 </Layout>
+
+<script>
+  // Intersection Observer for fade-in animations
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -100px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, observerOptions);
+
+  // Observe all sections with fade-in class
+  document.querySelectorAll('.fade-in-section').forEach((section) => {
+    observer.observe(section);
+  });
+
+  // Reinitialize on page navigation
+  document.addEventListener('astro:after-swap', () => {
+    document.querySelectorAll('.fade-in-section').forEach((section) => {
+      observer.observe(section);
+    });
+  });
+</script>
 
 <style>
   a {
@@ -235,5 +284,67 @@ const image = {
 
   a:hover {
     color: var(--ctp-pink);
+  }
+
+  /* Fade-in animation */
+  .fade-in-section {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .fade-in-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Gradient shift animation */
+  @keyframes gradient-shift {
+    0%, 100% {
+      transform: translateY(0) scale(1);
+      opacity: 0.3;
+    }
+    50% {
+      transform: translateY(-20px) scale(1.1);
+      opacity: 0.6;
+    }
+  }
+
+  .animate-gradient-shift {
+    animation: gradient-shift 8s ease-in-out infinite;
+  }
+
+  @keyframes gradient-slow {
+    0%, 100% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  .animate-gradient-slow {
+    animation: gradient-slow 10s ease-in-out infinite;
+  }
+
+  /* Smooth section transitions */
+  section {
+    position: relative;
+  }
+
+  section::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: linear-gradient(to bottom, transparent, var(--ctp-base));
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  section:first-child::before {
+    display: none;
   }
 </style>

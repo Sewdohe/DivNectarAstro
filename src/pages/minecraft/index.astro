@@ -15,14 +15,14 @@ const image = {
 };
 ---
 
-<Layout title={title} direction="col" description={description} topPadding image={image}>
+<Layout title={title} direction="col" description={description} image={image}>
   <div class="text-ctp-text">
     <!-- Hero Section -->
     <section class="relative overflow-hidden">
       <!-- Animated gradient background -->
       <div class="absolute inset-0 bg-gradient-to-b from-transparent via-ctp-mauve/5 to-transparent animate-gradient-shift"></div>
 
-      <div class="relative z-10 py-8 px-4 mx-auto text-center lg:py-16 lg:px-12 fade-in-section">
+      <div class="relative z-10 py-8 px-4 mx-auto text-center lg:py-16 lg:px-12 fade-in-section md:max-w-[65%]">
         <a
           href="https://wp.divnectar.com/wp-content/uploads/2025/12/CraftNectar-Network.zip"
           class="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-ctp-subtext1 bg-ctp-crust rounded-full hover:bg-ctp-mantle"
@@ -58,11 +58,11 @@ const image = {
         </div>
         <div class="flex text-left justify-center align-middle flex-col">
           <p
-            class="prose-catpuccin mb-6 text-xl max-w-full self-center lg:max-w-[50%]"
+            class="prose-catpuccin mb-6 text-center text-xl max-w-full self-center lg:max-w-[50%]"
           >
             CraftNectar is a longstanding Minecraft server (we've been offering a myriad of Minecraft experiences since 2021!) that's always prioritized user experience. We've never offered pay-to-win content and we never will, CraftNectar is essentially an open-source server. The modpack can be found on Github as a <a href="https://packwiz.infra.link">PackWiz</a> modpack. Packwiz enables our <a href="https://prismlauncher.org">Prism Launcher</a> modpack to auto-update itself when the pack manifest changes on Github. It's quite cool 😎
           </p>
-          <p>
+          <p class="prose-catpuccin text-center max-w-full self-center pb-6">
             The current iteration of CraftNectar is currently a W.I.P. Our admin team are hard-at-work to bring everyone a fantastic modded Minecraft experience using Minecraft 1.21.1 running on the Arclight server software - which allows us to utilize both mods as well as plugins to bring a custom-tailored experience that you won't find many other places. Feel free to keep up with development over on the <a href="https://github.com/Sewdohe/CraftNectarNetwork">Github</a> repo for the modpack. 
           </p>
         </div>

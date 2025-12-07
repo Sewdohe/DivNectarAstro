@@ -280,21 +280,21 @@ function formatBalance(balance: number): string {
 
   searchInput.addEventListener('input', () => {
     if (searchInput.value.length > 0 && window.umami) {
-      window.umami.track('players-search-used');
+      window.umami.track('players-search-used', { category: 'minecraft' });
     }
     filterAndSortPlayers();
   });
 
   statusFilter.addEventListener('change', () => {
     if (window.umami) {
-      window.umami.track('players-filter-status', { status: statusFilter.value });
+      window.umami.track('players-filter-status', { status: statusFilter.value, category: 'minecraft' });
     }
     filterAndSortPlayers();
   });
 
   sortSelect.addEventListener('change', () => {
     if (window.umami) {
-      window.umami.track('players-sort-changed', { sortBy: sortSelect.value });
+      window.umami.track('players-sort-changed', { sortBy: sortSelect.value, category: 'minecraft' });
     }
     filterAndSortPlayers();
   });

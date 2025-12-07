@@ -1,0 +1,295 @@
+---
+interface Props {
+  height?: string;
+}
+
+const { height = 'h-96' } = Astro.props;
+---
+
+<div class={`bg-ctp-surface0 rounded-lg shadow-lg border-2 border-ctp-surface2 flex flex-col ${height}`}>
+  <!-- Header -->
+  <div class="bg-ctp-surface1 p-4 rounded-t-lg border-b-2 border-ctp-surface2">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div id="connection-status" class="w-3 h-3 bg-ctp-red rounded-full"></div>
+        <h2 class="text-xl font-bold text-ctp-text">Server Chat</h2>
+      </div>
+      <span id="connection-text" class="text-sm text-ctp-subtext0">Connecting...</span>
+    </div>
+  </div>
+
+  <!-- Messages Container -->
+  <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-2 bg-ctp-base">
+    <!-- Messages will be inserted here -->
+  </div>
+
+  <!-- Input Area -->
+  <div id="chat-input-container" class="p-4 bg-ctp-surface1 rounded-b-lg border-t-2 border-ctp-surface2">
+    <div id="login-prompt" class="text-center text-ctp-subtext0">
+      <p class="mb-2">You must be logged in and have your Minecraft account linked to chat.</p>
+      <a href="/profile" class="text-ctp-mauve hover:text-ctp-pink transition-colors">
+        Login or Link Account →
+      </a>
+    </div>
+
+    <form id="chat-form" class="hidden">
+      <div class="flex gap-2">
+        <input
+          type="text"
+          id="chat-input"
+          placeholder="Type a message..."
+          maxlength="256"
+          class="flex-1 bg-ctp-surface0 text-ctp-text px-4 py-2 rounded-lg border border-ctp-surface2 focus:border-ctp-mauve focus:outline-none"
+        />
+        <button
+          type="submit"
+          class="bg-ctp-mauve hover:bg-ctp-pink text-ctp-base px-6 py-2 rounded-lg font-bold transition-colors"
+        >
+          Send
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // WebSocket connection
+  let ws: WebSocket | null = null;
+  let reconnectInterval: NodeJS.Timeout | null = null;
+  const BACKEND_WS = import.meta.env.DEV
+    ? 'ws://localhost:4477'
+    : 'wss://backend.divnectar.com:4477';
+
+  // DOM elements
+  const messagesContainer = document.getElementById('chat-messages');
+  const chatForm = document.getElementById('chat-form') as HTMLFormElement;
+  const chatInput = document.getElementById('chat-input') as HTMLInputElement;
+  const loginPrompt = document.getElementById('login-prompt');
+  const connectionStatus = document.getElementById('connection-status');
+  const connectionText = document.getElementById('connection-text');
+
+  // Store user info
+  let userInfo: any = null;
+
+  // Check if user is authenticated and linked
+  async function checkAuth() {
+    try {
+      const BACKEND_URL = import.meta.env.DEV
+        ? 'http://localhost:4477'
+        : 'https://backend.divnectar.com:4477';
+
+      const response = await fetch(`${BACKEND_URL}/api/chat/auth-status`, {
+        credentials: 'include' // Send cookies
+      });
+
+      if (!response.ok) {
+        console.error('Auth check failed');
+        return;
+      }
+
+      const data = await response.json();
+      userInfo = data;
+
+      if (data.authenticated && data.linked) {
+        // User is logged in and linked - show chat form
+        if (loginPrompt) loginPrompt.classList.add('hidden');
+        if (chatForm) chatForm.classList.remove('hidden');
+
+        console.log(`Authenticated as ${data.playerName}`);
+      } else if (data.authenticated && !data.linked) {
+        // User is logged in but not linked
+        if (loginPrompt) {
+          loginPrompt.innerHTML = `
+            <p class="mb-2 text-ctp-yellow">Your Discord account is not linked to Minecraft.</p>
+            <p class="text-sm text-ctp-subtext0">Join the server and use <code class="bg-ctp-surface0 px-2 py-1 rounded text-ctp-text">/discord link</code> to link your account.</p>
+          `;
+        }
+      }
+    } catch (error) {
+      console.error('Auth check failed:', error);
+    }
+  }
+
+  // Connect to WebSocket
+  function connect() {
+    if (ws?.readyState === WebSocket.OPEN) return;
+
+    ws = new WebSocket(BACKEND_WS);
+
+    ws.onopen = () => {
+      console.log('WebSocket connected');
+      if (connectionStatus) connectionStatus.className = 'w-3 h-3 bg-ctp-green rounded-full animate-pulse';
+      if (connectionText) connectionText.textContent = 'Connected';
+
+      if (reconnectInterval) {
+        clearInterval(reconnectInterval);
+        reconnectInterval = null;
+      }
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        addMessage(data);
+      } catch (error) {
+        console.error('Failed to parse message:', error);
+      }
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket disconnected');
+      if (connectionStatus) connectionStatus.className = 'w-3 h-3 bg-ctp-red rounded-full';
+      if (connectionText) connectionText.textContent = 'Disconnected';
+
+      // Try to reconnect every 5 seconds
+      if (!reconnectInterval) {
+        reconnectInterval = setInterval(() => {
+          console.log('Attempting to reconnect...');
+          connect();
+        }, 5000);
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+      if (connectionStatus) connectionStatus.className = 'w-3 h-3 bg-ctp-yellow rounded-full';
+      if (connectionText) connectionText.textContent = 'Error';
+    };
+  }
+
+  // Add message to chat
+  function addMessage(data: any) {
+    if (!messagesContainer) return;
+
+    const messageEl = document.createElement('div');
+    messageEl.className = 'flex items-start gap-2 text-sm';
+
+    const timestamp = new Date(data.timestamp).toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    let messageHTML = '';
+
+    if (data.type === 'system') {
+      messageHTML = `
+        <span class="text-ctp-subtext1">[${timestamp}]</span>
+        <span class="text-ctp-yellow italic">${escapeHtml(data.message)}</span>
+      `;
+    } else if (data.type === 'chat') {
+      const playerColor = getPlayerColor(data.player);
+      messageHTML = `
+        <span class="text-ctp-subtext1">[${timestamp}]</span>
+        <span class="text-${playerColor} font-bold">${escapeHtml(data.player)}:</span>
+        <span class="text-ctp-text">${escapeHtml(data.message)}</span>
+      `;
+    }
+
+    messageEl.innerHTML = messageHTML;
+    messagesContainer.appendChild(messageEl);
+
+    // Auto-scroll to bottom
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+    // Limit message history to last 100 messages
+    while (messagesContainer.children.length > 100) {
+      messagesContainer.removeChild(messagesContainer.children[0]);
+    }
+  }
+
+  // Send message
+  function sendMessage(message: string) {
+    if (!message.trim()) return;
+
+    const BACKEND_URL = import.meta.env.DEV
+      ? 'http://localhost:4477'
+      : 'https://backend.divnectar.com:4477';
+
+    fetch(`${BACKEND_URL}/api/chat/send`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include', // Send cookies
+      body: JSON.stringify({ message })
+    })
+    .then(async res => {
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || 'Failed to send message');
+      }
+      if (chatInput) chatInput.value = '';
+    })
+    .catch(err => {
+      console.error('Error sending message:', err);
+      alert(err.message || 'Failed to send message. Please try again.');
+    });
+  }
+
+  // Escape HTML to prevent XSS
+  function escapeHtml(text: string): string {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Get color for player name
+  function getPlayerColor(player: string): string {
+    const colors = ['ctp-mauve', 'ctp-pink', 'ctp-sky', 'ctp-teal', 'ctp-peach'];
+    let hash = 0;
+    for (let i = 0; i < player.length; i++) {
+      hash = player.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return colors[Math.abs(hash) % colors.length];
+  }
+
+  // Event listeners
+  chatForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (chatInput) {
+      sendMessage(chatInput.value);
+    }
+  });
+
+  // Initialize
+  checkAuth();
+  connect();
+
+  // Cleanup on page unload
+  window.addEventListener('beforeunload', () => {
+    if (ws) {
+      ws.close();
+    }
+    if (reconnectInterval) {
+      clearInterval(reconnectInterval);
+    }
+  });
+
+  // Reconnect on page visibility change
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && ws?.readyState !== WebSocket.OPEN) {
+      connect();
+    }
+  });
+</script>
+
+<style>
+  /* Custom scrollbar for chat */
+  #chat-messages::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  #chat-messages::-webkit-scrollbar-track {
+    background: var(--ctp-surface0);
+    border-radius: 4px;
+  }
+
+  #chat-messages::-webkit-scrollbar-thumb {
+    background: var(--ctp-surface2);
+    border-radius: 4px;
+  }
+
+  #chat-messages::-webkit-scrollbar-thumb:hover {
+    background: var(--ctp-overlay0);
+  }
+</style>

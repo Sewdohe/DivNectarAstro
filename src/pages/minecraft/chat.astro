@@ -1,0 +1,109 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import MinecraftChat from "../../components/MinecraftChat.astro";
+import { Icon } from "astro-icon/components";
+
+const title = "Live Server Chat - DivNectar";
+const description = "Chat live with players on the CraftNectar Minecraft server";
+const image = {
+  url: "https://wp.divnectar.com/wp-content/uploads/2025/12/sewnet-logo-hive.webp",
+  alt: "CraftNectar Logo",
+};
+---
+
+<Layout title={title} description={description} image={image}>
+  <div class="container mx-auto px-4 py-8 max-w-6xl">
+    <!-- Header -->
+    <div class="mb-8 text-center">
+      <div class="flex items-center justify-center gap-3 mb-4">
+        <Icon name="line-md:discord-twotone" class="w-12 h-12 text-ctp-mauve" />
+        <h1 class="text-4xl md:text-5xl font-bold text-ctp-text">
+          Live Server Chat
+        </h1>
+      </div>
+      <p class="text-ctp-subtext0 text-lg max-w-2xl mx-auto">
+        See what's happening on the server in real-time. Login and link your Minecraft account to chat directly from the website!
+      </p>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div class="bg-ctp-surface0 rounded-lg p-4 border border-ctp-surface2">
+        <div class="flex items-center gap-2 mb-2">
+          <Icon name="line-md:check-all" class="w-5 h-5 text-ctp-green" />
+          <h3 class="font-bold text-ctp-text">Real-Time</h3>
+        </div>
+        <p class="text-sm text-ctp-subtext0">
+          Messages appear instantly with WebSocket connection
+        </p>
+      </div>
+
+      <div class="bg-ctp-surface0 rounded-lg p-4 border border-ctp-surface2">
+        <div class="flex items-center gap-2 mb-2">
+          <Icon name="line-md:discord" class="w-5 h-5 text-ctp-mauve" />
+          <h3 class="font-bold text-ctp-text">Discord Linked</h3>
+        </div>
+        <p class="text-sm text-ctp-subtext0">
+          Uses your linked Discord account for verification
+        </p>
+      </div>
+
+      <div class="bg-ctp-surface0 rounded-lg p-4 border border-ctp-surface2">
+        <div class="flex items-center gap-2 mb-2">
+          <Icon name="line-md:speedometer-loop" class="w-5 h-5 text-ctp-sky" />
+          <h3 class="font-bold text-ctp-text">No Delay</h3>
+        </div>
+        <p class="text-sm text-ctp-subtext0">
+          Chat with players as if you were in-game
+        </p>
+      </div>
+    </div>
+
+    <!-- Chat Component -->
+    <MinecraftChat height="h-[600px]" />
+
+    <!-- Help Section -->
+    <div class="mt-8 bg-ctp-surface0 rounded-lg p-6 border border-ctp-surface2">
+      <h2 class="text-2xl font-bold text-ctp-text mb-4">How to Chat</h2>
+      <ol class="space-y-3 text-ctp-subtext0">
+        <li class="flex items-start gap-3">
+          <span class="bg-ctp-mauve text-ctp-base rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 font-bold">1</span>
+          <span>Login to the website using Discord OAuth (click the user icon in the navigation)</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="bg-ctp-mauve text-ctp-base rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 font-bold">2</span>
+          <span>Link your Minecraft account on the server using <code class="bg-ctp-surface1 px-2 py-1 rounded text-ctp-text">/discord link</code></span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="bg-ctp-mauve text-ctp-base rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 font-bold">3</span>
+          <span>Once linked, the chat box will appear and you can send messages!</span>
+        </li>
+      </ol>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="mt-8 flex flex-wrap gap-4 justify-center">
+      <a
+        href="/minecraft"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-ctp-surface0 hover:bg-ctp-surface1 text-ctp-text rounded-lg border border-ctp-surface2 transition-colors"
+      >
+        <Icon name="line-md:arrow-left" class="w-5 h-5" />
+        <span>Back to Minecraft</span>
+      </a>
+      <a
+        href="/minecraft/players"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-ctp-mauve hover:bg-ctp-pink text-ctp-base rounded-lg font-bold transition-colors"
+      >
+        <Icon name="line-md:person-twotone" class="w-5 h-5" />
+        <span>View Players</span>
+      </a>
+      <a
+        href="/profile"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-ctp-surface0 hover:bg-ctp-surface1 text-ctp-text rounded-lg border border-ctp-surface2 transition-colors"
+      >
+        <Icon name="line-md:person-twotone" class="w-5 h-5" />
+        <span>My Profile</span>
+      </a>
+    </div>
+  </div>
+</Layout>

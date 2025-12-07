@@ -174,33 +174,36 @@ const profileLinks = [
 
 <script define:vars={{ backend_url }}>
   function createProfileButtonListeners() {
-    const modal = document.querySelector("#nav-modal");
-    const profileOpen = document.querySelector("#user-avatar");
-    const anonButton = document.querySelector("#anon-button");
+    const modals = document.querySelectorAll("#nav-modal");
+    const profileButtons = document.querySelectorAll("#user-avatar");
+    const anonButtons = document.querySelectorAll("#anon-button");
 
-    if (profileOpen) {
+    // Add click listeners to all profile avatars
+    profileButtons.forEach((profileOpen) => {
       profileOpen.addEventListener("click", () => {
-        if (modal) {
+        modals.forEach(modal => {
           modal.classList.remove("hidden");
-        }
+        });
       });
-    }
+    });
 
-    if (modal) {
+    // Add click listeners to close modal when clicking outside
+    modals.forEach((modal) => {
       modal.addEventListener("click", (e) => {
         if (e.target === modal) {
-          modal.classList.add("hidden");
+          modals.forEach(m => m.classList.add("hidden"));
         }
       });
-    }
+    });
 
-    if (anonButton) {
+    // Add click listeners to all anonymous buttons
+    anonButtons.forEach((anonButton) => {
       anonButton.addEventListener("click", () => {
-        if (modal) {
+        modals.forEach(modal => {
           modal.classList.remove("hidden");
-        }
+        });
       });
-    }
+    });
   }
 
   createProfileButtonListeners();

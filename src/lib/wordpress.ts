@@ -1,125 +1,144 @@
 import type Article from "../interfaces/article";
+import fetchApi from "./strapi";
 
-interface WordPressPost {
+interface StrapiPost {
   id: number;
-  title: {
-    rendered: string;
-  };
-  content: {
-    rendered: string;
-  };
-  excerpt: {
-    rendered: string;
-  };
-  slug: string;
-  date: string;
-  modified: string;
-  featured_media: number;
-  categories: number[];
-}
-
-interface WordPressMedia {
-  id: number;
-  source_url: string;
-  alt_text: string;
-}
-
-interface WordPressCategory {
-  id: number;
-  name: string;
-  slug: string;
+  documentId: string;
+  title: string;
   description: string;
+  content: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  cover?: {
+    id: number;
+    documentId: string;
+    url: string;
+    alternativeText?: string;
+  };
+  category?: {
+    id: number;
+    documentId: string;
+    name: string;
+    slug: string;
+    description: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  };
 }
 
-const WORDPRESS_URL = import.meta.env.WORDPRESS_URL;
+interface StrapiResponse<T> {
+  data: Array<{
+    id: number;
+    documentId: string;
+    attributes: T;
+  }>;
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
+}
 
-if (!WORDPRESS_URL) {
-  throw new Error("WORDPRESS_URL environment variable is not set");
+interface StrapiSingleResponse<T> {
+  data: {
+    id: number;
+    documentId: string;
+    attributes: T;
+  };
+}
+
+const STRAPI_URL = import.meta.env.STRAPI_URL;
+
+if (!STRAPI_URL) {
+  throw new Error("STRAPI_URL environment variable is not set");
 }
 
 /**
- * Fetches all blog posts from WordPress
+ * Fetches all blog posts from Strapi
  * @returns Array of Article objects
  */
 export async function getAllPosts(): Promise<Article[]> {
   try {
-    const response = await fetch(`${WORDPRESS_URL}/wp-json/wp/v2/posts?_embed`);
+    const response = await fetch(
+      `${STRAPI_URL}/api/articles?populate[cover][fields][0]=url&populate[cover][fields][1]=alternativeText&populate[category][populate]=*`,
+      {
+        headers: {
+          Authorization: `bearer ${import.meta.env.STRAPI_API_TOKEN}`,
+        },
+      }
+    );
 
     if (!response.ok) {
-      throw new Error(`WordPress API returned ${response.status}`);
+      throw new Error(`Strapi API returned ${response.status}`);
     }
 
-    const posts: WordPressPost[] = await response.json();
+    const result = await response.json();
 
-    // Map WordPress posts to Article interface
-    const articles = await Promise.all(
-      posts.map(async (post) => {
-        // Get featured image
-        let coverUrl = "";
-        let coverAlt = "";
+    // Map Strapi posts to Article interface
+    const articles: Article[] = result.data.map((item: any) => {
+      const post = item;
 
-        if (post.featured_media && (post as any)._embedded?.["wp:featuredmedia"]) {
-          const media = (post as any)._embedded["wp:featuredmedia"][0];
-          coverUrl = media.source_url || "";
-          coverAlt = media.alt_text || post.title.rendered;
-        }
+      // Default category if none exists
+      const category = post.category || {
+        id: 0,
+        documentId: "0",
+        name: "Uncategorized",
+        slug: "uncategorized",
+        description: "",
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+        publishedAt: post.publishedAt,
+      };
 
-        // Get category
-        let category = {
-          id: 0,
-          documentId: "0",
-          name: "Uncategorized",
-          slug: "uncategorized",
-          description: "",
-          createdAt: post.date,
-          updatedAt: post.modified,
-          publishedAt: post.date,
-        };
+      // Default cover if none exists
+      const cover = post.cover || {
+        url: "",
+        alternativeText: post.title,
+      };
 
-        if (post.categories && post.categories.length > 0 && (post as any)._embedded?.["wp:term"]) {
-          const wpCategory = (post as any)._embedded["wp:term"][0][0];
-          if (wpCategory) {
-            category = {
-              id: wpCategory.id,
-              documentId: wpCategory.id.toString(),
-              name: wpCategory.name,
-              slug: wpCategory.slug,
-              description: wpCategory.description || "",
-              createdAt: post.date,
-              updatedAt: post.modified,
-              publishedAt: post.date,
-            };
-          }
-        }
+      // Make cover URL absolute if it's relative
+      let coverUrl = cover.url || "";
+      if (coverUrl && !coverUrl.startsWith('http')) {
+        coverUrl = `${STRAPI_URL}${coverUrl}`;
+      }
 
-        // Strip HTML tags from excerpt to get plain text description
-        const description = post.excerpt.rendered
-          .replace(/<[^>]*>/g, "")
-          .trim();
+      const article: Article = {
+        id: item.id,
+        title: post.title,
+        description: post.description,
+        content: post.content,
+        slug: post.slug,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+        publishedAt: post.publishedAt,
+        cover: {
+          url: coverUrl,
+          alternativeText: cover.alternativeText || post.title,
+        },
+        category: {
+          id: category.id,
+          documentId: category.documentId,
+          name: category.name,
+          slug: category.slug,
+          description: category.description,
+          createdAt: category.createdAt,
+          updatedAt: category.updatedAt,
+          publishedAt: category.publishedAt,
+        },
+      };
 
-        const article: Article = {
-          id: post.id,
-          title: post.title.rendered,
-          description: description,
-          content: post.content.rendered,
-          slug: post.slug,
-          createdAt: post.date,
-          updatedAt: post.modified,
-          publishedAt: post.date,
-          cover: {
-            url: coverUrl,
-            alternativeText: coverAlt,
-          },
-          category: category,
-        };
-
-        return article;
-      })
-    );
+      return article;
+    });
 
     return articles;
   } catch (error) {
-    console.error("Error fetching WordPress posts:", error);
+    console.error("Error fetching Strapi posts:", error);
     throw error;
   }
 }
@@ -130,18 +149,33 @@ export async function getAllPosts(): Promise<Article[]> {
  */
 export async function getAllCategories(): Promise<Array<{ id: number; name: string; slug: string; count: number }>> {
   try {
-    const response = await fetch(`${WORDPRESS_URL}/wp-json/wp/v2/categories`);
+    const response = await fetch(
+      `${STRAPI_URL}/api/categories?populate[articles][fields][0]=id`,
+      {
+        headers: {
+          Authorization: `bearer ${import.meta.env.STRAPI_API_TOKEN}`,
+        },
+      }
+    );
 
     if (!response.ok) {
-      throw new Error(`WordPress API returned ${response.status}`);
+      throw new Error(`Strapi API returned ${response.status}`);
     }
 
-    const categories: Array<{ id: number; name: string; slug: string; count: number }> = await response.json();
+    const result = await response.json();
+
+    // Map categories and calculate post counts
+    const categories = result.data.map((item: any) => ({
+      id: item.id,
+      name: item.name,
+      slug: item.slug,
+      count: item.articles?.length || 0,
+    }));
 
     // Filter out categories with no posts
-    return categories.filter(cat => cat.count > 0);
+    return categories.filter((cat: any) => cat.count > 0);
   } catch (error) {
-    console.error("Error fetching WordPress categories:", error);
+    console.error("Error fetching Strapi categories:", error);
     return [];
   }
 }
@@ -153,172 +187,165 @@ export async function getAllCategories(): Promise<Array<{ id: number; name: stri
  */
 export async function getPostsByCategory(categorySlug: string): Promise<Article[]> {
   try {
-    // First get the category ID from slug
-    const categoriesResponse = await fetch(`${WORDPRESS_URL}/wp-json/wp/v2/categories?slug=${categorySlug}`);
-
-    if (!categoriesResponse.ok) {
-      throw new Error(`WordPress API returned ${categoriesResponse.status}`);
-    }
-
-    const categories: WordPressCategory[] = await categoriesResponse.json();
-
-    if (!categories || categories.length === 0) {
-      return [];
-    }
-
-    const categoryId = categories[0].id;
-
-    // Now fetch posts with that category
-    const response = await fetch(`${WORDPRESS_URL}/wp-json/wp/v2/posts?categories=${categoryId}&_embed`);
+    const response = await fetch(
+      `${STRAPI_URL}/api/articles?filters[category][slug][$eq]=${categorySlug}&populate[cover][fields][0]=url&populate[cover][fields][1]=alternativeText&populate[category][populate]=*`,
+      {
+        headers: {
+          Authorization: `bearer ${import.meta.env.STRAPI_API_TOKEN}`,
+        },
+      }
+    );
 
     if (!response.ok) {
-      throw new Error(`WordPress API returned ${response.status}`);
+      throw new Error(`Strapi API returned ${response.status}`);
     }
 
-    const posts: WordPressPost[] = await response.json();
+    const result = await response.json();
 
-    // Map WordPress posts to Article interface (reuse logic from getAllPosts)
-    const articles = await Promise.all(
-      posts.map(async (post) => {
-        // Get featured image
-        let coverUrl = "";
-        let coverAlt = "";
+    // Map Strapi posts to Article interface
+    const articles: Article[] = result.data.map((item: any) => {
+      const post = item;
 
-        if (post.featured_media && (post as any)._embedded?.["wp:featuredmedia"]) {
-          const media = (post as any)._embedded["wp:featuredmedia"][0];
-          coverUrl = media.source_url || "";
-          coverAlt = media.alt_text || post.title.rendered;
-        }
+      // Default category if none exists
+      const category = post.category || {
+        id: 0,
+        documentId: "0",
+        name: "Uncategorized",
+        slug: "uncategorized",
+        description: "",
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+        publishedAt: post.publishedAt,
+      };
 
-        // Get category
-        let category = {
-          id: categories[0].id,
-          documentId: categories[0].id.toString(),
-          name: categories[0].name,
-          slug: categories[0].slug,
-          description: categories[0].description || "",
-          createdAt: post.date,
-          updatedAt: post.modified,
-          publishedAt: post.date,
-        };
+      // Default cover if none exists
+      const cover = post.cover || {
+        url: "",
+        alternativeText: post.title,
+      };
 
-        // Strip HTML tags from excerpt to get plain text description
-        const description = post.excerpt.rendered
-          .replace(/<[^>]*>/g, "")
-          .trim();
+      // Make cover URL absolute if it's relative
+      let coverUrl = cover.url || "";
+      if (coverUrl && !coverUrl.startsWith('http')) {
+        coverUrl = `${STRAPI_URL}${coverUrl}`;
+      }
 
-        const article: Article = {
-          id: post.id,
-          title: post.title.rendered,
-          description: description,
-          content: post.content.rendered,
-          slug: post.slug,
-          createdAt: post.date,
-          updatedAt: post.modified,
-          publishedAt: post.date,
-          cover: {
-            url: coverUrl,
-            alternativeText: coverAlt,
-          },
-          category: category,
-        };
+      const article: Article = {
+        id: item.id,
+        title: post.title,
+        description: post.description,
+        content: post.content,
+        slug: post.slug,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+        publishedAt: post.publishedAt,
+        cover: {
+          url: coverUrl,
+          alternativeText: cover.alternativeText || post.title,
+        },
+        category: {
+          id: category.id,
+          documentId: category.documentId,
+          name: category.name,
+          slug: category.slug,
+          description: category.description,
+          createdAt: category.createdAt,
+          updatedAt: category.updatedAt,
+          publishedAt: category.publishedAt,
+        },
+      };
 
-        return article;
-      })
-    );
+      return article;
+    });
 
     return articles;
   } catch (error) {
-    console.error("Error fetching WordPress posts by category:", error);
+    console.error("Error fetching Strapi posts by category:", error);
     return [];
   }
 }
 
 /**
- * Fetches a single blog post by slug from WordPress
+ * Fetches a single blog post by slug from Strapi
  * @param slug - The post slug
  * @returns Article object or null if not found
  */
 export async function getPostBySlug(slug: string): Promise<Article | null> {
   try {
     const response = await fetch(
-      `${WORDPRESS_URL}/wp-json/wp/v2/posts?slug=${slug}&_embed`
+      `${STRAPI_URL}/api/articles?filters[slug][$eq]=${slug}&populate[cover][fields][0]=url&populate[cover][fields][1]=alternativeText&populate[category][populate]=*`,
+      {
+        headers: {
+          Authorization: `bearer ${import.meta.env.STRAPI_API_TOKEN}`,
+        },
+      }
     );
 
     if (!response.ok) {
-      throw new Error(`WordPress API returned ${response.status}`);
+      throw new Error(`Strapi API returned ${response.status}`);
     }
 
-    const posts: WordPressPost[] = await response.json();
+    const result = await response.json();
 
-    if (!posts || posts.length === 0) {
+    if (!result.data || result.data.length === 0) {
       return null;
     }
 
-    const post = posts[0];
+    const item = result.data[0];
+    const post = item;
 
-    // Get featured image
-    let coverUrl = "";
-    let coverAlt = "";
-
-    if (post.featured_media && (post as any)._embedded?.["wp:featuredmedia"]) {
-      const media = (post as any)._embedded["wp:featuredmedia"][0];
-      coverUrl = media.source_url || "";
-      coverAlt = media.alt_text || post.title.rendered;
-    }
-
-    // Get category
-    let category = {
+    // Default category if none exists
+    const category = post.category || {
       id: 0,
       documentId: "0",
       name: "Uncategorized",
       slug: "uncategorized",
       description: "",
-      createdAt: post.date,
-      updatedAt: post.modified,
-      publishedAt: post.date,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+      publishedAt: post.publishedAt,
     };
 
-    if (post.categories && post.categories.length > 0 && (post as any)._embedded?.["wp:term"]) {
-      const wpCategory = (post as any)._embedded["wp:term"][0][0];
-      if (wpCategory) {
-        category = {
-          id: wpCategory.id,
-          documentId: wpCategory.id.toString(),
-          name: wpCategory.name,
-          slug: wpCategory.slug,
-          description: wpCategory.description || "",
-          createdAt: post.date,
-          updatedAt: post.modified,
-          publishedAt: post.date,
-        };
-      }
+    // Default cover if none exists
+    const cover = post.cover || {
+      url: "",
+      alternativeText: post.title,
+    };
+
+    // Make cover URL absolute if it's relative
+    let coverUrl = cover.url || "";
+    if (coverUrl && !coverUrl.startsWith('http')) {
+      coverUrl = `${STRAPI_URL}${coverUrl}`;
     }
 
-    // Strip HTML tags from excerpt to get plain text description
-    const description = post.excerpt.rendered
-      .replace(/<[^>]*>/g, "")
-      .trim();
-
     const article: Article = {
-      id: post.id,
-      title: post.title.rendered,
-      description: description,
-      content: post.content.rendered,
+      id: item.id,
+      title: post.title,
+      description: post.description,
+      content: post.content,
       slug: post.slug,
-      createdAt: post.date,
-      updatedAt: post.modified,
-      publishedAt: post.date,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+      publishedAt: post.publishedAt,
       cover: {
         url: coverUrl,
-        alternativeText: coverAlt,
+        alternativeText: cover.alternativeText || post.title,
       },
-      category: category,
+      category: {
+        id: category.id,
+        documentId: category.documentId,
+        name: category.name,
+        slug: category.slug,
+        description: category.description,
+        createdAt: category.createdAt,
+        updatedAt: category.updatedAt,
+        publishedAt: category.publishedAt,
+      },
     };
 
     return article;
   } catch (error) {
-    console.error("Error fetching WordPress post:", error);
+    console.error("Error fetching Strapi post:", error);
     return null;
   }
 }

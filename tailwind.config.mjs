@@ -202,10 +202,14 @@ export default {
 					  padding: '1em',
 					  marginTop: '1.75em',
 					  marginBottom: '1.75em',
+                      whiteSpace: 'pre-wrap', // Allow wrapping for long lines
+                      wordBreak: 'break-word', // Break long words if necessary
 					},
 					'pre code': {
 					  fontSize: '0.875em',
 					  lineHeight: '1.7',
+                      display: 'block', // Ensure code takes full width of pre
+                      maxWidth: '100%', // Explicitly limit width
 					},
 
 					// Images

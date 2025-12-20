@@ -3,7 +3,7 @@ import { getPostBySlug } from "../../lib/wordpress";
 import type Article from "../../interfaces/article";
 import BlogPost from "../../layouts/BlogPost.astro";
 import BlogTracker from "../../components/BlogTracker.astro";
-import { Markdown } from "astro-remote";
+import { marked } from "marked";
 import H1 from "../../components/Basic/Headings/H1.astro";
 import H2 from "../../components/Basic/Headings/H2.astro";
 import H3 from "../../components/Basic/Headings/H3.astro";
@@ -22,10 +22,21 @@ const { slug } = Astro.params;
 
 const article = await getPostBySlug(slug || "");
 
-console.log(article)
+console.log('--- ARTICLE START ---');
+console.log(JSON.stringify(article, null, 2));
+console.log('--- ARTICLE END ---');
 
 if (!article) {
   return Astro.redirect("/404");
+}
+
+let renderedContent;
+try {
+  renderedContent = marked.parse(article.content);
+} catch (error) {
+  console.error("Error parsing markdown:", error);
+  console.error("Article content:", article.content);
+  renderedContent = "<p>Error rendering content.</p>";
 }
 ---
 
@@ -46,25 +57,5 @@ if (!article) {
     </h1>
   </div>
   <div class="h-11"></div>
-  <div class="pt-20 md:pt-8">
-    <Markdown
-      sanitize={{ allowComponents: true }}
-      content={article.content}
-      components={{
-        p: Paragraph,
-        img: Img,
-        h1: H1,
-        h2: H2,
-        h3: H3,
-        h4: H4,
-        h5: H5,
-        h6: H6,
-        a: Link,
-        icon: MarkdownIcon,
-        code: InlineCode,
-        pre: MarkdownCodeBlock,
-        CodeBlock: MarkdownCodeBlock,
-      }}
-    />
-  </div>
+  <div class="pt-20 md:pt-8" set:html={renderedContent}></div>
 </BlogPost>

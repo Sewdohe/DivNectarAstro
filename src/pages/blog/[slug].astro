@@ -22,6 +22,8 @@ const { slug } = Astro.params;
 
 const article = await getPostBySlug(slug || "");
 
+console.log(article)
+
 if (!article) {
   return Astro.redirect("/404");
 }

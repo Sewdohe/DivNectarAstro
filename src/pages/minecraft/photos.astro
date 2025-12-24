@@ -1,0 +1,281 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+const title = "Minecraft Photos - DivNectar";
+const description = "Browse screenshots from our Minecraft server taken with the Exposure mod";
+const image = {
+  url: "https://divnectar.com/site-logo.webp",
+  alt: "DivNectar Logo",
+};
+
+// Fetch initial photos (server-side)
+const backendUrl = import.meta.env.BACKEND_URL || "http://localhost:4477";
+// Remove /api suffix if present since we'll add it in our API calls
+const baseUrl = backendUrl.replace(/\/api$/, '');
+let initialPhotos = { files: [], total: 0, hasMore: false };
+
+try {
+  const response = await fetch(`${baseUrl}/api/photos/list?limit=20&offset=0`);
+  if (response.ok) {
+    initialPhotos = await response.json();
+  }
+} catch (error) {
+  console.error("Error fetching initial photos:", error);
+}
+
+// Format date helper
+function formatDate(timestamp: number): string {
+  return new Date(timestamp).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
+---
+
+<Layout title={title} description={description} image={image}>
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-ctp-text mb-4">Minecraft Screenshots</h1>
+      <p class="text-lg text-ctp-subtext0">
+        {initialPhotos.total > 0
+          ? `Browse ${initialPhotos.total} photos from our Minecraft server`
+          : 'No photos available yet'}
+      </p>
+    </div>
+
+    {initialPhotos.files.length > 0 ? (
+      <>
+        <!-- Masonry Grid -->
+        <div id="photo-grid" class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6">
+          {initialPhotos.files.map((photo, index) => (
+            <div
+              class="photo-card break-inside-avoid mb-6 cursor-pointer"
+              data-photo-index={index}
+              data-photo-name={photo.name}
+            >
+              <div class="rounded-lg shadow-md bg-ctp-crust hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                <img
+                  src={`${baseUrl}/api/photos/image/${photo.name}`}
+                  alt={`Minecraft screenshot ${photo.name}`}
+                  loading="lazy"
+                  class="w-full h-auto"
+                />
+                <div class="p-3 text-sm text-ctp-subtext0">
+                  {formatDate(photo.modified)}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loading-spinner" class="hidden text-center py-8">
+          <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-ctp-mauve"></div>
+          <p class="text-ctp-subtext0 mt-4">Loading more photos...</p>
+        </div>
+
+        <!-- Scroll Sentinel (invisible element for intersection observer) -->
+        <div id="scroll-sentinel" class="h-1"></div>
+      </>
+    ) : (
+      <div class="text-center py-16">
+        <p class="text-xl text-ctp-subtext0">No photos found. Start taking screenshots!</p>
+      </div>
+    )}
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div id="photo-lightbox" class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center">
+    <button
+      id="lightbox-close"
+      class="absolute top-4 right-4 text-white text-4xl hover:text-ctp-mauve transition-colors z-10"
+      aria-label="Close"
+    >
+      &times;
+    </button>
+
+    <button
+      id="lightbox-prev"
+      class="absolute left-4 text-white text-6xl hover:text-ctp-mauve transition-colors z-10"
+      aria-label="Previous"
+    >
+      &#8249;
+    </button>
+
+    <button
+      id="lightbox-next"
+      class="absolute right-4 text-white text-6xl hover:text-ctp-mauve transition-colors z-10"
+      aria-label="Next"
+    >
+      &#8250;
+    </button>
+
+    <div class="max-w-7xl max-h-screen p-4 flex flex-col items-center">
+      <img
+        id="lightbox-image"
+        src=""
+        alt=""
+        class="max-w-full max-h-[85vh] object-contain rounded-lg"
+      />
+      <div class="mt-4 text-white text-center">
+        <span id="lightbox-filename" class="text-lg"></span>
+        <span id="lightbox-counter" class="text-sm text-ctp-subtext0 ml-4"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client-side Scripts -->
+  <script define:vars={{ backendUrl: baseUrl, initialTotal: initialPhotos.total, initialHasMore: initialPhotos.hasMore }}>
+    // State
+    let currentOffset = 20; // Already loaded initial batch
+    let isLoading = false;
+    let hasMore = initialHasMore;
+    let allPhotos = [];
+    let currentLightboxIndex = 0;
+
+    // Get elements
+    const photoGrid = document.getElementById('photo-grid');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const scrollSentinel = document.getElementById('scroll-sentinel');
+    const lightbox = document.getElementById('photo-lightbox');
+    const lightboxImage = document.getElementById('lightbox-image');
+    const lightboxFilename = document.getElementById('lightbox-filename');
+    const lightboxCounter = document.getElementById('lightbox-counter');
+    const lightboxClose = document.getElementById('lightbox-close');
+    const lightboxPrev = document.getElementById('lightbox-prev');
+    const lightboxNext = document.getElementById('lightbox-next');
+
+    // Initialize photos array from initial load
+    document.querySelectorAll('.photo-card').forEach((card, index) => {
+      allPhotos.push(card.dataset.photoName);
+      card.addEventListener('click', () => openLightbox(index));
+    });
+
+    // Infinite Scroll - Intersection Observer
+    if (scrollSentinel && hasMore) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && !isLoading && hasMore) {
+            loadMorePhotos();
+          }
+        },
+        { rootMargin: '200px' }
+      );
+      observer.observe(scrollSentinel);
+    }
+
+    // Load more photos
+    async function loadMorePhotos() {
+      isLoading = true;
+      loadingSpinner.classList.remove('hidden');
+
+      try {
+        const response = await fetch(
+          `${backendUrl}/api/photos/list?limit=20&offset=${currentOffset}`
+        );
+        const data = await response.json();
+
+        // Append photos to grid
+        data.files.forEach((photo, index) => {
+          const photoIndex = allPhotos.length;
+          allPhotos.push(photo.name);
+
+          const cardDiv = document.createElement('div');
+          cardDiv.className = 'photo-card break-inside-avoid mb-6 cursor-pointer';
+          cardDiv.dataset.photoIndex = photoIndex;
+          cardDiv.dataset.photoName = photo.name;
+
+          cardDiv.innerHTML = `
+            <div class="rounded-lg shadow-md bg-ctp-crust hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
+              <img
+                src="${backendUrl}/api/photos/image/${photo.name}"
+                alt="Minecraft screenshot ${photo.name}"
+                loading="lazy"
+                class="w-full h-auto"
+              />
+              <div class="p-3 text-sm text-ctp-subtext0">
+                ${formatDate(photo.modified)}
+              </div>
+            </div>
+          `;
+
+          cardDiv.addEventListener('click', () => openLightbox(photoIndex));
+          photoGrid.appendChild(cardDiv);
+        });
+
+        currentOffset += data.files.length;
+        hasMore = data.hasMore;
+
+        if (!hasMore) {
+          observer.disconnect();
+        }
+      } catch (error) {
+        console.error('Error loading more photos:', error);
+      } finally {
+        isLoading = false;
+        loadingSpinner.classList.add('hidden');
+      }
+    }
+
+    // Format date (client-side)
+    function formatDate(timestamp) {
+      return new Date(timestamp).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      });
+    }
+
+    // Lightbox Functions
+    function openLightbox(index) {
+      currentLightboxIndex = index;
+      updateLightbox();
+      lightbox.classList.remove('hidden');
+      lightbox.classList.add('flex');
+      document.body.style.overflow = 'hidden'; // Prevent scrolling
+    }
+
+    function closeLightbox() {
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+      document.body.style.overflow = ''; // Restore scrolling
+    }
+
+    function updateLightbox() {
+      const photoName = allPhotos[currentLightboxIndex];
+      lightboxImage.src = `${backendUrl}/api/photos/image/${photoName}`;
+      lightboxImage.alt = photoName;
+      lightboxFilename.textContent = photoName;
+      lightboxCounter.textContent = `${currentLightboxIndex + 1} / ${allPhotos.length}`;
+    }
+
+    function nextPhoto() {
+      currentLightboxIndex = (currentLightboxIndex + 1) % allPhotos.length;
+      updateLightbox();
+    }
+
+    function prevPhoto() {
+      currentLightboxIndex = (currentLightboxIndex - 1 + allPhotos.length) % allPhotos.length;
+      updateLightbox();
+    }
+
+    // Lightbox Event Listeners
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightboxPrev.addEventListener('click', prevPhoto);
+    lightboxNext.addEventListener('click', nextPhoto);
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    // Keyboard Navigation
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('hidden')) {
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowRight') nextPhoto();
+        if (e.key === 'ArrowLeft') prevPhoto();
+      }
+    });
+  </script>
+</Layout>
